@@ -58,3 +58,5 @@ butternut_halfsib_names_cleanfront <- gsub("^.*\\.","", butternut_halfsib_names)
 butternut_halfsib_names_cleanback <- gsub("^.*\\_","", butternut_halfsib_names_cleanfront)
 
 relate_ind_remove <- unique(butternut_halfsib_names_cleanback)
+
+##then subset genind file and data frame
