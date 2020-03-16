@@ -17,6 +17,12 @@ butternutgen <- read.genepop("butternut_USCAN.gen", ncode = 3)
 
 butternutpop <- genind2genpop(butternutgen)
 
+##name rows with individual IDs and load in raw allele doc
+
+butternut_df <- read.csv("butternut1.csv")
+
+rownames(butternutgen@tab) <- as.character(butternut_df$Sample.no.)
+
 ##first identify if there were scoring discrepencies between Sean and Jeanne
 
 loci <- c("B114","B159","WGA","A5_2","B157","B212_2","B121",	"B147",	"B249",	"B262","B264")
