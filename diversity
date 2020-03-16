@@ -60,3 +60,6 @@ butternut_halfsib_names_cleanback <- gsub("^.*\\_","", butternut_halfsib_names_c
 relate_ind_remove <- unique(butternut_halfsib_names_cleanback)
 
 ##then subset genind file and data frame
+butternutgen_reduced <- butternutgen_nomd[!rownames(butternutgen_nomd@tab) %in% relate_ind,]
+
+butternut_df_reduced <- butternutrel_df[!butternutrel_df$Ind %in% relate_ind,]
