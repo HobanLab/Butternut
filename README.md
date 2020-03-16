@@ -8,6 +8,7 @@ library(adegenet)
 setwd("C:/Users/eksch/Documents/MortonArboretum")
 
 butternutgen <- read.genepop("butternut_USCAN.gen", ncode = 3)
+
 butternutpop <- genind2genpop(butternutgen)
 
 ##first identify if there were scoring discrepencies between Sean and Jeanne
@@ -23,8 +24,4 @@ for(a in loci){
   barplot(new, las = 2, beside = TRUE, col = c("red", "blue"), legend.text =  c("Canada", "United States"))
   
 }
-
-
-
-
 dev.off()
