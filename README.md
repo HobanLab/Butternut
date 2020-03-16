@@ -1,6 +1,12 @@
 # butternut
 Collection of all code for butternut
 library(adegenet)
+library(adegenet)
+library(stringr)
+library(tidyr)
+library(hierfstat)
+library(poppr)
+library()
 ##load butternut document
 
 ##setwd("C:/Users/eschumacher/Documents/MortonArboretum/")
@@ -25,3 +31,25 @@ for(a in loci){
   
 }
 dev.off()
+
+##now remove individuals with greater than 25% missing data
+
+butternutgen_nomd <- missingno(butternutgen, type = "geno", cutoff = 0.25, quiet = FALSE, freq = FALSE)
+
+##then use this to create a dataframe
+
+butternutgen_nomd_df <- genind2df(butternutgen_nomd, oneColPerAll = TRUE)
+
+##which can be used in demerelate -- calculate relatedness of all individuals
+butternutrel <- Demerelate(butternutrel_df, object = T, value = "loiselle")
+
+##now identify how many individuals have greater than 25% relatedness = half siblings
+butternut_halfsib_names <- names(which(unlist(butternutrel$Empirical_Relatedness) > 0.25))
+
+##then use this to create a document which has all the unique individual numbers for every highly related individuals
+butternut_halfsib_names_cleanfront <- gsub("^.*\\.","", butternut_halfsib_names)
+
+butternut_halfsib_names_cleanback <- gsub("^.*\\_","", butternut_halfsib_names_cleanfront)
+
+relate_ind_remove <- unique(butternut_halfsib_names_cleanback)
+
