@@ -72,7 +72,32 @@ butternutgen_reduced <- butternutgen_nomd[!rownames(butternutgen_nomd@tab) %in% 
 
 butternut_df_reduced <- butternutrel_df[!butternutrel_df$Ind %in% relate_ind,]
 
-##rerun stuff with 44 populations instead of just two to identify pwfst results
+##now do lon lat calcs
+butternut_mean_lon <- matrix()
+butternut_mean_lat <- matrix()
+
+##loops for mean lat/lon
+for(pop in butternutnames){
+  
+  butternut_mean_lon[pop] <- mean(butternutdf_reduced_2[butternutdf_reduced_2$Pop == pop,][,3])
+  
+  
+}
+
+for(pop in butternutnames){
+  
+  butternut_mean_lat[pop] <- mean(butternutdf_reduced_2[butternutdf_reduced_2$Pop == pop,][,4])
+  
+  
+}
+
+##convert to matrix
+butternut_mean_lon <- matrix(butternut_mean_lon)
+butternut_mean_lat <- matrix(butternut_mean_lat)
+
+##document cleanup
+butternut_mean_lon <- butternut_mean_lon[-1]
+butternut_mean_lat <- butternut_mean_lat[-1]
 
 
 
