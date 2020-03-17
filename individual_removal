@@ -72,6 +72,11 @@ butternutgen_reduced <- butternutgen_nomd[!rownames(butternutgen_nomd@tab) %in% 
 
 butternut_df_reduced <- butternutrel_df[!butternutrel_df$Ind %in% relate_ind,]
 
+##rerun stuff with 44 populations instead of just two to identify pwfst results
+
+
+
+
 
 
 
