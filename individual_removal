@@ -6,6 +6,7 @@ library(tidyr)
 library(hierfstat)
 library(poppr)
 library(Demerelate)
+library(rworldmap)
 
 ##load butternut document
 
