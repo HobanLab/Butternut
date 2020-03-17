@@ -1,12 +1,12 @@
 # butternut
 Collection of all code for butternut
 library(adegenet)
-library(adegenet)
 library(stringr)
 library(tidyr)
 library(hierfstat)
 library(poppr)
-library()
+library(Demerelate)
+
 ##load butternut document
 
 ##setwd("C:/Users/eschumacher/Documents/MortonArboretum/")
@@ -63,3 +63,7 @@ relate_ind_remove <- unique(butternut_halfsib_names_cleanback)
 butternutgen_reduced <- butternutgen_nomd[!rownames(butternutgen_nomd@tab) %in% relate_ind,]
 
 butternut_df_reduced <- butternutrel_df[!butternutrel_df$Ind %in% relate_ind,]
+
+
+
+
