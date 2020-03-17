@@ -73,5 +73,86 @@ butternutgen_reduced <- butternutgen_nomd[!rownames(butternutgen_nomd@tab) %in% 
 butternut_df_reduced <- butternutrel_df[!butternutrel_df$Ind %in% relate_ind,]
 
 
+##calculate PWFst 
+butternut <- read.csv("butternut1.csv")
+butternutnames <- unique(butternut$Pop)
+
+butternut_fst<-as.matrix(pairwise.fst(butternutgen_reduced))
+butternut_fst[butternut_fst==0]<-NA
+rownames(butternut_fst) <- butternutnames
+colnames(butternut_fst) <- butternutnames
+
+##now do lon lat calcs
+butternut_mean_lon <- matrix()
+butternut_mean_lat <- matrix()
+
+##loops for mean lat/lon
+for(pop in butternutnames){
+  
+  butternut_mean_lon[pop] <- mean(butternutdf_reduced_2[butternutdf_reduced_2$Pop == pop,][,3])
+  
+  
+}
+
+for(pop in butternutnames){
+  
+  butternut_mean_lat[pop] <- mean(butternutdf_reduced_2[butternutdf_reduced_2$Pop == pop,][,4])
+  
+  
+}
+
+##convert to matrix
+butternut_mean_lon <- matrix(butternut_mean_lon)
+butternut_mean_lat <- matrix(butternut_mean_lat)
+
+##document cleanup
+butternut_mean_lon <- butternut_mean_lon[-1]
+butternut_mean_lat <- butternut_mean_lat[-1]
+
+#combine into one document for mean long and lat for each pop
+butternut_mean_coords <- matrix(ncol = 2, nrow = 44)
+butternut_mean_coords[,1] <- butternut_mean_lon
+butternut_mean_coords[,2] <- butternut_mean_lat
+rownames(butternut_mean_coords) <- butternutnames
+colnames(butternut_mean_coords) <- c("Mean Lon", "Mean Lat")
+
+
+
+
+#calculate mean PWFst of each population to identify each population's avg difference between all other pops
+butternut_fst2 <- matrix()
+
+for(a in 1:44){
+  
+  butternut_fst2[a] <- mean(butternut_fst[a,], na.rm = TRUE)
+  
+}
+
+butternut_fst2 <- data.frame(butternut_fst2)
+
+##combine into one document
+butternut_fst_lat <- cbind(butternut_mean_lat,butternut_fst2)
+rownames(butternut_fst_lat) <- butternutnames
+
+#assign Canadian vs. US to better visualize
+new_group <- matrix(ncol = 2, nrow = 44)
+new_group[1:24] <- "Canada"
+new_group[25:44] <- "United States"
+butternut_fst_lat[,3] <- new_group[,1]
+colnames(butternut_fst_lat) <- c("Latitude", "Mean PWFst","Population")
+rownames(butternut_fst_lat) <- butternutnames
+butternut_fst_lat <- data.frame(butternut_fst_lat)
+
+
+##plot mean population coords on a map
+
+butternutmap <- getMap(resolution = "low")
+plot(butternutmap, xlim = c(min(butternut_mean_coords[,1]), max(butternut_mean_coords[,1])), ylim = c(min(butternut_mean_coords[,2]),max(butternut_mean_coords[,2])))
+points(butternut_mean_coords[,1],butternut_mean_coords[,2], col = "red", cex = 1)
+text(butternut_mean_coords[,1],butternut_mean_coords[,2], label = rownames(butternut_mean_coords), pos = 1, offset = 0.5)
+
+##now plot mean pwfst and against mean lat
+ggplot(data = butternut_fst_lat, aes(butternut_fst_lat[,1], butternut_fst_lat[,2])) + geom_point(aes(color = butternut_fst_lat[,3]), size = 2) + theme_bw() + xlab("Mean Lat") + ylab("PWFst") + scale_fill_discrete(name = "Population") + geom_smooth(method = "lm", se = FALSE, color = "black", formula = y ~ x) + geom_label_repel(aes(label = rownames(butternut_fst_lat), vjust = 2))
+
 
 
