@@ -1,5 +1,8 @@
-# butternut
 Collection of all code for butternut
+#############
+Libraries
+#############
+
 library(adegenet)
 library(stringr)
 library(tidyr)
@@ -12,26 +15,34 @@ library(ggplot2)
 library(ggrepel)
 library(geosphere)
 
+########################
+Scoring Comparisons
+########################
+
 ##load butternut document
 
 ##setwd("C:/Users/eschumacher/Documents/MortonArboretum/")
 ##personal computer
 setwd("C:/Users/eksch/Documents/MortonArboretum")
 
+##load genepop files
 butternutgen <- read.genepop("butternut_USCAN.gen", ncode = 3)
 
 butternutpop <- genind2genpop(butternutgen)
 
-##name rows with individual IDs and load in raw allele doc
+##load data frame 
 
 butternut_df <- read.csv("butternut1.csv")
 
+##name rows with individual IDs and load in raw allele doc
+
 rownames(butternutgen@tab) <- as.character(butternut_df$Sample.no.)
 
-##first identify if there were scoring discrepencies between Sean and Jeanne
+##create list of loci 
 
 loci <- c("B114","B159","WGA","A5_2","B157","B212_2","B121",	"B147",	"B249",	"B262","B264")
 
+##loop to compare US, Jeanne's Canada, and Sean's Canada scoring 
 pdf(file=paste0("locibarplot.pdf"),width=40,height=9)
 
 for(a in loci){
@@ -50,6 +61,9 @@ for(a in loci){
 
 dev.off()
 
+############################
+Individual Reduction
+############################
 
 ##now remove individuals with greater than 25% missing data
 
@@ -77,6 +91,9 @@ butternutgen_reduced <- butternutgen_nomd[!rownames(butternutgen_nomd@tab) %in% 
 
 butternut_df_reduced <- butternutrel_df[!butternutrel_df$Ind %in% relate_ind,]
 
+######################################
+Genetic Analyses - Fst vs. Mean Lat
+######################################
 
 ##calculate PWFst 
 butternut <- read.csv("butternut1.csv")
@@ -121,9 +138,6 @@ butternut_mean_coords[,2] <- butternut_mean_lat
 rownames(butternut_mean_coords) <- butternutnames
 colnames(butternut_mean_coords) <- c("Mean Lon", "Mean Lat")
 
-
-
-
 #calculate mean PWFst of each population to identify each population's avg difference between all other pops
 butternut_fst2 <- matrix()
 
@@ -148,7 +162,6 @@ colnames(butternut_fst_lat) <- c("Latitude", "Mean PWFst","Population")
 rownames(butternut_fst_lat) <- butternutnames
 butternut_fst_lat <- data.frame(butternut_fst_lat)
 
-
 ##plot mean population coords on a map
 
 butternutmap <- getMap(resolution = "low")
@@ -158,6 +171,10 @@ text(butternut_mean_coords[,1],butternut_mean_coords[,2], label = rownames(butte
 
 ##now plot mean pwfst and against mean lat
 ggplot(data = butternut_fst_lat, aes(butternut_fst_lat[,1], butternut_fst_lat[,2])) + geom_point(aes(color = butternut_fst_lat[,3]), size = 2) + theme_bw() + xlab("Mean Lat") + ylab("PWFst") + scale_fill_discrete(name = "Population") + geom_smooth(method = "lm", se = FALSE, color = "black", formula = y ~ x) + geom_label_repel(aes(label = rownames(butternut_fst_lat), vjust = 2))
+
+######################################
+Genetic Analyses - IBD
+######################################
 
 ##calculate distance to identify if there is isolation by distance 
 butternut_dist <- matrix(nrow = 44, ncol = 44)
