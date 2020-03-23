@@ -84,35 +84,33 @@ butternut_latlon_nomd <- butternut_latlon[butternut_latlon$Ind %in% butternut_24
 ##then reduce it by relatedness individuals
 butternut_24pop_coords <- butternut_latlon_nomd[!butternut_latlon_nomd$Ind %in% relate_ind_remove,]
 
-
 ######################################
 Genetic Analyses - Fst vs. Mean Lat
 ######################################
 
 ##calculate PWFst 
-butternut <- read.csv("butternut1.csv")
-butternutnames <- unique(butternut$Pop)
+butternut_24pop_fst<-as.matrix(pairwise.fst(butternutgen_reduced))
 
-butternut_fst<-as.matrix(pairwise.fst(butternutgen_reduced))
-butternut_fst[butternut_fst==0]<-NA
-rownames(butternut_fst) <- butternutnames
-colnames(butternut_fst) <- butternutnames
+##code to create name file
+butternut_24pop_names <- unique(butternut_24pop_coords$Pop)
+
+rownames(butternut_24pop_fst) <- butternut_24pop_names
+colnames(butternut_24pop_fst) <- butternut_24pop_names
 
 ##now do lon lat calcs
 butternut_mean_lon <- matrix()
 butternut_mean_lat <- matrix()
 
 ##loops for mean lat/lon
-for(pop in butternutnames){
+for(pop in butternut_24pop_names){
   
-  butternut_mean_lon[pop] <- mean(butternutdf_reduced_2[butternutdf_reduced_2$Pop == pop,][,3])
-  
+    butternut_mean_lon[pop] <- mean(butternut_24pop_coords[butternut_24pop_coords$Pop == pop,][,3])  
   
 }
 
-for(pop in butternutnames){
+for(pop in butternut_24pop_names){
   
-  butternut_mean_lat[pop] <- mean(butternutdf_reduced_2[butternutdf_reduced_2$Pop == pop,][,4])
+    butternut_mean_lat[pop] <- mean(butternut_24pop_coords[butternut_24pop_coords$Pop == pop,][,4])  
   
   
 }
@@ -126,40 +124,36 @@ butternut_mean_lon <- butternut_mean_lon[-1]
 butternut_mean_lat <- butternut_mean_lat[-1]
 
 #combine into one document for mean long and lat for each pop
-butternut_mean_coords <- matrix(ncol = 2, nrow = 44)
-butternut_mean_coords[,1] <- butternut_mean_lon
-butternut_mean_coords[,2] <- butternut_mean_lat
-rownames(butternut_mean_coords) <- butternutnames
-colnames(butternut_mean_coords) <- c("Mean Lon", "Mean Lat")
+butternut_coord_df <- matrix(ncol = 2, nrow = 24)
+butternut_coord_df[,1] <- butternut_mean_lon
+butternut_coord_df[,2] <- butternut_mean_lat
+rownames(butternut_coord_df) <- butternut_24pop_names
+colnames(butternut_coord_df) <- c("Mean Lon", "Mean Lat")
 
 #calculate mean PWFst of each population to identify each population's avg difference between all other pops
-butternut_fst2 <- matrix()
+butternut_meanfst <- matrix()
 
-for(a in 1:44){
+for(a in 1:24){
   
-  butternut_fst2[a] <- mean(butternut_fst[a,], na.rm = TRUE)
+  butternut_meanfst[a] <- mean(butternut_24pop_fst[a,], na.rm = TRUE)
   
 }
 
 butternut_fst2 <- data.frame(butternut_fst2)
 
-##combine into one document
-butternut_fst_lat <- cbind(butternut_mean_lat,butternut_fst2)
-rownames(butternut_fst_lat) <- butternutnames
-
 #assign Canadian vs. US to better visualize
 new_group <- matrix(ncol = 2, nrow = 44)
-new_group[1:24] <- "Canada"
-new_group[25:44] <- "United States"
+new_group[1:11] <- "Canada"
+new_group[12:24] <- "United States"
 butternut_fst_lat[,3] <- new_group[,1]
-colnames(butternut_fst_lat) <- c("Latitude", "Mean PWFst","Population")
-rownames(butternut_fst_lat) <- butternutnames
-butternut_fst_lat <- data.frame(butternut_fst_lat)
+butternut_lat_fst_comp <- cbind(butternut_mean_lat, butternut_meanfst, new_group)
+butternut_lat_fst_comp <- butternut_lat_fst_comp[,-4]
+rownames(butternut_lat_fst_comp) <- butternut_24pop_names
+colnames(butternut_lat_fst_comp) <- c("Latitude", "Mean PWFst","Population")
 
 ##plot mean population coords on a map
-
 butternutmap <- getMap(resolution = "low")
-plot(butternutmap, xlim = c(min(butternut_mean_coords[,1]), max(butternut_mean_coords[,1])), ylim = c(min(butternut_mean_coords[,2]),max(butternut_mean_coords[,2])))
+plot(butternutmap, xlim = c(min(butternut_coord_df[,1]), max(butternut_coord_df[,1])), ylim = c(min(butternut_coord_df[,2]),max(butternut_coord_df[,2])))
 points(butternut_mean_coords[,1],butternut_mean_coords[,2], col = "red", cex = 1)
 text(butternut_mean_coords[,1],butternut_mean_coords[,2], label = rownames(butternut_mean_coords), pos = 1, offset = 0.5)
 
