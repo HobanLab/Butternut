@@ -154,8 +154,8 @@ colnames(butternut_lat_fst_comp) <- c("Latitude", "Mean PWFst","Population")
 ##plot mean population coords on a map
 butternutmap <- getMap(resolution = "low")
 plot(butternutmap, xlim = c(min(butternut_coord_df[,1]), max(butternut_coord_df[,1])), ylim = c(min(butternut_coord_df[,2]),max(butternut_coord_df[,2])))
-points(butternut_mean_coords[,1],butternut_mean_coords[,2], col = "red", cex = 1)
-text(butternut_mean_coords[,1],butternut_mean_coords[,2], label = rownames(butternut_mean_coords), pos = 1, offset = 0.5)
+points(butternut_coord_df[,1],butternut_coord_df[,2], col = c("red","blue")[butternut_fst_lat[,3]], cex = 1, pch = 16)
+text(butternut_coord_df[,1],butternut_coord_df[,2], label = rownames(butternut_coord_df), pos = 2, offset = 0.5, cex = 0.5)
 
 ##now plot mean pwfst and against mean lat
 ggplot(data = butternut_fst_lat, aes(butternut_fst_lat[,1], butternut_fst_lat[,2])) + geom_point(aes(color = butternut_fst_lat[,3]), size = 2) + theme_bw() + xlab("Mean Lat") + ylab("PWFst") + scale_fill_discrete(name = "Population") + geom_smooth(method = "lm", se = FALSE, color = "black", formula = y ~ x) + geom_label_repel(aes(label = rownames(butternut_fst_lat), vjust = 2))
