@@ -187,5 +187,23 @@ pdf(file=paste0("dist_fst_plot.pdf"),width=6,height=6)
 dist_fst_plot <- plot(dist_fst[,,2],dist_fst[,,1], xlab = "Distance (km)", ylab = "PWFst", col = c("red","blue","purple"))
 dev.off()
 
+######################################
+Genetic Analyses - Clustering 
+######################################
+##Create genepop file from genind
+butternutgen_24pop_genpop <- genind2genpop(butternutgen_24pop_reduced) 
+
+##then create clustering file
+butternut_24pop_ca_genpop <- dudi.coa(butternutgen_24pop_genpop@tab, scannf = FALSE, nf = 3)
+
+##to export to a file
+pdf(file="pca_24pop_bypop.pdf", width=6,height=6)
+s.label(butternut_24pop_ca_genpop$li, sub="CA 1-2",csub=2)
+dev.off()
+
+
+
+
+
 
 
