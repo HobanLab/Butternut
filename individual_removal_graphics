@@ -163,27 +163,29 @@ ggplot(data = butternut_fst_lat, aes(butternut_fst_lat[,1], butternut_fst_lat[,2
 ######################################
 Genetic Analyses - IBD
 ######################################
+##create a length vector
+butternut_pops_n <- length(unique(butternut_rel_24pop$Pop))
 
 ##calculate distance to identify if there is isolation by distance 
-butternut_dist <- matrix(nrow = 44, ncol = 44)
+butternut_dist <- matrix(nrow = butternut_pops_n, ncol = butternut_pops_n)
 
-for(first in 1:44){
-  for(second in 1:44){
-    butternut_dist[first,second] <-  distm(butternut_mean_coords[first,], butternut_mean_coords[second,], fun = distGeo)/1000
+for(first in 1:butternut_pops_n){
+  for(second in 1:butternut_pops_n){
+    butternut_dist[first,second] <-  distm(butternut_coord_df[first,], butternut_coord_df[second,], fun = distGeo)/1000
   }
 }
 
 ##replace NAs with 0 for IBD plot
-butternut_fst[is.na(butternut_fst)] <- 0
-rownames(butternut_dist) <- butternutnames
-colnames(butternut_dist) <- butternutnames
+rownames(butternut_dist) <- butternut_24pop_names
+colnames(butternut_dist) <- butternut_24pop_names
 
-##compare distance and fst into an array
-dist_fst <- array(c(butternut_fst,butternut_dist), dim = c(44,44,2))
+##combine files to create an array
+dist_fst <- array(c(butternut_24pop_fst,butternut_dist), dim = c(butternut_pops_n,butternut_pops_n,2))
 
-plot(dist_fst[,,2],dist_fst[,,1], xlab = "Distance (km)", ylab = "PW Fst")
+##generate IBD plot
+pdf(file=paste0("dist_fst_plot.pdf"),width=6,height=6)
+dist_fst_plot <- plot(dist_fst[,,2],dist_fst[,,1], xlab = "Distance (km)", ylab = "PWFst", col = c("red","blue","purple"))
+dev.off()
 
-##plot against 
-dist_fst_r <- array(c(butternut_fst,butternut_dist), dim = c(44,44,2))
-plot(dist_fst_r[,,2],dist_fst_r[,,1], xlab = "Distance (km)", ylab = "PW Fst")
+
 
