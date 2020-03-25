@@ -348,3 +348,18 @@ legend('topleft', legend = rp_8loci_fst, bty = 'n', border = "black", pt.cex = 1
 text(butternut_8loci_fst_lat[,1],butternut_8loci_fst_lat[,2], label = rownames(butternut_8loci_fst_lat), pos = 2.5, offset = 0.5, cex = 0.8)
 abline(butternut_8loci_fstlat_lm, col = "blue")
 dev.off()
+
+############################
+8 loci - IBD Plot
+############################
+
+pdf(file=paste0("dist_fst_8loci_col.pdf"),width=6,height=6)
+
+plot(dist_fst_8loci[12:24,1:11,2],dist_fst_8loci[12:24,1:11,1], pch = 16, col = "mediumpurple1", xlab = "Distance (km)", ylab = "PWFst")
+points(dist_fst_8loci[1:11,1:11,2],dist_fst_8loci[1:11,1:11,1], col = "red1", xlab = "Distance (km)", ylab = "PWFst", pch = 16)
+points(dist_fst_8loci[12:24,12:24,2],dist_fst_8loci[12:24,12:24,1], pch = 16, col = "dodgerblue2")
+legend('topright',c("Canada vs Canada", "US v US", "US v Canada"), text.col = c("red1","dodgerblue2","mediumpurple1"), cex = 0.75, pt.cex = 0.75)
+dev.off()
+
+
+
