@@ -349,10 +349,11 @@ text(butternut_8loci_fst_lat[,1],butternut_8loci_fst_lat[,2], label = rownames(b
 abline(butternut_8loci_fstlat_lm, col = "blue")
 dev.off()
 
-############################
-8 loci - IBD Plot
-############################
+#####################################
+8 loci - Genetic Diversity Plotting 
+#####################################
 
+##IBD plot
 pdf(file=paste0("dist_fst_8loci_col.pdf"),width=6,height=6)
 
 plot(dist_fst_8loci[12:24,1:11,2],dist_fst_8loci[12:24,1:11,1], pch = 16, col = "mediumpurple1", xlab = "Distance (km)", ylab = "PWFst")
@@ -361,5 +362,46 @@ points(dist_fst_8loci[12:24,12:24,2],dist_fst_8loci[12:24,12:24,1], pch = 16, co
 legend('topright',c("Canada vs Canada", "US v US", "US v Canada"), text.col = c("red1","dodgerblue2","mediumpurple1"), cex = 0.75, pt.cex = 0.75)
 dev.off()
 
+##graph comparing expected heterozygosity to mean lat
+##create figures - compare latitudes with Hexp and allelic richness 
+hexp_lat_8loci_lm <- lm(butternut_8loci_hexp~butternut_coord_df[,2])
+hexp_lat_8loci_sum <- summary(hexp_lat_8loci_lm)
+
+r2_hexp_8loci <- hexp_lat_8loci_sum$adj.r.squared
+coef_hexp_8loci <- hexp_lat_8loci_sum$coefficients
+pvalue_hexp_8loci <- coef_hexp_8loci[2,4]
+rp_hexp_8loci <- vector('expression',2)
+rp_hexp_8loci[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
+                         list(MYVALUE = format(r2_hexp_8loci,dig=3)))[2]
+rp_hexp_8loci[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
+                        list(MYOTHERVALUE = format(pvalue_hexp_8loci, digits = 2)))[2]
+
+pdf(file="lat_hexp_8loci_zoomout.pdf", width=7,height=6)
+plot(butternut_coord_df[,2], butternut_8loci_hexp, pch = 16, xlab = "Mean Latitude", ylab = "Expected Heterozygosity", ylim = c(0,1))
+text(butternut_coord_df[,2], butternut_8loci_hexp, label = rownames(butternut_coord_df), pos = 4, offset = 0.5, cex = 0.8)
+legend('bottomleft', legend = rp_hexp_8loci, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
+abline(hexp_lat_8loci_lm, col = "blue")
+dev.off()
+
+##generate r2 and p values for linear relationship between allelic richness 
+allrich_8loci_lm <- lm(butternut_8loci_allrich~butternut_coord_df[,2])
+allrich_8loci_lmsum <- summary(allrich_8loci_lm)
+
+r2_allrich_8loci <- allrich_8loci_lmsum$adj.r.squared
+coef_allrich_8loci <- allrich_8loci_lmsum$coefficients
+pvalue_allrich_8loci <- coef_allrich_8loci[2,4]
+rp_allrich_8loci <- vector('expression',2)
+rp_allrich_8loci[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
+                            list(MYVALUE = format(r2_allrich_8loci,dig=3)))[2]
+rp_allrich_8loci[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
+                           list(MYOTHERVALUE = format(pvalue_allrich_8loci, digits = 2)))[2]
+
+##plot relationship between allelic richness and mean latitude
+pdf(file="lat_allrich_8loci_zoomout.pdf", width=6,height=6)
+plot(butternut_coord_df[,2],butternut_8loci_allrich, pch = 16, xlab = "Mean Latitude", ylab = "Average Allelic Richness", ylim = c(0,10))
+text(butternut_coord_df[,2], butternut_8loci_allrich, label = rownames(butternut_coord_df), pos = 4, offset = 0.5, cex = 0.8)
+legend('bottomleft', legend = rp_allrich_8loci, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
+abline(allrich_8loci_lm, col = "blue")
+dev.off()
 
 
