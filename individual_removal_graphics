@@ -277,3 +277,74 @@ legend('bottomleft', legend = rp_allrich, bty = 'n', border = "black", pt.cex = 
 abline(allrich_lm, col = "blue")
 dev.off()
 
+############################
+Loci Removal - 8 loci
+############################
+##
+butternutgen_24pop_8loci <- butternutgen_24pop_reduced[loc=-c(5,6,10)]
+
+############################
+8 loci - clustering 
+############################
+##create a PCA from 8 loci - individuals
+butternut_24pop_8loci_rel <- read.csv("butternut_24pop_8loci_rel.csv")
+
+butternut_24pop_pca_ind <- dudi.coa(butternut_24pop_8loci_rel[,3:18], scannf = FALSE, nf = 3)
+
+pdf(file="butternutPCA_24pop_8loci_individuals.pdf", width=6,height=6)
+s.label(butternut_24pop_pca_ind$li, sub="CA 1-2",csub=2, label = butternut_24pop_8loci_rel[,1])
+dev.off()
+
+##now do it with populations
+
+butternutpop_24pop_8loci <- genind2genpop(butternutgen_24pop_8loci)
+
+butternutPCA_24pop_8loci_genpop <- dudi.coa(butternutpop_24pop_8loci@tab, scannf = FALSE, nf = 3)
+
+pdf(file="PCA_populations_24pop_8loci.pdf", width=6,height=6)
+s.label(butternutPCA_24pop_8loci_genpop$li,sub="CA 1-2")
+dev.off()
+
+############################
+8 loci - genetic diversity 
+############################
+
+##Lat vs. PWFst
+butternut_24pop_8loci_fst <- as.matrix(pairwise.fst(butternutgen_24pop_8loci))
+
+##calculating mean fst
+
+butternut_8loci_meanfst <- matrix()
+
+for(a in 1:24){
+  
+  butternut_8loci_meanfst[a] <- mean(butternut_24pop_8loci_fst[a,], na.rm = TRUE)
+  
+}
+
+butternut_8loci_fst_lat <- cbind(butternut_coord_df[,2],butternut_8loci_meanfst)
+rownames(butternut_8loci_fst_lat) <- butternut_24pop_names
+colnames(butternut_8loci_fst_lat) <- c("Mean Lat","Mean Fst")
+
+##now plot the comparison
+butternut_8loci_fstlat_lm <- lm(butternut_8loci_fst_lat[,2]~butternut_8loci_fst_lat[,1])
+butternut_8loci_lm_summary <- summary(butternut_8loci_fstlat_lm)
+
+r2_8loci_fst <- butternut_8loci_lm_summary$adj.r.squared
+coef_8loci_fst <- butternut_8loci_lm_summary$coefficients
+pvalue_8loci_fst <- coef_8loci_fst[2,4]
+rp_8loci_fst <- vector('expression',2)
+rp_8loci_fst[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
+                            list(MYVALUE = format(r2_8loci_fst,dig=3)))[2]
+rp_8loci_fst[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
+                           list(MYOTHERVALUE = format(pvalue_8loci_fst, digits = 2)))[2]
+
+
+
+
+pdf(file="butternut_24pop_8loci_fstlat.pdf", width=6,height=6)
+plot(butternut_8loci_fst_lat[,1],butternut_8loci_fst_lat[,2], xlab = "Mean Lat", ylab = "Mean Population Fst", pch = 16)
+legend('topleft', legend = rp_8loci_fst, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
+text(butternut_8loci_fst_lat[,1],butternut_8loci_fst_lat[,2], label = rownames(butternut_8loci_fst_lat), pos = 2.5, offset = 0.5, cex = 0.8)
+abline(butternut_8loci_fstlat_lm, col = "blue")
+dev.off()
