@@ -201,9 +201,79 @@ pdf(file="pca_24pop_bypop.pdf", width=6,height=6)
 s.label(butternut_24pop_ca_genpop$li, sub="CA 1-2",csub=2)
 dev.off()
 
+#############################################
+Genetic Analyses - Genetic Diversity Stats 
+#############################################
+
+##create data matrix
+butternut_sumstats<-summary(butternutgen_24pop_reduced)
+butternut_poppr <- poppr(butternutgen_24pop_reduced)
+
+butternut_ind <- butternut_poppr[1:24,2]
+butternut_mlg <- butternut_poppr[1:24,3]
+butternut_popnall <- butternut_sumstats$pop.n.all
+butternut_allrich <- colSums(allelic.richness(butternutgen_24pop_reduced)$Ar)/ length(butternutgen_24pop_reduced@loc.n.all)
+butternut_hexp <- butternut_poppr[1:24,10]
+
+##relatedness 
+
+butternut_24pop_wang<-Demerelate(butternut_24pop_rel,object=T,value="wang")
+
+butternut_24pop_ritland<-Demerelate(butternut_24pop_rel,object=T,value="ritland")
+
+butternut_24pop_mxy<-Demerelate(butternut_24pop_rel,object=T,value="Mxy")
+
+#means of pairwise relatedness within each population
+butternut_24pop_wang_mean<-unlist(lapply(butternut_24pop_wang$Empirical_Relatedness,mean))
+
+butternut_24pop_ritland_mean<-unlist(lapply(butternut_24pop_ritland$Empirical_Relatedness,mean))
+
+butternut_24pop_mxy_mean<-unlist(lapply(butternut_24pop_mxy$Empirical_Relatedness,mean))
+
+##create genetic diversity statistics table
+butternut_24pop_gendiv <- cbind(butternut_ind, butternut_mlg, butternut_popnall,butternut_allrich,butternut_hexp,butternut_24pop_wang_mean,butternut_24pop_ritland_mean,butternut_24pop_mxy_mean)
+
+##name genetic diversity statistic table
+rownames(butternut_24pop_gendiv) <- butternut_24pop_names
+colnames(butternut_24pop_gendiv) <- c("N", "MLG", "N Alleles", "Allelic Richness", "H Exp", "Wang Rel", "Ritland Rel", "Mxy Rel")
+write.csv(butternut_24pop_gendiv, "butternut_24pop_gendiv.csv")
 
 
+##create figures - compare latitudes with Hexp and allelic richness 
+hexp_lat_lm <- lm(butternut_hexp~butternut_coord_df[,2])
+hexp_lat_sum <- summary(hexp_lat_lm)
 
+r2_hexp <- hexp_lat_sum$adj.r.squared
+coef_hexp <- hexp_lat_sum$coefficients
+pvalue_hexp <- coef_hexp[2,4]
+rp_hexp <- vector('expression',2)
+rp_hexp[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
+                          list(MYVALUE = format(r2_hexp,dig=3)))[2]
+rp_hexp[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
+                         list(MYOTHERVALUE = format(pvalue_hexp, digits = 2)))[2]
 
+pdf(file="lat_hexp_7_8.pdf", width=6,height=6)
+plot(butternut_coord_df[,2], butternut_hexp, pch = 16, xlab = "Mean Latitude", ylab = "Expected Heterozygosity")
+text(butternut_coord_df[,2], butternut_hexp, label = rownames(butternut_coord_df), pos = 2.5, offset = 0.5, cex = 0.8)
+legend('bottomleft', legend = rp_hexp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
+abline(hexp_lat_lm, col = "blue")
+dev.off()
 
+##generate r2 and p values for linear relationship between allelic richness 
+r2_allrich <- allrich_lm_sum$adj.r.squared
+coef_allrich <- allrich_lm_sum$coefficients
+pvalue_allrich <- coef_allrich[2,4]
+rp_allrich <- vector('expression',2)
+rp_allrich[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
+                         list(MYVALUE = format(r2_allrich,dig=3)))[2]
+rp_allrich[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
+                        list(MYOTHERVALUE = format(pvalue_allrich, digits = 2)))[2]
+                        
+##plot relationship between allelic richness and mean latitude
+pdf(file="lat_allrichness_zoomout.pdf", width=6,height=6)
+plot(butternut_coord_df[,2],butternut_allrich, pch = 16, xlab = "Mean Latitude", ylab = "Average Allelic Richness")
+text(butternut_coord_df[,2], butternut_allrich, label = rownames(butternut_coord_df), pos = 2.5, offset = 0.5, cex = 0.8)
+legend('bottomleft', legend = rp_allrich, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
+abline(allrich_lm, col = "blue")
+dev.off()
 
