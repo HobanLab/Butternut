@@ -401,4 +401,39 @@ legend('bottomleft', legend = rp_allrich_8loci, bty = 'n', border = "black", pt.
 abline(allrich_8loci_lm, col = "blue")
 dev.off()
 
+###############################################
+11 loci, 44 population updated plotting
+###############################################
 
+butternut_44pop_latfst_lm <- lm(butternut_44pop_lat_fst[,1]~butternut_44pop_lat_fst[,2])
+butternut_44pop_latfst_lm_sum <- summary(butternut_44pop_latfst_lm)
+
+r2_44pop_latfst <- butternut_44pop_latfst_lm_sum$adj.r.squared
+coef_44pop_latfst <- butternut_44pop_latfst_lm_sum$coefficients
+pvalue_44pop_latfst <- coef_44pop_latfst[2,4]
+rp_44pop_latfst <- vector('expression',2)
+rp_44pop_latfst[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
+                         list(MYVALUE = format(r2_44pop_latfst,dig=3)))[2]
+rp_44pop_latfst[2] <- substitute(expression(italic(p) == MYOTHERVALUE), 
+                        list(MYOTHERVALUE = format(pvalue_44pop_latfst, digits = 2)))[2]
+
+library(poppr)
+
+##butternut poppr 
+butternut_poppr <- poppr(butternut_44pop_gen)
+butternut_ind <- butternut_poppr[1:44,2]
+
+setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/Graphical_Stat_Results/PreIndRemoval")
+
+usvcan <- data.frame(nrow = 44, ncol = 1)
+usvcan[1:24,1] <- "red"
+usvcan[25:44,1] <- "blue"
+butternut_44pop_col <- cbind(butternut_44pop_lat_fst,usvcan)
+
+pdf(file="latfst_44pops.pdf", width=10,height=6)
+plot(butternut_44pop_col[,1]~butternut_44pop_col[,2], pch = 16,  cex = c(butternut_ind/75), xlab = "Mean Latitude", ylab = "Mean Fst", col = butternut_44pop_col[,3])
+text(butternut_44pop_lat_fst[,1]~butternut_44pop_lat_fst[,2], label = rownames(butternut_44pop_lat_fst), pos = 4, offset = 0.5, cex = 0.8)
+legend('topleft', legend = rp_44pop_latfst, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
+legend('top', legend = c("Canada","US"), pch = 16, col = c("firebrick4","dodgerblue"))
+abline(butternut_44pop_latfst_lm, col = "blue")
+dev.off()
