@@ -14,6 +14,7 @@ library(data.table)
 library(ggplot2)
 library(ggrepel)
 library(geosphere)
+library(stataG)
 
 #############################
 Working Directory
@@ -436,4 +437,27 @@ text(butternut_44pop_lat_fst[,1]~butternut_44pop_lat_fst[,2], label = rownames(b
 legend('topleft', legend = rp_44pop_latfst, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
 legend('top', legend = c("Canada","US"), pch = 16, col = c("firebrick4","dodgerblue"))
 abline(butternut_44pop_latfst_lm, col = "blue")
+dev.off()
+
+###############################################
+Structure Diagrams
+###############################################
+##load in structure document
+butternut_24pop_11loci_k2 <- read.csv("butternut_k2_11loci_24pop.csv")
+butternut_24pop_11loci_k3 <- read.csv("24pop_11loci_k3.csv")
+butternut_24pop_11loci_k4 <- read.csv("24pop_11loci_k4.csv")
+
+##structure plot - 24 pop, 11 loci, k = 2 
+pdf("butternut_24pop_11loci_k3.pdf", width = 35, height = 6)
+structurePlot(butternut_24pop_11loci_k3, pop.col = 2, prob.col = 3, sort.probs = FALSE, label.pops = TRUE, col = c("dodgerblue","white","dodgerblue4"), horiz = FALSE)
+dev.off()
+
+##structure plot - 24 pop, 11 loci, k = 3 
+pdf("butternut_24pop_11loci_k3.pdf", width = 35, height = 6)
+structurePlot(butternut_24pop_11loci_k3, pop.col = 2, prob.col = 3, sort.probs = FALSE, label.pops = TRUE, col = c("dodgerblue","white","dodgerblue4"), horiz = FALSE)
+dev.off()
+
+##structure plot - 24 pop, 11 loci, k = 4 
+pdf("butternut_24pop_11loci_k4.pdf", width = 35, height = 6)
+structurePlot(butternut_24pop_11loci_k4, pop.col = 2, prob.col = 3, sort.probs = FALSE, label.pops = TRUE, col = c("dodgerblue","white","dodgerblue4", "darkturquoise"), horiz = FALSE)
 dev.off()
