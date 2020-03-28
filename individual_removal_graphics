@@ -113,7 +113,6 @@ for(pop in butternut_24pop_names){
   
     butternut_mean_lat[pop] <- mean(butternut_24pop_coords[butternut_24pop_coords$Pop == pop,][,4])  
   
-  
 }
 
 ##convert to matrix
@@ -140,26 +139,48 @@ for(a in 1:24){
   
 }
 
-butternut_fst2 <- data.frame(butternut_fst2)
+##create mean lat and fst table
+butternut_fst_lat <- cbind(butternut_meanfst,butternut_mean_lat)
 
-#assign Canadian vs. US to better visualize
-new_group <- matrix(ncol = 2, nrow = 44)
-new_group[1:11] <- "Canada"
-new_group[12:24] <- "United States"
-butternut_fst_lat[,3] <- new_group[,1]
-butternut_lat_fst_comp <- cbind(butternut_mean_lat, butternut_meanfst, new_group)
-butternut_lat_fst_comp <- butternut_lat_fst_comp[,-4]
-rownames(butternut_lat_fst_comp) <- butternut_24pop_names
-colnames(butternut_lat_fst_comp) <- c("Latitude", "Mean PWFst","Population")
+##assign Canadian vs. US to better visualize
+new_group <- matrix(ncol = 1, nrow = nrow(butternut_meanfst))
+new_group[1:11] <- "firebrickred1"
+new_group[12:24] <- "dodgerblue"
 
-##plot mean population coords on a map
-butternutmap <- getMap(resolution = "low")
-plot(butternutmap, xlim = c(min(butternut_coord_df[,1]), max(butternut_coord_df[,1])), ylim = c(min(butternut_coord_df[,2]),max(butternut_coord_df[,2])))
-points(butternut_coord_df[,1],butternut_coord_df[,2], col = c("red","blue")[butternut_fst_lat[,3]], cex = 1, pch = 16)
-text(butternut_coord_df[,1],butternut_coord_df[,2], label = rownames(butternut_coord_df), pos = 2, offset = 0.5, cex = 0.5)
+#add color column to create final plotting data frame
+butternut_fst_lat_pop <- cbind(butternut_fst_lat,new_group)
 
-##now plot mean pwfst and against mean lat
-ggplot(data = butternut_fst_lat, aes(butternut_fst_lat[,1], butternut_fst_lat[,2])) + geom_point(aes(color = butternut_fst_lat[,3]), size = 2) + theme_bw() + xlab("Mean Lat") + ylab("PWFst") + scale_fill_discrete(name = "Population") + geom_smooth(method = "lm", se = FALSE, color = "black", formula = y ~ x) + geom_label_repel(aes(label = rownames(butternut_fst_lat), vjust = 2))
+##add names to dataframe
+rownames(butternut_fst_lat_pop) <- butternut_24pop_names
+colnames(butternut_fst_lat_pop) <- c("Latitude", "Mean PWFst","Popcol")
+
+##create linear model for plotting comparison with mean lat compared to mean population fst
+butternut_24pop_latfst_lm <- lm(butternut_fst_lat_pop[,1]~butternut_fst_lat_pop[,2])
+butternut_24pop_latfst_lm_sum <- summary(butternut_24pop_latfst_lm)
+
+##create r squared and p-value legend
+r2_24pop_latfst <- butternut_24pop_latfst_lm_sum$adj.r.squared
+coef_24pop_latfst <- butternut_24pop_latfst_lm_sum$coefficients
+pvalue_24pop_latfst <- coef_24pop_latfst[2,4]
+rp_24pop_latfst <- vector('expression',2)
+rp_24pop_latfst[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
+                         list(MYVALUE = format(r2_24pop_latfst,dig=3)))[2]
+rp_24pop_latfst[2] <- substitute(expression(italic(p) == MYOTHERVALUE), 
+                        list(MYOTHERVALUE = format(pvalue_24pop_latfst, digits = 2)))[2]
+
+##butternut poppr document
+butternut_24pop_poppr <- poppr(butternutgen_24pop_reduced)
+butternut_24pop_ind <- butternutgen_24pop_reduced[1:24,2]
+
+##plot mean lat vs. mean pwfst 
+pdf(file="latfst_24pops.pdf", width=10,height=6)
+plot(butternut_fst_lat_pop[,1]~butternut_fst_lat_pop[,2], pch = 16,  cex = c(butternut_24pop_ind/75), xlab = "Mean Latitude", ylab = "Mean Fst", col = butternut_fst_lat_pop[,3])
+textbutternut_fst_lat_pop[,1]~butternut_fst_lat_pop[,2], label = rownames(butternut_fst_lat_pop), pos = 4, offset = 0.5, cex = 0.8)
+legend('topleft', legend = rp_24pop_latfst, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
+legend('top', legend = c("Canada","US"), pch = 16, col = c("firebrick1","dodgerblue"))
+abline(butternut_24pop_latfst_lm, col = "darkturquoise")
+dev.off()
+
 
 ######################################
 Genetic Analyses - IBD
@@ -216,16 +237,12 @@ butternut_hexp <- butternut_poppr[1:24,10]
 ##relatedness 
 
 butternut_24pop_wang<-Demerelate(butternut_24pop_rel,object=T,value="wang")
-
 butternut_24pop_ritland<-Demerelate(butternut_24pop_rel,object=T,value="ritland")
-
 butternut_24pop_mxy<-Demerelate(butternut_24pop_rel,object=T,value="Mxy")
 
 #means of pairwise relatedness within each population
 butternut_24pop_wang_mean<-unlist(lapply(butternut_24pop_wang$Empirical_Relatedness,mean))
-
 butternut_24pop_ritland_mean<-unlist(lapply(butternut_24pop_ritland$Empirical_Relatedness,mean))
-
 butternut_24pop_mxy_mean<-unlist(lapply(butternut_24pop_mxy$Empirical_Relatedness,mean))
 
 ##create genetic diversity statistics table
@@ -278,7 +295,7 @@ dev.off()
 ############################
 Loci Removal - 8 loci
 ############################
-##
+##remove loci - B157, B212_1, B262
 butternutgen_24pop_8loci <- butternutgen_24pop_reduced[loc=-c(5,6,10)]
 
 ############################
@@ -400,43 +417,6 @@ plot(butternut_coord_df[,2],butternut_8loci_allrich, pch = 16, xlab = "Mean Lati
 text(butternut_coord_df[,2], butternut_8loci_allrich, label = rownames(butternut_coord_df), pos = 4, offset = 0.5, cex = 0.8)
 legend('bottomleft', legend = rp_allrich_8loci, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
 abline(allrich_8loci_lm, col = "blue")
-dev.off()
-
-###############################################
-11 loci, 44 population updated plotting
-###############################################
-
-butternut_44pop_latfst_lm <- lm(butternut_44pop_lat_fst[,1]~butternut_44pop_lat_fst[,2])
-butternut_44pop_latfst_lm_sum <- summary(butternut_44pop_latfst_lm)
-
-r2_44pop_latfst <- butternut_44pop_latfst_lm_sum$adj.r.squared
-coef_44pop_latfst <- butternut_44pop_latfst_lm_sum$coefficients
-pvalue_44pop_latfst <- coef_44pop_latfst[2,4]
-rp_44pop_latfst <- vector('expression',2)
-rp_44pop_latfst[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
-                         list(MYVALUE = format(r2_44pop_latfst,dig=3)))[2]
-rp_44pop_latfst[2] <- substitute(expression(italic(p) == MYOTHERVALUE), 
-                        list(MYOTHERVALUE = format(pvalue_44pop_latfst, digits = 2)))[2]
-
-library(poppr)
-
-##butternut poppr 
-butternut_poppr <- poppr(butternut_44pop_gen)
-butternut_ind <- butternut_poppr[1:44,2]
-
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/Graphical_Stat_Results/PreIndRemoval")
-
-usvcan <- data.frame(nrow = 44, ncol = 1)
-usvcan[1:24,1] <- "red"
-usvcan[25:44,1] <- "blue"
-butternut_44pop_col <- cbind(butternut_44pop_lat_fst,usvcan)
-
-pdf(file="latfst_44pops.pdf", width=10,height=6)
-plot(butternut_44pop_col[,1]~butternut_44pop_col[,2], pch = 16,  cex = c(butternut_ind/75), xlab = "Mean Latitude", ylab = "Mean Fst", col = butternut_44pop_col[,3])
-text(butternut_44pop_lat_fst[,1]~butternut_44pop_lat_fst[,2], label = rownames(butternut_44pop_lat_fst), pos = 4, offset = 0.5, cex = 0.8)
-legend('topleft', legend = rp_44pop_latfst, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
-legend('top', legend = c("Canada","US"), pch = 16, col = c("firebrick4","dodgerblue"))
-abline(butternut_44pop_latfst_lm, col = "blue")
 dev.off()
 
 ###############################################
