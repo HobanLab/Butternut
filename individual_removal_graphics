@@ -77,7 +77,7 @@ relate_ind_remove <- unique(butternut_halfsib_names_cleanback)
 butternutgen_24pop_reduced <- butternutgen_nomd[!rownames(butternutgen_nomd@tab) %in% relate_ind_remove,]
 
 ##data frame to reduce loading
-butternut_latlon <- read.csv("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/24Populations/butternut_24pops_lonlat.csv")
+butternut_latlon <- read.csv("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/24Populations/11loci/butternut_24pops_lonlat.csv")
 
 ##first reduce it by missing data 
 butternut_latlon_nomd <- butternut_latlon[butternut_latlon$Ind %in% butternut_24pop_rel$Ind,]
@@ -90,7 +90,7 @@ Genetic Analyses - Fst vs. Mean Lat
 ######################################
 
 ##calculate PWFst 
-butternut_24pop_fst<-as.matrix(pairwise.fst(butternutgen_reduced))
+butternut_24pop_fst<-as.matrix(pairwise.fst(butternutgen_24pop_reduced))
 
 ##code to create name file
 butternut_24pop_names <- unique(butternut_24pop_coords$Pop)
@@ -148,14 +148,14 @@ new_group[1:11] <- "firebrickred1"
 new_group[12:24] <- "dodgerblue"
 
 #add color column to create final plotting data frame
-butternut_fst_lat_pop <- cbind(butternut_fst_lat,new_group)
+butternut_fst_lat_pop <- cbind(butternut_fst_lat,new_group[,1])
 
 ##add names to dataframe
 rownames(butternut_fst_lat_pop) <- butternut_24pop_names
 colnames(butternut_fst_lat_pop) <- c("Latitude", "Mean PWFst","Popcol")
 
 ##create linear model for plotting comparison with mean lat compared to mean population fst
-butternut_24pop_latfst_lm <- lm(butternut_fst_lat_pop[,1]~butternut_fst_lat_pop[,2])
+butternut_24pop_latfst_lm <- lm(as.numeric(butternut_fst_lat_pop[,1])~as.numeric(butternut_fst_lat_pop[,2]))
 butternut_24pop_latfst_lm_sum <- summary(butternut_24pop_latfst_lm)
 
 ##create r squared and p-value legend
@@ -170,17 +170,16 @@ rp_24pop_latfst[2] <- substitute(expression(italic(p) == MYOTHERVALUE),
 
 ##butternut poppr document
 butternut_24pop_poppr <- poppr(butternutgen_24pop_reduced)
-butternut_24pop_ind <- butternutgen_24pop_reduced[1:24,2]
+butternut_24pop_ind <- butternut_24pop_poppr[1:24,2]
 
 ##plot mean lat vs. mean pwfst 
-pdf(file="latfst_24pops.pdf", width=10,height=6)
-plot(butternut_fst_lat_pop[,1]~butternut_fst_lat_pop[,2], pch = 16,  cex = c(butternut_24pop_ind/75), xlab = "Mean Latitude", ylab = "Mean Fst", col = butternut_fst_lat_pop[,3])
-textbutternut_fst_lat_pop[,1]~butternut_fst_lat_pop[,2], label = rownames(butternut_fst_lat_pop), pos = 4, offset = 0.5, cex = 0.8)
+pdf(file="latfst_24pops_11loci.pdf", width=10,height=6)
+plot(as.numeric(butternut_fst_lat_pop[,1])~as.numeric(butternut_fst_lat_pop[,2]), pch = 16,  cex = c(butternut_24pop_ind/30), xlab = "Mean Latitude", ylab = "Mean Fst", col = butternut_fst_lat_pop[,3])
+text(as.numeric(butternut_fst_lat_pop[,1])~as.numeric(butternut_fst_lat_pop[,2]), label = butternut_24pop_names, cex = 0.8, pos = 3,offset = 0.5)
 legend('topleft', legend = rp_24pop_latfst, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
 legend('top', legend = c("Canada","US"), pch = 16, col = c("firebrick1","dodgerblue"))
-abline(butternut_24pop_latfst_lm, col = "darkturquoise")
+abline(butternut_24pop_latfst_lm, col = "darkblue")
 dev.off()
-
 
 ######################################
 Genetic Analyses - IBD
