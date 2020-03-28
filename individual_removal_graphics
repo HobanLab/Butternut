@@ -52,13 +52,13 @@ dev.off()
 Individual Reduction
 ############################
 ##following pop reclassification - load 24 pop document
-butternut_24pop_gen <- read.genepop("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/24Populations/butternut_24pops.gen", ncode = 3)
+butternut_24pop_gen <- read.genepop("butternut_24pop_gen <- read.genepop("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/24Populations/11loci/butternut_24pops.gen", ncode = 3)
 
 ##now remove individuals with greater than 25% missing data
 butternutgen_nomd <- missingno(butternut_24pop_gen, type = "geno", cutoff = 0.25, quiet = FALSE, freq = FALSE)
 
 #load in relatedness file
-butternut_24pop_rel <- read.csv("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/24Populations/butternut_24pop_rel.csv")
+butternut_24pop_rel <- read.csv("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/24Populations/11loci/butternut_24pop_rel.csv")
 
 ##calculate relatedness
 butternutrel <- Demerelate(butternut_24pop_rel, object = T, value = "loiselle")
