@@ -181,6 +181,30 @@ legend('top', legend = c("Canada","US"), pch = 16, col = c("firebrick1","dodgerb
 abline(butternut_24pop_latfst_lm, col = "darkblue")
 dev.off()
 
+##now calculate mean latitude and pwfst without SFNF12 population because it could be biasing linear model
+butternut_23pop <- butternut_fst_lat_pop[-21,]
+butternut_23pop_latfst_lm <- lm(as.numeric(butternut_23pop[,1])~as.numeric(butternut_23pop[,2]))
+butternut_23pop_latfst_lm_sum <- summary(butternut_23pop_latfst_lm)
+
+##create r squared and p-value legend
+r2_23pop_latfst <- butternut_23pop_latfst_lm_sum$adj.r.squared
+coef_23pop_latfst <- butternut_23pop_latfst_lm_sum$coefficients
+pvalue_23pop_latfst <- coef_23pop_latfst[2,4]
+rp_23pop_latfst <- vector('expression',2)
+rp_23pop_latfst[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
+                                 list(MYVALUE = format(r2_23pop_latfst,dig=3)))[2]
+rp_23pop_latfst[2] <- substitute(expression(italic(p) == MYOTHERVALUE), 
+                                 list(MYOTHERVALUE = format(pvalue_23pop_latfst, digits = 2)))[2]
+                                 
+##plot
+pdf(file="latfst_23pops_11loci.pdf", width=10,height=8)
+plot(as.numeric(butternut_fst_lat_pop[,1])~as.numeric(butternut_fst_lat_pop[,2]), pch = 16,  cex = c(butternut_24pop_ind/30), xlab = "Mean Latitude", ylab = "Mean Fst", col = butternut_fst_lat_pop[,3])
+text(as.numeric(butternut_fst_lat_pop[,1])~as.numeric(butternut_fst_lat_pop[,2]), label = butternut_24pop_names, cex = 0.8, pos = 3,offset = 0.5)
+legend('topleft', legend = rp_23pop_latfst, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
+legend('top', legend = c("Canada","US"), pch = 16, col = c("firebrick1","dodgerblue"))
+abline(butternut_23pop_latfst_lm, col = "darkblue")
+dev.off()
+
 ######################################
 Genetic Analyses - IBD
 ######################################
@@ -198,7 +222,16 @@ for(first in 1:butternut_pops_n){
 
 ##generate IBD plot
 
-##8 loci
+##11 loci IBD plot
+dist_fst_11loci_24pop <- array(c(butternut_24pop_fst,butternut_dist), dim = c(butternut_pops_n,butternut_pops_n,2))
+pdf("dist_fst_11loci_24pop.pdf", width=10,height=8)
+plot(dist_fst_11loci_24pop[12:24,1:11,2],dist_fst_11loci_24pop[12:24,1:11,1], pch = 16, col = "mediumpurple1", xlab = "Distance (km)", ylab = "PWFst")
+points(dist_fst_11loci_24pop[1:11,1:11,2],dist_fst_11loci_24pop[1:11,1:11,1], col = "red1", xlab = "Distance (km)", ylab = "PWFst", pch = 16)
+points(dist_fst_11loci_24pop[12:24,12:24,2],dist_fst_11loci_24pop[12:24,12:24,1], pch = 16, col = "dodgerblue4")
+legend('topright',c("Canada vs Canada", "US v US", "US v Canada"), pch = 16, col = c("red1","dodgerblue4","mediumpurple1"), cex = 0.75, pt.cex = 0.75)
+dev.off()
+
+##8 loci IBD plot
 dist_fst_8loci <- array(c(butternut_24pop_8loci_fst,butternut_dist), dim = c(butternut_pops_n,butternut_pops_n,2))
 plot(dist_fst_8loci[12:24,1:11,2],dist_fst_8loci[12:24,1:11,1], pch = 16, col = "mediumpurple1", xlab = "Distance (km)", ylab = "PWFst")
 points(dist_fst_8loci[1:11,1:11,2],dist_fst_8loci[1:11,1:11,1], col = "red1", xlab = "Distance (km)", ylab = "PWFst", pch = 16)
