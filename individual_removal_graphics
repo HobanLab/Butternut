@@ -307,6 +307,9 @@ abline(hexp_lat_lm, col = "blue")
 dev.off()
 
 ##generate r2 and p values for linear relationship between allelic richness 
+allrich_lm <- lm(butternut_allrich~butternut_coord_df[,2])
+allrich_lm_sum <- summary(allrich_lm)
+
 r2_allrich <- allrich_lm_sum$adj.r.squared
 coef_allrich <- allrich_lm_sum$coefficients
 pvalue_allrich <- coef_allrich[2,4]
