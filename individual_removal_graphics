@@ -144,7 +144,7 @@ butternut_fst_lat <- cbind(butternut_meanfst,butternut_mean_lat)
 
 ##assign Canadian vs. US to better visualize
 new_group <- matrix(ncol = 1, nrow = nrow(butternut_meanfst))
-new_group[1:11] <- "firebrickred1"
+new_group[1:11] <- "firebrick1"
 new_group[12:24] <- "dodgerblue"
 
 #add color column to create final plotting data frame
