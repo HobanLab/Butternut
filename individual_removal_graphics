@@ -14,7 +14,7 @@ library(data.table)
 library(ggplot2)
 library(ggrepel)
 library(geosphere)
-library(stataG)
+library(strataG)
 
 #############################
 Working Directory
