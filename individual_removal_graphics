@@ -457,6 +457,7 @@ dev.off()
 ###############################################
 Structure Diagrams
 ###############################################
+setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/Graphical_Stat_Results/PostIndRemoval/24pop/11loci/STR")
 ##load in structure document
 butternut_24pop_11loci_k2 <- read.csv("butternut_k2_11loci_24pop.csv")
 butternut_24pop_11loci_k3 <- read.csv("24pop_11loci_k3.csv")
