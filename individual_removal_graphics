@@ -1,8 +1,8 @@
 Collection of all code for butternut
+
 #############
 Libraries
 #############
-
 library(adegenet)
 library(stringr)
 library(tidyr)
@@ -15,16 +15,17 @@ library(ggplot2)
 library(ggrepel)
 library(geosphere)
 library(strataG)
+library(plotrix)
 
-#############################
-Working Directory
-#############################
+###############################################
+############## Working Directory ##############
+###############################################
 
 setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI")
 
-########################
-Scoring Comparisons
-########################
+###############################################
+############# Scoring Comparison ##############
+###############################################
 
 ##three pop genind and genpop files
 butternut_3pop_gen <- read.genepop("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/butternut3.gen", ncode = 3)
@@ -48,9 +49,9 @@ for(a in loci){
 
 dev.off()
 
-############################
-Individual Reduction
-############################
+###############################################
+############# Individual Reduction ############
+###############################################
 ##following pop reclassification - load 24 pop document
 butternut_24pop_gen <- read.genepop("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/24Populations/11loci/butternut_24pops.gen", ncode = 3)
 
@@ -85,9 +86,9 @@ butternut_latlon_nomd <- butternut_latlon[butternut_latlon$Ind %in% butternut_24
 ##then reduce it by relatedness individuals
 butternut_24pop_coords <- butternut_latlon_nomd[!butternut_latlon_nomd$Ind %in% relate_ind_remove,]
 
-######################################
-Genetic Analyses - Fst vs. Mean Lat
-######################################
+############################################################
+########## Genetic Analyses - Mean Lat vs. PWFst ###########
+############################################################
 
 ##calculate PWFst 
 butternut_24pop_fst<-as.matrix(pairwise.fst(butternutgen_24pop_reduced))
@@ -231,9 +232,9 @@ points(dist_fst_11loci_24pop[12:24,12:24,2],dist_fst_11loci_24pop[12:24,12:24,1]
 legend('topright',c("Canada vs Canada", "US v US", "US v Canada"), pch = 16, col = c("red1","dodgerblue4","mediumpurple1"), cex = 0.75, pt.cex = 0.75)
 dev.off()
 
-######################################
-Genetic Analyses - Clustering 
-######################################
+#################################################
+####### Genetic Analyses - Clustering ###########
+#################################################
 ##Create genepop file from genind
 butternutgen_24pop_genpop <- genind2genpop(butternutgen_24pop_reduced) 
 
@@ -245,9 +246,9 @@ pdf(file="pca_24pop_bypop.pdf", width=6,height=6)
 s.label(butternut_24pop_ca_genpop$li, sub="CA 1-2",csub=2)
 dev.off()
 
-#############################################
-Genetic Analyses - Genetic Diversity Stats 
-#############################################
+#########################################################
+####### Genetic Analyses - Genetic Dviversity ###########
+#########################################################
 
 ##create data matrix
 butternut_sumstats<-summary(butternutgen_24pop_reduced)
@@ -320,15 +321,15 @@ legend('bottomleft', legend = rp_allrich, bty = 'n', border = "black", pt.cex = 
 abline(allrich_lm, col = "blue")
 dev.off()
 
-############################
-Loci Removal - 8 loci
-############################
+###############################################
+########## Loci Reduction - 8 Loci ############
+###############################################
 ##remove loci - B157, B212_1, B262
 butternutgen_24pop_8loci <- butternutgen_24pop_reduced[loc=-c(5,6,10)]
 
-############################
-8 loci - clustering 
-############################
+###############################################
+############ 8 Loci - Clustering ##############
+###############################################
 ##create a PCA from 8 loci - individuals
 butternut_24pop_8loci_rel <- read.csv("butternut_24pop_8loci_rel.csv")
 
@@ -348,9 +349,9 @@ pdf(file="PCA_populations_24pop_8loci.pdf", width=6,height=6)
 s.label(butternutPCA_24pop_8loci_genpop$li,sub="CA 1-2")
 dev.off()
 
-############################
-8 loci - genetic diversity 
-############################
+###############################################
+######## 8 Loci - Genetic Diversity ###########
+###############################################
 
 ##Lat vs. PWFst
 butternut_24pop_8loci_fst <- as.matrix(pairwise.fst(butternutgen_24pop_8loci))
@@ -392,9 +393,9 @@ text(butternut_8loci_fst_lat[,1],butternut_8loci_fst_lat[,2], label = rownames(b
 abline(butternut_8loci_fstlat_lm, col = "blue")
 dev.off()
 
-#####################################
-8 loci - Genetic Diversity Plotting 
-#####################################
+#########################################################
+######### 8 loci - Genetic Diversity Plotting ###########
+#########################################################
 
 ##IBD plot
 pdf(file=paste0("dist_fst_8loci_col.pdf"),width=6,height=6)
@@ -448,7 +449,7 @@ abline(allrich_8loci_lm, col = "blue")
 dev.off()
 
 ###############################################
-Structure Diagrams
+########### Structure Diagrams ################
 ###############################################
 setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/Graphical_Stat_Results/PostIndRemoval/24pop/11loci/STR")
 ##load in structure document
@@ -470,3 +471,94 @@ dev.off()
 pdf("butternut_24pop_11loci_k4.pdf", width = 35, height = 6)
 structurePlot(butternut_24pop_11loci_k4, pop.col = 2, prob.col = 3, sort.probs = FALSE, label.pops = TRUE, col = c("dodgerblue","white","dodgerblue4", "darkturquoise"), horiz = FALSE)
 dev.off()
+
+###############################################
+####### Calculating Private Alleles ###########
+###############################################
+
+##Calculate private alleles for regional based population groupings 
+
+##first, load in regional scale (NB, WI, Central, South) populations
+setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/4Populations")
+
+butternutgen_4pops <- read.genepop("11loci/butternut_4pop.gen", ncode = 3)
+
+##load in 8 loci allele document
+butternutgen_4pops_8loci <- butternutgen_4pops[loc=-c(5,6,10)]
+
+##create population names document
+butternut_4pop_names <- c("NB","Central","Wisconsin","South")
+
+##11 loci private allele documents
+butternut_priv <- private_alleles(butternutgen_4pops)
+
+##the priv allele counts are given from this function, so I take the total # of priv alleles for regions and the subtract the number of cells with 0s in each population
+butternut_priv_sum <- matrix(nrow = 4, ncol = 2)
+
+for(a in 1:4){
+  
+  butternut_priv_sum[a,2] <- length(butternut_priv[a,]) - length(which(butternut_priv[a,] == 0))
+  
+}
+
+##fix up the dataframe
+butternut_priv_sum[,1] <- butternut_4pop_names
+colnames(butternut_priv_sum) <- c("Pop","PrivateAlleles")
+
+##8 loci
+butternut_8loci_priv <- private_alleles(butternutgen_4pops_8loci)
+
+##now calculate
+butternut_8loci_priv_sum <- matrix(nrow = 4, ncol = 2)
+
+for(a in 1:4){
+  
+  butternut_8loci_priv_sum[a,2] <- length(butternut_8loci_priv[a,]) - length(which(butternut_8loci_priv[a,] == 0))
+  
+}
+
+butternut_8loci_priv_sum[,1] <- butternut_4pop_names
+colnames(butternut_8loci_priv_sum) <- c("Pop","PrivateAlleles")
+
+##Now try it on the 8 loci document
+butternut_8loci_priv <- private_alleles(butternutgen_4pops_8loci)
+
+##now calculate
+butternut_8loci_priv_sum <- matrix(nrow = 4, ncol = 2)
+
+for(a in 1:4){
+  
+  butternut_8loci_priv_sum[a,2] <- length(butternut_8loci_priv[a,]) - length(which(butternut_8loci_priv[a,] == 0))
+  
+}
+
+butternut_8loci_priv_sum[,1] <- butternut_4pop_names
+colnames(butternut_8loci_priv_sum) <- c("Pop","PrivateAlleles")
+
+##now take the data frame and plot it 
+
+pdf('G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/Graphical_Stat_Results/PostIndRemoval/4pops/priv_all_bp.pdf', width = 15, height = 8)
+par(mfrow = c(1,2))
+b1 <- barplot(as.numeric(butternut_priv_sum[,2]), width = 0.5, names.arg = butternut_4pop_names, col = "cornflowerblue", ylim = c(0,20), xlab = "Population", ylab = "Number of Private Alleles", main = "11 loci Number of Private Alleles")
+barlabels(b1, as.numeric(butternut_priv_sum[,2]), prop = 1.1, nobox = TRUE)
+b2 <- barplot(as.numeric(butternut_8loci_priv_sum[,2]), width = 0.5, names.arg = butternut_4pop_names, col = "cornflowerblue", ylim = c(0,20), xlab = "Population", ylab = "Number of Private Alleles", main = "8 loci Number of Private Alleles")
+barlabels(b2, as.numeric(butternut_8loci_priv_sum[,2]), prop = 1.1, nobox = TRUE)
+dev.off()
+
+##now plot just NB private alleles
+pdf('G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/Graphical_Stat_Results/PostIndRemoval/4pops/NB_priv_alls.pdf', width = 15, height = 8)
+par(mfrow = c(2,1))
+NB_bp1 <- barplot(butternut_priv[1,], las = 2, ylab = "Number of Private Alleles", main = "11 loci New Brunswick Private Alleles", ylim = c(0,25), col = "cornflowerblue")
+barlabels(NB_bp1, butternut_priv[1,], prop = 1.1, nobox = TRUE)
+NB_bp2 <- barplot(butternut_8loci_priv[1,], las = 2, ylab = "Number of Private Alleles", main = "8 loci New Brunswick Private Alleles", ylim = c(0,25), col = "cornflowerblue")
+barlabels(NB_bp2, butternut_8loci_priv[1,], prop = 1.1, nobox = TRUE)
+dev.off()
+
+pdf('G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/Graphical_Stat_Results/PostIndRemoval/4pops/S_priv_alls.pdf', width = 15, height = 8)
+par(mfrow = c(2,1))
+S_bp1 <- barplot(butternut_priv[4,], las = 2, ylab = "Number of Private Alleles", main = "11 loci New Brunswick Private Alleles", ylim = c(0,25), col = "cornflowerblue")
+barlabels(S_bp1, butternut_priv[4,], prop = 1.1, nobox = TRUE)
+S_bp2 <- barplot(butternut_8loci_priv[4,], las = 2, ylab = "Number of Private Alleles", main = "8 loci New Brunswick Private Alleles", ylim = c(0,25), col = "cornflowerblue")
+barlabels(S_bp2, butternut_8loci_priv[4,], prop = 1.1, nobox = TRUE)
+dev.off()
+
