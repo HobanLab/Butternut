@@ -13,26 +13,27 @@ library(gbm)
 library(AUC)
 library(ggplot2)
 library(plyr)
-library(arcgisbinding)
 library(HH)
 library(ltm)
 
 ##set working directory
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/SDMs/SDM2")
+##load data points
+setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI")
 
 ######################################################################
 ################# Reduce Spatial Autocorrelation #####################
 ######################################################################
 ##read in occurrence records
-butternut_extent_oc <- read.csv("lim_extent.csv")
+butternut_presence <- read.csv("SDMs/InputFiles/Points/butternut_occurrence_points.csv")
+butternut_presence <- butternut_presence[,-1]
 
 ##Now set spatial reference for the points
-coordinates(butternut_extent_oc) <- c('Longitude', 'Latitude')
-proj4string(butternut_extent_oc) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+coordinates(butternut_presence) <- c('Longitude', 'Latitude')
+proj4string(butternut_presence) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 
 ##project to Albers Equal Area Conic 
 ## distance code requires 
-butternut_limit_proj <- spTransform(butternut_extent_oc, CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
+butternut_limit_proj <- spTransform(butternut_presence, CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
 
 ##First we need to reduce spatial autocorrelation
 
@@ -47,34 +48,80 @@ points_matrix <- gWithinDistance(butternut_limit_proj, dist = .0086206897, byid 
 ####2km
 points_matrix <- gWithinDistance(butternut_limit_proj, dist = .0172413794, byid = TRUE)
 
-#create pairwise matrix for any points that that are within these buffers
+##create tri matrix with NAs for bottom rows
 points_matrix[lower.tri(points_matrix, diag=TRUE)] <- NA
 
-##determine if any of the points are within 2 km or lower distance
+##now determine where points within 1 km are 
 auto_cols <- colSums(points_matrix, na.rm=TRUE) == 0
 
-##limits the points document by this 
-occurrence_wo_auto <- butternut_limit_proj[auto_cols,]
+##now subset the original data by this 
+occurrence_wo_auto <- butternut_presence[auto_cols,]
 
-##generate a data frame for export 
-occurrence_wo_auto <- data.frame(butternut_limit_proj)
+##convert to a data frame
+occurrence_no_auto <-data.frame(occurrence_wo_auto)
 
+##remove columns with no points 
+occurrence_no_auto <- na.omit(occurrence_wo_auto)
+
+##write to file
+write.csv(occurence_wo_auto, "SDMs/InputFiles/Points/occurrence_final.csv")
+
+######################################################################
+############################ Plotting ################################
+######################################################################
+
+##set limits
+min_lon <- min(occurrence_wo_auto$Longitude)
+max_lon <- max(occurrence_wo_auto$Longitude)
+min_lat <- min(occurrence_wo_auto$Latitude)
+max_lat <- max(occurrence_wo_auto$Latitude)
+
+##turns coordinates into Spatial Points
+coordinates(occurrence_no_auto) <- c('Longitude', 'Latitude')
+proj4string(occurrence_no_auto) <- CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+
+##get map
+newmap <- getMap(resolution = "low")
+
+##now plot
+plot(newmap, xlim = c(min_lon, max_lon), ylim = c(min_lat, max_lat))
+points(occurrence_no_auto, col = "dodgerblue", pch = 16)
 
 ######################################################################
 ################# Generated Pseudo-Absence Points ####################
 ######################################################################
+##remove duplicate points
+occurrence_no_auto <- remove.duplicates(occurrence_no_auto)
 
-##Randomly generate background points
-bgsel <- randomPoints(elevation_raster, 114) 
-bgsel2 <- gridSample(bgsel, elevation_raster, n=1) 
-bg_data <- SpatialPoints(bgsel2, proj4string=CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
+##transform to Albers for presence points
+occurence_presence <- spTransform(occurrence_no_auto, CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
 
-##Generate sampling grid of presence points to compare with pseudo-absence points
+##load in cropped raster
+extent <- arc.open("C:/Users/eschumacher/Documents/ArcGIS/Projects/butternutSDM/butternutSDM.gdb/elevation_Clip1")
+extent_arc <- arc.raster(extent)
+extent_raster <- as.raster(extent_arc)
+
+##project extent raster to Albers
+extent_project <- projectRaster(extent_raster, crs = "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+
+##Now start generating background points
+background <- randomPoints(extent_project, 5443)
+
+##now create spatial points object for absence points 
+set.seed(25)
+background_2 <- gridSample(background, extent_project, n=1) 
+bg_proj <- SpatialPoints(background_2, proj4string=CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
+
+##Create spatial points object for presence points 
 set.seed(8)
-occ_samp <- gridSample(butternut_limit_proj, elevation_raster, n=1) 
-##assign correct project coordinate information
-butternut_occ <- SpatialPoints(occ_samp, proj4string=CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
-##identify if there are points with the same coordinates
-butternut_abs <- gDifference(bg_data, butternut_occ)
+extent_sample <- gridSample(occurence_presence, extent_project, n=1) 
+spatial_points <- SpatialPoints(extent_sample, CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
+
+##Now determine if any of the points in presence/absence are at the same coordinates
+butternut_diff <- gDifference(bg_proj, spatial_points)
+
+##write out absence points 
+write.csv(butternut_diff, "SDMs/InputFiles/Points/butternut_absence.csv")
+
 
 
