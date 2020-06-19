@@ -32,17 +32,18 @@ coordinates(butternut_presence) <- c('Longitude', 'Latitude')
 proj4string(butternut_presence) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 
 ##First we need to reduce spatial autocorrelation
+##It will throw an error but it will still calculate the differences correctly 
 
 #####100 meters
-points_matrix <- gWithinDistance(butternut_limit_proj, dist = .00086206895, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence, dist = .00086206895, byid = TRUE)
 #####300 meters
-points_matrix <- gWithinDistance(butternut_limit_proj, dist = .00258620685, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence, dist = .00258620685, byid = TRUE)
 ######500 m
-points_matrix <- gWithinDistance(butternut_limit_proj, dist = .0043103448, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence, dist = .0043103448, byid = TRUE)
 #####1 km
-points_matrix <- gWithinDistance(butternut_limit_proj, dist = .0086206897, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence, dist = .0086206897, byid = TRUE)
 ####2km
-points_matrix <- gWithinDistance(butternut_limit_proj, dist = .0172413794, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence, dist = .0172413794, byid = TRUE)
 
 ##create tri matrix with NAs for bottom rows
 points_matrix[lower.tri(points_matrix, diag=TRUE)] <- NA
@@ -53,11 +54,11 @@ auto_cols <- colSums(points_matrix, na.rm=TRUE) == 0
 ##now subset the original data by this 
 occurrence_wo_auto <- butternut_presence[auto_cols,]
 
+##make sure the points are not at the same place
+occurrence_wo_auto <- remove.duplicates(occurrence_wo_auto)
+
 ##convert to a data frame
 occurrence_no_auto <-data.frame(occurrence_wo_auto)
-
-##remove columns with no points 
-occurrence_no_auto <- na.omit(occurrence_wo_auto)
 
 ##write to file
 write.csv(occurence_wo_auto, "SDMs/InputFiles/Points/occurrence_final.csv")
@@ -74,7 +75,7 @@ max_lat <- max(occurrence_wo_auto$Latitude)
 
 ##turns coordinates into Spatial Points
 coordinates(occurrence_no_auto) <- c('Longitude', 'Latitude')
-proj4string(occurrence_no_auto) <- CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+proj4string(occurrence_no_auto) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 
 ##get map
 newmap <- getMap(resolution = "low")
@@ -86,22 +87,17 @@ points(occurrence_no_auto, col = "dodgerblue", pch = 16)
 ######################################################################
 ################# Generated Pseudo-Absence Points ####################
 ######################################################################
-##remove duplicate points
-occurrence_no_auto <- remove.duplicates(occurrence_no_auto)
-
-##transform to Albers for presence points
-occurence_presence <- spTransform(occurrence_no_auto, CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
 
 ##load in cropped raster
 extent <- arc.open("C:/Users/eschumacher/Documents/ArcGIS/Projects/butternutSDM/butternutSDM.gdb/elevation_Clip1")
 extent_arc <- arc.raster(extent)
 extent_raster <- as.raster(extent_arc)
 
-##project extent raster to Albers
-extent_project <- projectRaster(extent_raster, crs = "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+##project the raster
+extent_proj <- projectRaster(extent_raster, CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
 
 ##Now start generating background points
-background <- randomPoints(extent_project, 5443)
+background <- randomPoints(extent_project, 2866)
 
 ##now create spatial points object for absence points 
 set.seed(25)
