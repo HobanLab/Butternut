@@ -147,15 +147,31 @@ coordinates(butternut_PA) <- c('Longitude', 'Latitude')
 proj4string(butternut_PA) <- CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
 
 ##load variables
-worldclim <- getData("worldclim",var="bio",res= 2.5)
+setwd("G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\wc2-5")
+worldclim_var_list <- list.files(pattern = ".bil$")
+
+worldclim_raster_list <- list()
+
+for(i in 1:length(worldclim_var_list)){
+  
+  worldclim_raster_list[[i]] <- raster(worldclim_var_list[[i]])
+  
+}
+
+##Now stack all of the rasters
+worldclim_stack <- stack(worldclim_raster_list)
 
 ##crop worldclim rasters
-worldclim_crop <- crop(worldclim, extent_raster)
+worldclim_crop <- crop(worldclim_stack, extent_raster)
 
-##project
+##project to Albers
 worldclim_project <- projectRaster(worldclim_crop, crs = "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
-names(worldclim_project) <- c("mat", "mdr", "iso", "temp_season", "mtwm", "mtcm", "range", "mtwetq", "mtdq", "mtwarq", "mtcq", "map", "pwm", "pdm", "precip_season", "pwetq", "pdq", "pwarq", "pcq")
-
+##And rename
+names(worldclim_project) <- c("MAT", "MTWQ", "MTCQ", "MAP", "PWM", "PDM", "precip_season",
+                              "PWetQ", "PDQ", "PwarQ", "PCQ", 
+                              "MDR", "ISO", "temp_season", "MTWM", "MTCM",
+                              "temp_range", "MTwetQ", "MTDQ")
+                              
 ##load in soil variables 
 setwd("C:/Users/eschumacher/Documents/JUCI/soil2/NACP_MSTMIP_UNIFIED_NA_SOIL_MA_1242/data")
 
