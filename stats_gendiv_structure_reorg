@@ -101,9 +101,12 @@ for(a in 1:24){
 }
 
 ##plot fst and mean lat
-butternut_fst_lat <- cbind(butternut_mean_lat, butternut_meanfst[,1])
 butternut_fst_lat <- data.frame(butternut_fst_lat)
-colnames(butternut_fst_lat) <- c("Mean Lat", "Mean PW Fst")
+butternut_fst_lat$Col <- NA
+butternut_fst_lat[1:11, 3] <- "firebrick1"
+butternut_fst_lat[12:24, 3] <- "dodgerblue"
+rownames(butternut_fst_lat) <- butternut_24pop_names
+colnames(butternut_fst_lat) <- c("MeanLat", "MeanFst", "Region")
 
 ##boxplot of Fsts by population 
 pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\fst_boxplot.pdf", width = 30, height = 10)
@@ -114,7 +117,7 @@ dev.off()
 
 ##Butternut Fst Lat graph 
 ##calculate lm
-butternut_24pop_fst_lm <- lm(butternut_fst_lat$`Mean PW Fst`~butternut_fst_lat$`Mean Lat`)
+butternut_24pop_fst_lm <- lm(butternut_fst_lat$`MeanFst`~butternut_fst_lat$`Mean Lat`)
 summary(butternut_24pop_fst_lm)
 
 ##Plot of Fst Lat
@@ -122,7 +125,7 @@ pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\Fst_Lat.pdf"
 plot(butternut_fst_lat[,2]~butternut_fst_lat[,1], pch = 16, col = butternut_fst_lat[,3], ylim = c(0,0.08), main = "Fst vs. Lat", ylab = "Mean PW Fst", xlab = "Mean Lat", cex = (butternut_24pop_poppr[1:24,2]/100))
 text(butternut_meanfst[,1]~butternut_mean_lat, labels = butternut_24pop_names, cex = 0.8, pos = 1)
 abline(butternut_24pop_fst_lm, col = "red")
-legend('topleft', legend = c("R2 = -0.02304", "p = 0.4947"), cex = 0.8)
+legend('topleft', legend = c("R2 = -0.0454", "p = 0.972"), cex = 0.8)
 legend('top', legend = c("Canada", "US"), pch = 16, col = c("firebrick1", "dodgerblue"))
 dev.off()
 
@@ -276,4 +279,37 @@ abline(h = 0)
 abline(v = 0)
 dev.off()
 
+######################################
+######## IBD Using Mean PWFst ########
+######################################
+##create a length vector
+butternut_pops_n <- length(unique(butternut_reorg_lonlat$Pop))
+
+##calculate distance to identify if there is isolation by distance 
+butternut_dist <- matrix(nrow = butternut_pops_n, ncol = butternut_pops_n)
+
+for(first in 1:butternut_pops_n){
+  for(second in 1:butternut_pops_n){
+    butternut_dist[first,second] <-  distm(butternut_coord_df[first,], butternut_coord_df[second,], fun = distGeo)/1000
+  }
+}
+
+##generate IBD plot
+
+###IBD plot
+dist_fst_24pop <- array(c(butternut_24pop_fst,butternut_dist), dim = c(butternut_pops_n,butternut_pops_n,2))
+
+##Now calculate regression between these
+IBD_lm <- lm(as.numeric(dist_fst_24pop[,,1])~as.numeric(dist_fst_24pop[,,2]))
+summary(IBD_lm)
+
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\IBD_reorg.pdf", width=10,height=8)
+plot(dist_fst_24pop[12:24,1:11,2],dist_fst_24pop[12:24,1:11,1], pch = 16, col = "mediumpurple1", xlab = "Distance (km)", ylab = "PWFst", main = "IBD Plot")
+points(dist_fst_24pop[1:11,1:11,2],dist_fst_24pop[1:11,1:11,1], col = "red1", xlab = "Distance (km)", ylab = "PWFst", pch = 16)
+points(dist_fst_24pop[12:24,12:24,2],dist_fst_24pop[12:24,12:24,1], pch = 16, col = "dodgerblue")
+legend('topright',c("Canada vs Canada", "US v US", "US v Canada"), pch = 16, col = c("red1","dodgerblue","mediumpurple1"), cex = 0.75, pt.cex = 0.75)
+legend('top', legend = c("R2 = 0.068", "p = 1.29e-10"))
+abline(IBD_lm, col = "red")
+
+dev.off()
 
