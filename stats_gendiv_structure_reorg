@@ -46,7 +46,7 @@ rownames(butternutgen_reorg@tab) <- ind_names
 butternut_reorg_lonlat <- read.csv("DataFiles/24Populations/butternut_reorg_lonlat.csv")
 
 #############################################
-########## Genetic Analyses - Fst Lat #######
+####### Genetic Analyses - Fst Lat ##########
 #############################################
 butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
 
@@ -105,20 +105,6 @@ butternut_fst_lat <- cbind(butternut_mean_lat, butternut_meanfst[,1])
 butternut_fst_lat <- data.frame(butternut_fst_lat)
 colnames(butternut_fst_lat) <- c("Mean Lat", "Mean PW Fst")
 
-##plot
-plot(butternut_fst_lat$`Mean PW Fst`~butternut_fst_lat$`Mean Lat`, pch = 16, col = "darkblue", ylim = c(0,0.04), ylab = "Mean PW Fst", xlab = "Mean Lat")
-text(butternut_fst_lat$`Mean PW Fst`~butternut_fst_lat$`Mean Lat`, labels = butternut_24pop_names, cex = 0.8, pos = 1)
-abline(butternut_24pop_fst_lm, col = "green")
-
-
-##
-rownames(butternut_24pop_fst) <- butternut_24pop_names
-colnames(butternut_24pop_fst) <- butternut_24pop_names
-butternut_fst_lat <- data.frame(butternut_fst_lat)
-butternut_fst_lat$Col <- NA
-butternut_fst_lat[1:11, 3] <- "firebrick1"
-butternut_fst_lat[12:24, 3] <- "dodgerblue"
-
 ##boxplot of Fsts by population 
 pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\fst_boxplot.pdf", width = 30, height = 10)
 boxplot(butternut_24pop_fst, main = "PW Fst by Pop", ylab = "PW Fst", xlab = "Population")
@@ -126,12 +112,12 @@ dev.off()
 
 ##may want to do a significance test to determine which populations differ 
 
-
 ##Butternut Fst Lat graph 
 ##calculate lm
 butternut_24pop_fst_lm <- lm(butternut_fst_lat$`Mean PW Fst`~butternut_fst_lat$`Mean Lat`)
 summary(butternut_24pop_fst_lm)
 
+##Plot of Fst Lat
 pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\Fst_Lat.pdf", width = 8, height = 6)
 plot(butternut_fst_lat[,2]~butternut_fst_lat[,1], pch = 16, col = butternut_fst_lat[,3], ylim = c(0,0.08), main = "Fst vs. Lat", ylab = "Mean PW Fst", xlab = "Mean Lat", cex = (butternut_24pop_poppr[1:24,2]/100))
 text(butternut_meanfst[,1]~butternut_mean_lat, labels = butternut_24pop_names, cex = 0.8, pos = 1)
@@ -140,12 +126,128 @@ legend('topleft', legend = c("R2 = -0.02304", "p = 0.4947"), cex = 0.8)
 legend('top', legend = c("Canada", "US"), pch = 16, col = c("firebrick1", "dodgerblue"))
 dev.off()
 
+##HExp Linear Relationship
+butternut_hexp_lm <- lm(butternut_poppr[1:24,10]~butternut_fst_lat[,1])
+butternut_hexp_lm_sum <- summary(butternut_hexp_lm)
 
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\Hexp_Lat.pdf", width = 8, height = 6)
+plot(butternut_poppr[1:24,10]~butternut_fst_lat[,1], pch = 16, col = butternut_fst_lat[,3], ylim = c(0.7, 0.9), main = "Hexp vs. Lat", ylab = "Hexp", xlab = "Mean Lat", cex = (butternut_24pop_poppr[1:24,2]/100))
+text(butternut_poppr[1:24,10]~butternut_fst_lat[,1], labels = butternut_24pop_names, cex = 0.8, pos = 1)
+abline(butternut_hexp_lm, col = "red")
+legend('topleft', legend = c("R2 = -0.0005804", "p = 0.331"), cex = 0.8)
+legend('top', legend = c("Canada", "US"), pch = 16, col = c("firebrick1", "dodgerblue"))
+dev.off()
 
+##Calculate Allelic Richness
+butternut_reorg_allrich <- colSums(allelic.richness(butternutgen_reorg)$Ar)/ length(butternutgen_reorg@loc.n.all)
 
+##Linear Relationship of Allelic Richness and Lat
+butternut_allrich_lm <- lm(butternut_reorg_allrich~butternut_fst_lat[,1])
+butternut_allrich_lm_sum <- summary(butternut_allrich_lm)
 
+##Plot Allelic Richness and Lat
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\AllRich_Lat.pdf", width = 8, height = 6)
+plot(butternut_reorg_allrich~butternut_fst_lat[,1], pch = 16, col = butternut_fst_lat[,3], main = "Number of Alleles vs. Lat", ylab = "Number of Alleles", xlab = "Mean Lat", cex = (butternut_24pop_poppr[1:24,2]/100), ylim = c(5,10))
+text(butternut_reorg_allrich~butternut_fst_lat[,1], labels = butternut_24pop_names, cex = 0.8, pos = 1)
+abline(butternut_allrich_lm, col = "red")
+legend('topleft', legend = c("R2 = 0.1816", "p = 0.022"), cex = 0.8)
+legend('top', legend = c("Canada", "US"), pch = 16, col = c("firebrick1", "dodgerblue"))
+dev.off()
 
+##Create Stats Matrix to save results in
+stats_matrix <- matrix(ncol = 5, nrow = 24)
+stats_matrix[,1] <- butternut_fst_lat[,1]
+stats_matrix[,2]  <- butternut_fst_lat[,2]
+stats_matrix[,3] <- butternut_reorg_allrich
+stats_matrix[,4] <- butternut_poppr[1:24,10]
+stats_matrix[,5] <- butternut_fst_lat[,3]
+rownames(stats_matrix) <- butternut_24pop_names
+colnames(stats_matrix) <- c("MeanLat", "MeanPWFst", "Nall", "HExp", "Col")
 
+stats_matrix <- data.frame(stats_matrix)
+stats_matrix[,1] <- as.numeric(as.character(stats_matrix[,1]))
+stats_matrix[,2] <- as.numeric(as.character(stats_matrix[,2]))
+stats_matrix[,3] <- as.numeric(as.character(stats_matrix[,3]))
+stats_matrix[,4] <- as.numeric(as.character(stats_matrix[,4]))
+stats_matrix[,5] <- as.character("stats_matrix[,5]")
+stats_matrix[1,5] <- as.character("NB")
+stats_matrix[2:3,5] <- as.character("OT")
+stats_matrix[4:6,5] <- as.character("NB")
+stats_matrix[7:9,5] <- as.character("OT")
+stats_matrix[10:11,5] <- as.character("NB")
+stats_matrix[12:24,5] <- as.character("US")
+
+stats_matrix[,1:4] <- round(stats_matrix[,1:4])
+
+##Now plot quadratic equation in comparison with stat matrices
+
+##Stat equation
+stat_form <- y ~ poly(x, 2)
+
+##Plot Allelic Richness Quadratic
+pdf("Quadratic_lat_nall.pdf", width = 8, height = 6)
+ggplot(stats_matrix, aes(x = MeanLat, y = Nall)) + geom_point(size = (butternut_24pop_poppr[1:24,2]/50)) + ylim(5, 10) +
+   geom_text(aes(label = butternut_24pop_names), size = 3, vjust = 1, hjust = 1) + ylab("Number of Alleles") +
+    xlab("Mean Latitude by Population") + ggtitle("Allelic Richness Reorg") +
+    stat_smooth(method = "lm", formula = y ~ poly(x, 2), size = 1) +
+    stat_poly_eq(formula = stat_form, 
+               aes(label = paste(..p.value.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE)
+
+  dev.off()
+  
+##Plot Quadratic Hexp Lat
+pdf("Quadratic_hexp.pdf", width = 8, height = 6)
+ggplot(stats_matrix, aes(x = MeanLat, y = HExp)) + geom_point(size = (butternut_24pop_poppr[1:24,2]/50)) +
+    geom_text(aes(label = butternut_24pop_names), size = 3, vjust = 1, hjust = 1) + ylab("Expected Heterozygosity") +
+    xlab("Mean Latitude by Population") + ggtitle("Expected Heterozygosity vs. Mean Lat") +
+    stat_smooth(method = "lm", formula = y ~ poly(x, 2), size = 1) +
+    stat_poly_eq(formula = stat_form, 
+                 aes(label = paste(..p.value.label.., ..rr.label.., sep = "~~~")), 
+                 parse = TRUE)
+  
+dev.off()
+  
+pdf("Quadratic_hexp.pdf", width = 8, height = 6)
+ggplot(stats_matrix, aes(x = MeanLat, y = MeanPWFst)) + geom_point(size = (butternut_24pop_poppr[1:24,2]/50)) +
+  geom_text(aes(label = butternut_24pop_names), size = 3, vjust = 1, hjust = 1) + ylab("Expected Heterozygosity") +
+  xlab("Mean Latitude by Population") + ggtitle("Expected Heterozygosity vs. Mean Lat") +
+  stat_smooth(method = "lm", formula = y ~ x, size = 1) +
+  stat_poly_eq(formula = stat_form, 
+               aes(label = paste(..p.value.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE)
+dev.off()
+
+#############################################
+######### Showing Genetic Structure #########
+#############################################
+##str
+##K = 2, most supported, load file 
+butternut_reorg_k2 <- read.csv("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\STR_k2_reorg.csv")
+butternut_reorg_k2 <- data.frame(butternut_reorg_k2)
+
+##graph K = 2 
+pdf("k2_reorg.pdf", width = 15, height = 5)
+structurePlot(butternut_reorg_k2, pop.col = 1, prob.col = 2, sort.probs = FALSE, label.pops = TRUE, col = c("dodgerblue","white"), horiz = FALSE)
+dev.off()
+
+##Load in K = 3 Reorg STR file 
+butternut_reorg_k3 <- read.csv("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\STR_k3_reorg.csv")
+butternut_reorg_k3 <- data.frame(butternut_reorg_k3)
+
+##plot K = 3
+pdf("k3_reorg.pdf", width = 15, height = 5)
+structurePlot(butternut_reorg_k3, pop.col = 2, prob.col = 3, sort.probs = FALSE, label.pops = TRUE, col = c("dodgerblue","white", "darkblue"), horiz = FALSE)
+dev.off()
+
+##load in k files without NB
+butternut_wonb_k2 <- data.frame(read.csv("str_k2_wonb.csv"))
+butternut_wonb_k3 <- read.csv("str_k3_wonb.csv")
+butternut_wonb_k4 <- read.csv("str_k4_wonb.csv")
+
+pdf("k2_reorg_wonb.pdf", width = 20, height = 5)
+structurePlot(butternut_wonb_k2, pop.col = 2, prob.col = 3, sort.probs = FALSE, label.pops = TRUE, col = c("dodgerblue","white"), horiz = FALSE)
+dev.off()
 
 
 
