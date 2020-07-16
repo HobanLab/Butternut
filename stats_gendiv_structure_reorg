@@ -1,0 +1,153 @@
+######Statistics for genetic diversity and structure calculations following the rebinning of the three problematic loci: B157, B212_2, B262
+
+##########################
+######## Libraries #######
+##########################
+
+library(diveRsity)
+library(adegenet)
+library(stringr)
+library(tidyr)
+library(hierfstat)
+library(poppr)
+library(Demerelate)
+library(rworldmap)
+library(data.table)
+library(ggplot2)
+library(ggrepel)
+library(geosphere)
+library(strataG)
+library(plotrix)
+library(ggpmisc)
+library(factoextra)
+
+#####################################
+############# Load Files ############
+#####################################
+
+setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI")
+
+##load in reorganization arlequin file which was exported from the genalex doc
+butternutgen_reorg <- arp2gen("DataFiles/24Populations/genalex_24pop_scoringrevised.arp")
+
+##now read in genind file
+butternutgen_reorg <- read.genepop("DataFiles/24Populations/butternut_24pop_reorg.gen", ncode = 3)
+
+##has removed the individual names, so for record keeping purposes, rename the ind names using the older genind doc 
+butternut_early_gen <- read.genepop("DataFiles/24Populations/11loci/butternut_24pops.gen", ncode = 3)
+
+butternut_early_nomd <- missingno(butternut_early_gen, type = "geno", cutoff = 0.25, quiet = FALSE, freq = FALSE)
+
+ind_names <- rownames(butternut_early_nomd@tab)
+
+rownames(butternutgen_reorg@tab) <- ind_names
+
+##now load in files with lon/lat
+butternut_reorg_lonlat <- read.csv("DataFiles/24Populations/butternut_reorg_lonlat.csv")
+
+#############################################
+########## Genetic Analyses - Fst Lat #######
+#############################################
+butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
+
+##calculate PWFst 
+butternut_24pop_fst <- as.matrix(pairwise.fst(butternutgen_reorg))
+
+##name populations 
+levels(butternutgen_reorg@pop) <- butternut_24pop_names
+
+##calculate poppr
+butternut_24pop_poppr <- poppr(butternutgen_reorg)
+
+##now do lon lat calcs
+butternut_mean_lon <- matrix()
+butternut_mean_lat <- matrix()
+
+##loops for mean lat/lon
+for(pop in butternut_24pop_names){
+  
+  butternut_mean_lon[pop] <- mean(butternut_reorg_lonlat[butternut_reorg_lonlat$Pop == pop,][,3])  
+  
+}
+
+for(pop in butternut_24pop_names){
+  
+  butternut_mean_lat[pop] <- mean(butternut_reorg_lonlat[butternut_reorg_lonlat$Pop == pop,][,4])  
+  
+}
+
+##convert to matrix
+butternut_mean_lon <- matrix(butternut_mean_lon)
+butternut_mean_lat <- matrix(butternut_mean_lat)
+
+##document cleanup
+butternut_mean_lon <- butternut_mean_lon[-1]
+butternut_mean_lat <- butternut_mean_lat[-1]
+
+#combine into one document for mean long and lat for each pop
+butternut_coord_df <- matrix(ncol = 2, nrow = 24)
+butternut_coord_df[,1] <- butternut_mean_lon
+butternut_coord_df[,2] <- butternut_mean_lat
+rownames(butternut_coord_df) <- butternut_24pop_names
+colnames(butternut_coord_df) <- c("Mean Lon", "Mean Lat")
+
+##here 11 loci mean fst
+butternut_meanfst <- matrix(nrow = 24, ncol = 2)
+
+for(a in 1:24){
+  
+  butternut_meanfst[a] <- mean(butternut_24pop_fst[a,], na.rm = TRUE)
+  
+}
+
+##plot fst and mean lat
+butternut_fst_lat <- cbind(butternut_mean_lat, butternut_meanfst[,1])
+butternut_fst_lat <- data.frame(butternut_fst_lat)
+colnames(butternut_fst_lat) <- c("Mean Lat", "Mean PW Fst")
+
+##plot
+plot(butternut_fst_lat$`Mean PW Fst`~butternut_fst_lat$`Mean Lat`, pch = 16, col = "darkblue", ylim = c(0,0.04), ylab = "Mean PW Fst", xlab = "Mean Lat")
+text(butternut_fst_lat$`Mean PW Fst`~butternut_fst_lat$`Mean Lat`, labels = butternut_24pop_names, cex = 0.8, pos = 1)
+abline(butternut_24pop_fst_lm, col = "green")
+
+
+##
+rownames(butternut_24pop_fst) <- butternut_24pop_names
+colnames(butternut_24pop_fst) <- butternut_24pop_names
+butternut_fst_lat <- data.frame(butternut_fst_lat)
+butternut_fst_lat$Col <- NA
+butternut_fst_lat[1:11, 3] <- "firebrick1"
+butternut_fst_lat[12:24, 3] <- "dodgerblue"
+
+##boxplot of Fsts by population 
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\fst_boxplot.pdf", width = 30, height = 10)
+boxplot(butternut_24pop_fst, main = "PW Fst by Pop", ylab = "PW Fst", xlab = "Population")
+dev.off()
+
+##may want to do a significance test to determine which populations differ 
+
+
+##Butternut Fst Lat graph 
+##calculate lm
+butternut_24pop_fst_lm <- lm(butternut_fst_lat$`Mean PW Fst`~butternut_fst_lat$`Mean Lat`)
+summary(butternut_24pop_fst_lm)
+
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\Fst_Lat.pdf", width = 8, height = 6)
+plot(butternut_fst_lat[,2]~butternut_fst_lat[,1], pch = 16, col = butternut_fst_lat[,3], ylim = c(0,0.08), main = "Fst vs. Lat", ylab = "Mean PW Fst", xlab = "Mean Lat", cex = (butternut_24pop_poppr[1:24,2]/100))
+text(butternut_meanfst[,1]~butternut_mean_lat, labels = butternut_24pop_names, cex = 0.8, pos = 1)
+abline(butternut_24pop_fst_lm, col = "red")
+legend('topleft', legend = c("R2 = -0.02304", "p = 0.4947"), cex = 0.8)
+legend('top', legend = c("Canada", "US"), pch = 16, col = c("firebrick1", "dodgerblue"))
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
