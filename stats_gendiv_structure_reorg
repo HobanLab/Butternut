@@ -249,7 +249,31 @@ pdf("k2_reorg_wonb.pdf", width = 20, height = 5)
 structurePlot(butternut_wonb_k2, pop.col = 2, prob.col = 3, sort.probs = FALSE, label.pops = TRUE, col = c("dodgerblue","white"), horiz = FALSE)
 dev.off()
 
+##Make PCOAs
+butternutpop_reorg <- genind2genpop(butternutgen_reorg)
 
+##scale it for PCoA
+butternutpop_reorg_scale <- scaleGen(butternutpop_reorg)
 
+##
+rownames(butternut_pco$li) <- butternut_24pop_names
+
+##format 
+##re-org data for color coding
+butternut_pco_nb <- rbind(butternut_pco$li[c("31","568","1014","7917","9101113a","9101113b"),1:2])
+butternut_pco_ot <- rbind(butternut_pco$li[c("151","170","125147","126147","171188"),1:2])
+
+##PCOA of the reorg
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\pco_reorg.pdf", width = 8, height = 6)
+plot(butternut_pco_nb$A1, butternut_pco_nb$A2, pch = 16, xlab = "PC1 (14.4%)", ylab = "PC2 (9.15%)", main = "PCoA 24 Populations Reorg", col = "firebrick1", ylim = c(-0.2, 0.2), xlim = c(-0.2, 0.2))
+text(butternut_pco_nb$A1, butternut_pco_nb$A2, label = rownames(butternut_pco_nb), pos = 4, cex = 0.8)
+points(butternut_pco_ot$A1, butternut_pco_ot$A2,pch = 16, col = "firebrick4")
+text(butternut_pco_ot$A1, butternut_pco_ot$A2, label = rownames(butternut_pco_ot), pos = 1, cex = 0.8)
+points(butternut_pco[12:24,]$li$A1, butternut_pco[12:24,]$li$A2, col = "dodgerblue", pch = 16)
+text(butternut_pco[12:24,]$li$A1, butternut_pco[12:24,]$li$A2, label = rownames(butternut_pco[12:24,]$li), pos = 2, cex = 0.8)
+legend('topleft', pch = 16, col = c("firebrick1","firebrick4", "dodgerblue"), legend = c("NB", "OT", "US"))
+abline(h = 0)
+abline(v = 0)
+dev.off()
 
 
