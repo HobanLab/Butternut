@@ -241,6 +241,9 @@ colnames(butternut_var) <- c("Longitude", "Latitude", "PA", "Elevation", "Slope"
 length(butternut_var[butternut_var$PA == "1",]$PA) ##Presence points, 5666
 length(butternut_var[butternut_var$PA == "0",]$PA) ##Absence points, 5226
 
+##write out points with variables
+write.csv(butternut_var, "SDMs\\InputFiles\\Points\\butternut_variables.csv")
+
 ##########creation correlation dissimilarity matrix
 
 #correlation matrix
@@ -254,20 +257,18 @@ predictor_cluster <- hclust(1-(predictors_dist))
 
 #plot
 par(mfrow=c(1,1))
-
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/SDMs/InputFiles/VariableSelection")
-
-pdf("cluster_ecogeo.pdf", width = 15, height = 10)
+##write out cluster diagram 
+pdf("SDMs/InputFiles/VariableSelection/cluster_ecogeo.pdf", width = 15, height = 10)
 plot(as.dendrogram(predictor_cluster), horiz =T, main="Dissimilarity Cluster of Ecogeorgaphic Varibales", cex.main=0.8)
 abline(v=0.5, col='red')
 dev.off()
 
 #Bisserial correlation
-
 variable_names <- names(butternut_var[,1:43])
 
-cor_result <- 43
-butternut_col <- 2 
+##create variable 
+cor_result <- length(butternut_var)
+butternut_col <- 2
 
 biserial_cor_matrix <- matrix(ncol=butternut_col, nrow=cor_result)
 
@@ -289,15 +290,20 @@ write.csv(biserial_cor_out, "biserial_cor_matrix.csv")
 ######################################################################
 ####################### Running the Model ############################
 ######################################################################
-
+##Following selection of the variables, begin running models 
 ##load in variable data frame
-butternut_var <- read.csv("butternut_var.csv")
+butternut_var <- read.csv("butternut_variables.csv")
+
 ##now limit to important variables
-butternut_list_variables <- c("PWM", "ISO", "Precip_Season", "Sub_Gravel")
+butternut_list_variables <- c("PwarQ","Max_Soil_Depth", "ISO", "PWM",
+                              "Top_Silt", "Top_Bulk", "Sub_Gravel",
+                              "Precip_Season", "Top_Clay", "Slope"
+)
 
 ##now load variables for model running
 butternut_sel_var <- butternut_var[,butternut_list_variables]
-butternut_sel_df <- cbind(butternut_var[,2:4], butternut_sel_var)
+butternut_sel_df <- cbind(butternut_var[,1:3], butternut_sel_var)
+butternut_sel_df[,3] <- as.numeric(butternut_sel_df[,3]) 
 
 ##now run models
 par(mfrow=c(1,1))
@@ -306,15 +312,9 @@ butternut_samp <- sample(nrow(butternut_sel_df), round(0.70 * nrow(butternut_sel
 testdata <- na.omit(butternut_sel_df[butternut_samp,])
 traindata <- na.omit(butternut_sel_df[-butternut_samp,])
 
-mean_rep <- matrix(nrow = length(testdata$Longitude), ncol = 2)
-
-
-#Model calibration. Using multiple BRT parameters to identify the best number of trees. See the Elith tutorial on what these parameters mean. 
-###there's a bunch of other things but code line 384 is how you do the predictions and generate the map. Most of the other things in here 
-####are either in the Elith tutorial or were related to finding range contraction and 
-####expansion. 
+###Model calibration. Using multiple BRT parameters to identify the best number of trees. See the Elith tutorial on what these parameters mean. 
 bf=c(.7)
-lr=c(.000007)
+lr=c(0.07)
 tc=c(2)
 ss=c(25)
 #Initiate the loop to identify the best number of trees. Call your model whatever you want- the "gbm.x = 4:7" are the columns of your climate variables and the "gbm.y=3" is the column on your csv file that has 0's and 1's for presence/absence 
@@ -329,7 +329,7 @@ for (i in 1:length(lr)){
         butternut_model_name <- paste('butternut_model_',tc[k],'_',lr[i],'_',bf[j],'_',ss[l],'_',sep='')
         
         set.seed(10)
-        butternut_model <- gbm.step(traindata, gbm.x = 4:7, gbm.y = 3, family = "bernoulli", step.size = ss[l],tree.complexity = tc[k],learning.rate = lr[i], bag.fraction = bf[j])
+        butternut_model <- gbm.step(traindata, gbm.x = 4:length(butternut_sel_df), gbm.y = 3, family = "bernoulli", step.size = ss[l],tree.complexity = tc[k],learning.rate = lr[i], bag.fraction = bf[j])
         
         #Model internal metrics 
         cv.AUC = butternut_model$cv.statistics$discrimination.mean 
@@ -358,9 +358,8 @@ for (i in 1:length(lr)){
         independent=calc.deviance(testdata$PA, pred_test)  
         #residual deviance was calculated between observed presence/absence data (v 1) and predicted probability of presence (v 2 ),
         ext.residual.deviance = calc.deviance(testdata$PA, pred_test, calc.mean=T)
-        mean_rep[,1] <- mean(testdata$PA)
-        ext.null.deviance = calc.deviance(testdata$PA, mean_rep[,1], calc.mean=T) 
-        #Calculating deviance explained in the evaluation dataset. Portion of data withheld during model building
+        ext.null.deviance = calc.deviance(testdata$PA,rep(mean(testdata$PA), 7274),calc.mean=T) 
+       #Calculating deviance explained in the evaluation dataset. Portion of data withheld during model building
         ext.dev=(ext.null.deviance - ext.residual.deviance)/ext.null.deviance
         
         
@@ -375,40 +374,21 @@ th
 ##summarize model - percent contribution of each variable
 summary(butternut_model)
 
-###
-butternut_predictors<-c("Mean Temperature of the Driest Quarter (C)", "Precipitation of the Wettest Quarter (mm)", "Mean Annual Precipitation (mm)", "Topsoil Bulk Density", "Topsoil Clay Fraction", "Mean Diurnal Range (C)")
-butternut_predictors<-factor(butternut_predictors,levels=c("Mean Temperature of the Driest Quarter (C)", "Precipitation of the Wettest Quarter (mm)", "Mean Annual Precipitation (mm)", "Topsoil Bulk Density","Topsoil Clay Fraction", "Mean Diurnal Range (C)"))
-butternut_influences<-data.frame(butternut_predictors,percentages=c(22.2, 20.8, 16.2, 16.0, 15.7, 9.11))
+###List out butternut predictors 
+butternut_predictors<-c("Seasonal Precipitation (mm)", "Subsoil Gravel Fraction", "Topsoil Bulk Density", "Isothermality", "Topsoil Silt Fraction", "Precipitation of the Wettest Month", "Slope", "Maximum Soil Depth (m)", "Topsoil Clay Fraction", "Precipitation of the Warmest Quarter (mm)")
+butternut_predictors<-factor(butternut_predictors,levels= c("Seasonal Precipitation (mm)", "Subsoil Gravel Fraction", "Topsoil Bulk Density", "Isothermality", "Topsoil Silt Fraction", "Precipitation of the Wettest Month", "Slope", "Maximum Soil Depth (m)", "Topsoil Clay Fraction", "Precipitation of the Warmest Quarter (mm)"))
+butternut_influences<-data.frame(butternut_predictors,percentages=c(20.3, 10.8, 10.4, 9.34, 9.34, 8.81, 8.72, 8.52, 6.89, 6.82))
                                  
 butternut_contribution_bp <- ggplot(data=butternut_influences, aes(x=butternut_predictors, y=percentages)) +
   geom_bar(stat="identity", color="black", fill="dodgerblue",width=.4)+
   geom_text(aes(y=percentages, label=paste0(percentages, '%')), vjust=.5, hjust=-.1,size=3)+
-  theme_minimal()+ggtitle("Relative Influence of Predictors (CV AUC = 0.762)")+theme_light(base_size=14)+theme(plot.margin = unit(c(1,1,1,1), "cm"))+ylim(0,100)+
+  theme_minimal()+ggtitle("Relative Influence of Predictors (CV AUC = 0.865)")+theme_light(base_size=14)+theme(plot.margin = unit(c(1,1,1,1), "cm"))+ylim(0,100)+
   xlab("Predictors") + ylab("Percent Contribution to the Model")
 
-butternut_contribution_bp <- butternut_contribution_bp + coord_flip()
+butternut_contribution_bp2 <- butternut_contribution_bp + coord_flip()
 
-pdf("SDMs/InputFiles/ModelRunning/butternut_contribution_6var_slowlr.pdf", width = 10, height = 8)
-butternut_contribution_bp
-dev.off()  
-
-##plot data frame of reduced variable selection 
-
-###
-butternut_predictors<-c("Mean Diurnal Range","Precipitation of the Wettest Quarter","Mean Temperature of the Driest Quarter","Mean Annual Precipitation","Topsoil Clay Fraction","Subsoil Bulk Density","Slope","Subsoil Silt Fraction")
-butternut_predictors<-factor(butternut_predictors,levels=c("Mean Diurnal Range","Precipitation of the Wettest Quarter","Mean Temperature of the Driest Quarter","Mean Annual Precipitation","Topsoil Clay Fraction","Subsoil Bulk Density","Slope","Subsoil Silt Fraction"))
-butternut_influences<-data.frame(butternut_predictors,percentages=c(47.1, 19.8, 15.0, 5.69, 5.25, 2.49, 2.35, 2.33))
-
-butternut_contribution_bp <- ggplot(data=butternut_influences, aes(x=butternut_predictors, y=percentages)) +
-  geom_bar(stat="identity", color="black", fill="dodgerblue",width=.4)+
-  geom_text(aes(y=percentages, label=paste0(percentages, '%')), vjust=.5, hjust=-.1,size=3)+
-  theme_minimal()+ggtitle("Relative Influence of Predictors (CV AUC = 0.799)")+theme_light(base_size=14)+theme(plot.margin = unit(c(1,1,1,1), "cm"))+ylim(0,100)+
-  xlab("Predictors") + ylab("Percent Contribution to the Model")
-
-butternut_contribution_bp <- butternut_contribution_bp + coord_flip()
-
-pdf("InputFiles/ModelRunning/reduced_lr_contribution_bp.pdf", width = 10, height = 8)
-butternut_contribution_bp
+pdf("SDMs\\OutputFiles\\tenvar_bp.pdf", width = 10, height = 8)
+butternut_contribution_bp2
 dev.off()  
 
 
@@ -417,32 +397,82 @@ dev.off()
 #######################
 
 ##need to stack all the variables that contribute to the best model
-##
-butternut_stack <- arc.open("C:/Users/eschumacher/Documents/ArcGIS/Projects/butternutSDM/butternut_output.gdb/composite_output2")
-butternut_stack_arc <- arc.raster(butternut_stack)
-butternut_stack_r <- as.raster(butternut_stack_arc)
+setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI")
 
-##
-butternut_ecogeo_names <- c("MAT","MDR","ISO","temp_season","MTWM","MTCM","TAR","MTwetQ","MTDQ","MTwarQ","MTCQ","MAP","PWM","PDM","precip_season","PwetQ","PDQ","PwarQ","PCQ", "top_clay","top_bulk","top_silt")
-names(butternut_stack_r) <- butternut_ecogeo_names
+##to get list of names
+butternut_model$var.names
+##Names must be equal to compare 
+names(butternut_model_stack) <- butternut_model$var.names
 
-##
-butternut_reduced_stack <- stack(butternut_stack_r$MDR, butternut_stack_r$MTDQ, butternut_stack_r$MAP, butternut_stack_r$PwetQ, butternut_stack_r$top_silt, butternut_stack_r$top_bulk, butternut_stack_r$top_clay)
-plot(butternut_reduced_stack)
+##now create prediction map
+butternut_prediction_map <- predict(butternut_model_stack, butternut_model,n.trees=1200, type='response')
 
-###prediction map
-butternut_model$var.names <- names(butternut_reduced_stack)
-butternut_prediction_map <- predict(object=butternut_reduced_stack, model=butternut_model,n.trees=3075, type='response')
-plot(butternut_prediction_map)
-butternut_prediction_map_scaled <- butternut_prediction_map * 1.9
-par(mfrow=c(1,1))
-butternut_prediction_map_prob = (exp(butternut_prediction_map_scaled) / (1+ exp(butternut_prediction_map_scaled)))
-butternut_prediction_map_prob=(exp(butternut_prediction_map)/(1+exp(butternut_prediction_map)))
+##project to get same extent and resolution 
+max_soil_depth_project <- projectRaster(soil_stack$max_depth, worldclim_project$pwarq)
+top_silt_project <- projectRaster(soil_stack$top_silt, worldclim_project$pwarq)
+top_bulk_project <- projectRaster(soil_stack$top_bulk, worldclim_project$pwarq)
+sub_gravel_project <- projectRaster(soil_stack$sub_gravel, worldclim_project$pwarq)
+top_clay_project <- projectRaster(soil_stack$top_clay, worldclim_project$pwarq)
+slope_project <- projectRaster(slope_aspect$slope, worldclim_project$pwarq)
 
-####plot presence absence
-butternut_points <- data.frame(butternut_sel_var[,2:4])
+##now stack
+butternut_model_stack <- stack(worldclim_project$pwarq, max_soil_depth_project,
+                               worldclim_project$iso, worldclim_project$pwm,
+                               top_silt_project, top_bulk_project,
+                               sub_gravel_project, worldclim_project$precip_season,
+                               top_clay_project, slope_project)
 
+##now look at plots
 
+pdf("hsm.pdf", width = 6, height = 6)
+plot(butternut_prediction_map, main = "Habitat Suitability Model")
+dev.off()
+
+pdf("hsm_p.pdf", width = 6, height = 6)
+plot(butternut_prediction_map, main = "HSM Presence")
+points(butternut_p, col = "dodgerblue", pch = 16)
+dev.off()
+
+pdf("hsm_a.pdf", width = 6, height = 6)
+plot(butternut_prediction_map, main = "HSM Absence")
+points(butternut_a, col = "dodgerblue4", pch = 16)
+dev.off()
+
+pdf("hsm_pa.pdf", width = 6, height = 6)
+plot(butternut_prediction_map, main = "HSM Presence and Absence")
+points(butternut_a, col = "dodgerblue4", pch = 16)
+points(butternut_p, col = "dodgerblue", pch = 16)
+legend('topright', legend = c("Presence", "Absence"), pch = 16, col = c("dodgerblue", "dodgerblue4"))
+dev.off()
+
+##Create data frames from presence/absence
+butternut_p <- data.frame(butternut_pa[butternut_pa$PA == 1,][,1:2])
+butternut_a <- data.frame(butternut_pa[butternut_pa$PA == 0,][,1:2])
+
+##Now convert to spatial points 
+coordinates(butternut_p) <- c('Longitude', 'Latitude')
+proj4string(butternut_p) <- CRS("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+
+##Absence spatial points 
+coordinates(butternut_a) <- c('Longitude', 'Latitude')
+proj4string(butternut_a) <- CRS("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+
+##now extract habitat suitability 
+hsm_p <- extract(butternut_prediction_map, butternut_p)
+hsm_a <- extract(butternut_prediction_map, butternut_a)
+
+##data frame for suitability 
+hsm_p_df <- data.frame(hsm_p)
+hsm_a_df <- data.frame(hsm_a)
+
+colnames(hsm_p_df) <- c("HSM_per")
+colnames(hsm_a_df) <- c("HSM_per")
+
+hsm_p_df$PA <- "1"
+hsm_a_df$PA <- "0"
+
+##combine into one table
+hsm_performance_pa <- rbind(hsm_p_df, hsm_a_df)
 
 
 
