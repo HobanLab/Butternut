@@ -144,58 +144,40 @@ write.csv(butternut_diff_df, "SDMs\\InputFiles\\Points\\butternut_abs.csv")
 ######################################################################
 ###################### Variable Selection ############################
 ######################################################################
+##combine to one document
+##Absence column added 
+butternut_diff_df$PA <- "0"
 
-##first need to combine presence and absence points into one document and add a column indicating presence of absence
-##load presence
-butternut_presence <- read.csv("SDMs/InputFiles/Points/butternut_presence.csv")
-butternut_presence <- data.frame(butternut_presence)
+##Add presence column to presence points
 butternut_presence$PA <- "1"
+
+##Presence points 
 butternut_presence <- butternut_presence[,-1]
-colnames(butternut_presence) <- c("Longitude", "Latitude", "PA")
 
-##load absence 
-butternut_absence <- read.csv("SDMs/InputFiles/Points/butternut_absence.csv")
-butternut_absence <- data.frame(butternut_absence)
-butternut_absence$PA <- "0"
-butternut_absence <- butternut_absence[,-1]
-colnames(butternut_absence) <- c("Longitude", "Latitude", "PA")
+##get col names
+col_names <- colnames(butternut_presence) 
 
-##now combine into one dataset
-butternut_PA <- rbind(butternut_presence,butternut_absence)
-write.csv(butternut_PA, "SDMs/InputFiles/Points/butternut_PA.csv")
+##name col names
+colnames(butternut_diff_df) <- col_names
 
-##new df
-butternut_PA_df <- butternut_PA
+##combine into one data frame
+butternut_pa <- rbind(butternut_presence, butternut_diff_df)
 
-##now SP Transform
-coordinates(butternut_PA) <- c('Longitude', 'Latitude')
-proj4string(butternut_PA) <- CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+##write out presence and absence point values
+write.csv(butternut_pa, "SDMs/InputFiles/Points/butternut_pa.csv")
 
-##load variables
-setwd("G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\wc2-5")
-worldclim_var_list <- list.files(pattern = ".bil$")
-
-worldclim_raster_list <- list()
-
-for(i in 1:length(worldclim_var_list)){
-  
-  worldclim_raster_list[[i]] <- raster(worldclim_var_list[[i]])
-  
-}
-
-##Now stack all of the rasters
-worldclim_stack <- stack(worldclim_raster_list)
+##load worldclim documents
+worldclim <- getData("worldclim",var="bio",res= 2.5)
 
 ##crop worldclim rasters
-worldclim_crop <- crop(worldclim_stack, extent_raster)
+worldclim_crop <- crop(worldclim, extent_raster)
 
-##project to Albers
-worldclim_project <- projectRaster(worldclim_crop, crs = "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
-##And rename
-names(worldclim_project) <- c("MAT", "MTWQ", "MTCQ", "MAP", "PWM", "PDM", "precip_season",
-                              "PWetQ", "PDQ", "PwarQ", "PCQ", 
-                              "MDR", "ISO", "temp_season", "MTWM", "MTCM",
-                              "temp_range", "MTwetQ", "MTDQ")
+##Project worldclim variables 
+worldclim_project <- projectRaster(worldclim_crop, crs = "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+
+##Rename layers
+names(worldclim_project) <- c("mat", "mdr", "iso", "temp_season", "mtwm", "mtcm", "range", "mtwetq", "mtdq", "mtwarq", "mtcq", "map", "pwm", "pdm", "precip_season", "pwetq", "pdq", "pwarq", "pcq")
+
                               
 ##load in soil variables 
 setwd("C:/Users/eschumacher/Documents/JUCI/soil2/NACP_MSTMIP_UNIFIED_NA_SOIL_MA_1242/data")
