@@ -33,9 +33,30 @@ setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI")
 butternut_presence <- read.csv("SDMs/InputFiles/Points/butternut_occurrence_points.csv")
 butternut_presence <- butternut_presence[,-1]
 
-##Now set spatial reference for the points
+######################################################################
+############################ Plotting ################################
+######################################################################
+
+##set limits
+min_lon <- min(butternut_presence$Longitude)
+max_lon <- max(butternut_presence$Longitude)
+min_lat <- min(butternut_presence$Latitude)
+max_lat <- max(butternut_presence$Latitude)
+
+##turns coordinates into Spatial Points
 coordinates(butternut_presence) <- c('Longitude', 'Latitude')
 proj4string(butternut_presence) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+
+##get map
+newmap <- getMap(resolution = "low")
+
+##now plot
+plot(newmap, xlim = c(min_lon, max_lon), ylim = c(min_lat, max_lat))
+points(butternut_presence, col = "dodgerblue", pch = 16)
+
+######################################################################
+######## Project and Remove Spatial Autocorrelation ##################
+######################################################################
 
 ##Project to Albers Equal Area Conic 
 butternut_presence_2 <- spTransform(butternut_presence, CRS("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"))
@@ -44,18 +65,17 @@ butternut_presence_2 <- spTransform(butternut_presence, CRS("+proj=aea +lat_1=20
 butternut_presence_2 <- remove.duplicates(butternut_presence_2)
 
 ##First we need to reduce spatial autocorrelation
-##It will throw an error but it will still calculate the differences correctly 
 
 #####100 meters
-points_matrix <- gWithinDistance(butternut_presence, dist = .00086206895, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence_2, dist = .00086206895, byid = TRUE)
 #####300 meters
-points_matrix <- gWithinDistance(butternut_presence, dist = .00258620685, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence_2, dist = .00258620685, byid = TRUE)
 ######500 m
-points_matrix <- gWithinDistance(butternut_presence, dist = .0043103448, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence_2, dist = .0043103448, byid = TRUE)
 #####1 km
-points_matrix <- gWithinDistance(butternut_presence, dist = .0086206897, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence_2, dist = .0086206897, byid = TRUE)
 ####2km
-points_matrix <- gWithinDistance(butternut_presence, dist = .0172413794, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence_2, dist = .0172413794, byid = TRUE)
 
 ##create tri matrix with NAs for bottom rows
 points_matrix[lower.tri(points_matrix, diag=TRUE)] <- NA
@@ -73,30 +93,8 @@ occurrence_no_auto <-data.frame(occurrence_wo_auto)
 write.csv(occurence_wo_auto, "SDMs/InputFiles/Points/occurrence_final.csv")
 
 ######################################################################
-############################ Plotting ################################
-######################################################################
-
-##set limits
-min_lon <- min(occurrence_wo_auto$Longitude)
-max_lon <- max(occurrence_wo_auto$Longitude)
-min_lat <- min(occurrence_wo_auto$Latitude)
-max_lat <- max(occurrence_wo_auto$Latitude)
-
-##turns coordinates into Spatial Points
-coordinates(occurrence_no_auto) <- c('Longitude', 'Latitude')
-proj4string(occurrence_no_auto) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-
-##get map
-newmap <- getMap(resolution = "low")
-
-##now plot
-plot(newmap, xlim = c(min_lon, max_lon), ylim = c(min_lat, max_lat))
-points(occurrence_no_auto, col = "dodgerblue", pch = 16)
-
-######################################################################
 ################# Generated Pseudo-Absence Points ####################
 ######################################################################
-
 ##load in cropped raster
 extent <- arc.open("C:/Users/eschumacher/Documents/ArcGIS/Projects/butternutSDM/butternutSDM.gdb/elevation_Clip1")
 extent_arc <- arc.raster(extent)
