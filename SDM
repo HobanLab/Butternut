@@ -90,38 +90,56 @@ occurrence_wo_auto <- butternut_presence[auto_cols,]
 occurrence_no_auto <-data.frame(occurrence_wo_auto)
 
 ##write to file
-write.csv(occurence_wo_auto, "SDMs/InputFiles/Points/occurrence_final.csv")
+write.csv(occurence_no_auto, "SDMs/InputFiles/Points/occurrence_noauto.csv")
 
 ######################################################################
 ################# Generated Pseudo-Absence Points ####################
 ######################################################################
-##load in cropped raster
-extent <- arc.open("C:/Users/eschumacher/Documents/ArcGIS/Projects/butternutSDM/butternutSDM.gdb/elevation_Clip1")
-extent_arc <- arc.raster(extent)
-extent_raster <- as.raster(extent_arc)
+##load in data 
+butternut_presence <- read.csv("SDMs/InputFiles/Points/occurrence_noautocorrelation.csv")
+butternut_presence <- butternut_presence[,-1]
 
-##project the raster
-extent_proj <- projectRaster(extent_raster, CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
+coordinates(butternut_presence) <- c('Longitude', 'Latitude')
+proj4string(butternut_presence) <- CRS("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+
+##Create extent raster
+extent_raster <- raster(ncol = 100, nrow = 100,xmn=min_lon,xmx=max_lon,ymn=min_lat,ymx=max_lat)
+
+##Load in elevation raster
+elev_raster <- raster("SDMs\\InputFiles\\wc2.1_2.5m_elev.tif")
+
+##crop raster to the full extent
+elev_crop <- crop(elev_raster, extent_raster)
+
+##project the elevation raster for extent 
+extent_project <- projectRaster(elev_crop, crs = "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
 
 ##Now start generating background points
-background <- randomPoints(extent_project, 2866)
+background_points <- randomPoints(extent_project, 5715)
 
-##now create spatial points object for absence points 
+##Now sample from the grid in order to not increase spatial autocorrelation 
 set.seed(25)
-background_2 <- gridSample(background, extent_project, n=1) 
-bg_proj <- SpatialPoints(background_2, proj4string=CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
+background_2 <- gridSample(background_points, extent_project, n=1) 
+bg_proj <- SpatialPoints(background_2, proj4string=CRS("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"))
 
-##Create spatial points object for presence points 
+##now set occurrence records to a spatial gridded object
 set.seed(8)
-extent_sample <- gridSample(occurence_presence, extent_project, n=1) 
-spatial_points <- SpatialPoints(extent_sample, CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
+extent_sample <- gridSample(butternut_presence, extent_project, n=1) 
 
-##Now determine if any of the points in presence/absence are at the same coordinates
-butternut_diff <- gDifference(bg_proj, spatial_points)
+##turn into a spatial points object
+occurrence_grid_spatial <-SpatialPoints(extent_sample, CRS("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"))
 
-##write out absence points 
-write.csv(butternut_diff, "SDMs/InputFiles/Points/butternut_absence.csv")
-write.csv(occurrence_no_auto, "SDMs/InputFiles/Points/butternut_presence.csv")
+##Make sure none of the presence and absence points are the same 
+butternut_diff <- gDifference(bg_proj, occurrence_grid_spatial)
+
+##Butternut absence data frame
+butternut_diff_df <- data.frame(butternut_diff)
+
+##two of the points needs to be removed - they are out of the extent
+butternut_diff_df <- butternut_diff_df[-c(5714:5715),]
+
+##now we can write out to file 
+write.csv(butternut_diff_df, "SDMs\\InputFiles\\Points\\butternut_abs.csv")
 
 ######################################################################
 ###################### Variable Selection ############################
