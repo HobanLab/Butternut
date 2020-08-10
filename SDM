@@ -166,7 +166,7 @@ butternut_pa <- rbind(butternut_presence, butternut_diff_df)
 ##write out presence and absence point values
 write.csv(butternut_pa, "SDMs/InputFiles/Points/butternut_pa.csv")
 
-##load worldclim documents
+########Load worldclim documents
 worldclim <- getData("worldclim",var="bio",res= 2.5)
 
 ##crop worldclim rasters
@@ -178,67 +178,68 @@ worldclim_project <- projectRaster(worldclim_crop, crs = "+proj=aea +lat_1=20 +l
 ##Rename layers
 names(worldclim_project) <- c("mat", "mdr", "iso", "temp_season", "mtwm", "mtcm", "range", "mtwetq", "mtdq", "mtwarq", "mtcq", "map", "pwm", "pdm", "precip_season", "pwetq", "pdq", "pwarq", "pcq")
 
-                              
-##load in soil variables 
-setwd("C:/Users/eschumacher/Documents/JUCI/soil2/NACP_MSTMIP_UNIFIED_NA_SOIL_MA_1242/data")
+#######Load in soil layers 
+##Set working directory 
+setwd("SDMs\\InputFiles\\soils\\data")
 
-##load in soil layers
-dom_soil <- raster("Unified_NA_Soil_Map_First_Dominant_Soil_Component_Area_Percentage.tif")
-max_depth <- raster("Unified_NA_Soil_Map_Maximum_Soil_Depth.tif")
-sub_cat <- raster("Unified_NA_Soil_Map_Subsoil_Cation_Exchange_Capacity.tif")
-sub_clay <- raster("Unified_NA_Soil_Map_Subsoil_Clay_Fraction.tif")
-sub_gravel <- raster("Unified_NA_Soil_Map_Subsoil_Gravel_Content.tif")
-sub_oc <- raster("Unified_NA_Soil_Map_Subsoil_Organic_Carbon.tif")
-sub_ph <- raster("Unified_NA_Soil_Map_Subsoil_pH.tif")
-sub_bulk <- raster("Unified_NA_Soil_Map_Subsoil_Reference_Bulk_Density.tif")
-sub_sand <- raster("Unified_NA_Soil_Map_Subsoil_Sand_Fraction.tif")
-sub_silt <- raster("Unified_NA_Soil_Map_Subsoil_Silt_Fraction.tif")
-top_cat <- raster("Unified_NA_Soil_Map_Topsoil_Cation_Exchange_Capacity.tif")
-top_clay <- raster("Unified_NA_Soil_Map_Topsoil_Clay_Fraction.tif")
-top_gravel <- raster("Unified_NA_Soil_Map_Topsoil_Gravel_Content.tif")
-top_oc <- raster("Unified_NA_Soil_Map_Topsoil_Organic_Carbon.tif")
-top_ph <- raster("Unified_NA_Soil_Map_Topsoil_pH.tif")
-top_bulk <- raster("Unified_NA_Soil_Map_Topsoil_Reference_Bulk_Density.tif")
-top_sand <- raster("Unified_NA_Soil_Map_Topsoil_Sand_Fraction.tif")
-top_silt <- raster("Unified_NA_Soil_Map_Topsoil_Silt_Fraction.tif")
+##create multiple lists
+soils_list = list.files(pattern = ".tif$")
+soil_raster_list <- list()
+soil_crop_list <- list()
+soil_project_list <- list()
 
-soil_stack <- stack(dom_soil, max_depth, sub_cat, sub_clay,
-                    sub_gravel, sub_oc, sub_ph, sub_bulk, sub_sand, sub_silt, 
-                    top_cat, top_clay, top_gravel, top_oc, top_ph, top_bulk, top_sand,
-                    top_silt
+##loop through soil docs to crop and project every layer 
+for(j in 1:length(soils_list)) {
+  #convert to rasters
+    soil_raster_list[[j]] = raster(soils_list[[j]])
+    
+    soil_crop_list[[j]] <- crop(soil_raster_list[[j]], extent_raster)
+    
+    soil_project_list[[j]] <- projectRaster(soil_crop_list[[j]], crs = "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+    
+}
+
+##now create a stack 
+soil_stack <- stack(soil_project_list[[1]], soil_project_list[[2]], 
+                    soil_project_list[[3]], soil_project_list[[4]],
+                    soil_project_list[[5]], soil_project_list[[6]],
+                    soil_project_list[[7]], soil_project_list[[8]],
+                    soil_project_list[[9]], soil_project_list[[10]],
+                    soil_project_list[[11]], soil_project_list[[12]],
+                    soil_project_list[[13]], soil_project_list[[14]],
+                    soil_project_list[[15]], soil_project_list[[16]],
+                    soil_project_list[[17]], soil_project_list[[18]]
+  
 )
+                        
+##rename stack 
+soil_names <- c("dom_soil", "max_depth", "sub_cat", "sub_clay", "sub_gravel", 
+                "sub_oc", "sub_ph", "sub_bulk", "sub_sand", "sub_silt", 
+                "top_cat", "top_clay", "top_gravel", "top_oc", "top_ph", 
+                "top_bulk", "top_sand", "top_silt")
+names(soil_stack) <- soil_names
 
-##crop
-soil_crop <- crop(soil_stack, extent_raster)
-##project
-soil_proj <- projectRaster(soil_crop, crs = "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
-
-##elevation
-setwd("C:/Users/eschumacher/Documents/Butternut")
-
-##elevation
-elevation <- raster("wc2.1_2.5m_elev.tif")
-
-##crop to extent 
-elevation_crop <- crop(elevation, extent_raster)
-##project
-elevation_proj <- projectRaster(elevation_crop, crs = "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
 ##calculate slope and aspect
-slope_aspect <- slopeAspect(elevation_proj, out=c('slope', 'aspect'), unit='radians')
+slope_aspect <- slopeAspect(extent_project, out=c('slope', 'aspect'), unit='radians')
 
 ##now extract values
-worldclim_extract <- extract(worldclim_project, butternut_PA)
-soil_extract <- extract(soil_proj, butternut_PA)
-slopeaspect_extract <- extract(slope_aspect, butternut_PA)
-elevation_extract <- extract(elevation_proj, butternut_PA)
+worldclim_extract <- extract(worldclim_project, butternut_pa[,1:2])
+soil_extract <- extract(soil_stack, butternut_pa[,1:2])
+slopeaspect_extract <- extract(slope_aspect, butternut_pa[,1:2])
+elevation_extract <- extract(extent_project, butternut_pa[,1:2])
 
 ##bind into columns 
-butternut_var <- cbind(butternut_PA_df, elevation_extract, slopeaspect_extract, worldclim_extract, soil_extract)
+butternut_var <- cbind(butternut_pa, elevation_extract, slopeaspect_extract, worldclim_extract, soil_extract)
+
+##remove any columns that do not have any information -- likely in lakes 
 butternut_var <- na.omit(butternut_var)
 
+##rename
+colnames(butternut_var) <- c("Longitude", "Latitude", "PA", "Elevation", "Slope", "Aspect", "MAT", "MDR", "ISO", "Temp_Season", "MTWM", "MTCM", "range", "MTwetQ", "MTDQ", "MTwarQ", "MTCQ", "MAP", "PWM", "PDM", "Precip_Season", "PWetQ", "PDQ","PwarQ", "PCQ","Dom_Soil_Comp", "Max_Soil_Depth","Sub_cat","Sub_Clay","Sub_Gravel","Sub_OC","Sub_ph","Sub_bulk","Sub_Sand","Sub_Silt","Top_cat","Top_Clay","Top_Gravel","Top_OC","Top_ph","Top_Bulk","Top_Sand","Top_Silt")
+
 ##check out how many individuals are left 
-length(butternut_var[butternut_var$PA == "1",]$PA) ##Presence points, 5386
-length(butternut_var[butternut_var$PA == "0",]$PA) ##Absence points, 5062
+length(butternut_var[butternut_var$PA == "1",]$PA) ##Presence points, 5666
+length(butternut_var[butternut_var$PA == "0",]$PA) ##Absence points, 5226
 
 ##########creation correlation dissimilarity matrix
 
