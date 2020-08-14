@@ -95,18 +95,11 @@ write.csv(occurence_no_auto, "SDMs/InputFiles/Points/occurrence_noauto.csv")
 ######################################################################
 ################# Generated Pseudo-Absence Points ####################
 ######################################################################
-##load in data 
-butternut_presence <- read.csv("InputFiles/Points/occurrence_noautocorrelation.csv")
-butternut_presence <- butternut_presence[,-1]
-
-coordinates(butternut_presence) <- c('Longitude', 'Latitude')
-proj4string(butternut_presence) <- CRS("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
-
 ##Create extent raster
 extent_raster <- raster(ncol = 100, nrow = 100,xmn=min_lon,xmx=max_lon,ymn=min_lat,ymx=max_lat)
 
 ##Load in elevation raster
-elev_raster <- raster("SDMs\\InputFiles\\wc2.1_2.5m_elev.tif")
+elev_raster <- raster("InputFiles\\wc2.1_2.5m_elev.tif")
 
 ##crop raster to the full extent
 elev_crop <- crop(elev_raster, extent_raster)
@@ -142,7 +135,7 @@ butternut_abs <- data.frame(butternut_diff)
 butternut_pres <- data.frame(presence_proj)
 
 ##now we can write out to file 
-write.csv(butternut_diff_df, "InputFiles\\Points\\butternut_abs.csv")
+write.csv(butternut_abs, "InputFiles\\Points\\butternut_abs.csv")
 
 ######################################################################
 ###################### Variable Selection ############################
@@ -164,19 +157,43 @@ colnames(butternut_diff_df) <- col_names
 butternut_pa <- rbind(butternut_pres, butternut_abs)
 
 ##write out presence and absence point values
-write.csv(butternut_pa, "SDMs/InputFiles/Points/butternut_pa.csv")
+write.csv(butternut_pa, "InputFiles/Points/butternut_pa.csv")
 
 ########Load worldclim documents
-worldclim <- getData("worldclim",var="bio",res= 2.5)
+########Load worldclim documents
+setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\wc2-5")
 
-##crop worldclim rasters
-worldclim_crop <- crop(worldclim, extent_raster)
+##create multiple lists
+worldclim_list = list.files(pattern = ".bil$")
+worldclim_raster_list <- list()
+worldclim_crop_list <- list()
+worldclim_project_list <- list()
 
-##Project worldclim variables 
-worldclim_project <- projectRaster(worldclim_crop, crs = "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+##loop through soil docs to crop and project every layer 
+for(j in 1:length(worldclim_list)) {
+  #convert to rasters
+  worldclim_raster_list[[j]] = raster(paste0("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\wc2-5\\", worldclim_list[[j]]))
+  
+  worldclim_crop_list[[j]] <- crop(worldclim_raster_list[[j]], extent_raster)
+  
+  worldclim_project_list[[j]] <- projectRaster(worldclim_crop_list[[j]], crs = "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+  
+}
 
 ##Rename layers
-names(worldclim_project) <- c("mat", "mdr", "iso", "temp_season", "mtwm", "mtcm", "range", "mtwetq", "mtdq", "mtwarq", "mtcq", "map", "pwm", "pdm", "precip_season", "pwetq", "pdq", "pwarq", "pcq")
+worldclim_names <- c("mat", "mtwarq", "mtcq", "map", "pwetm", "pdm", "precip_season",
+                      "pwetq", "pdq", "pwarq", "pcq", "mdr","iso","temp_season", 
+                     "mtwm","mtcm", "temp_range", "mtwetq", "mtdq")
+  
+for(p in 1:length(worldclim_names)) {
+  
+  names(worldclim_project_list[[p]]) <- worldclim_names[[p]]
+  
+}
+
+
+
+
 
 #######Load in soil layers 
 ##Set working directory 
