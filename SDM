@@ -191,13 +191,21 @@ for(p in 1:length(worldclim_names)) {
   
 }
 
-
-
-
+##now create a raster stack of these variables
+worldclim_stack <- stack(worldclim_project_list[[1]], worldclim_project_list[[2]],
+                     worldclim_project_list[[3]], worldclim_project_list[[4]],
+                     worldclim_project_list[[5]], worldclim_project_list[[6]],
+                     worldclim_project_list[[7]], worldclim_project_list[[8]],
+                     worldclim_project_list[[9]], worldclim_project_list[[10]],
+                     worldclim_project_list[[11]], worldclim_project_list[[12]],
+                     worldclim_project_list[[13]], worldclim_project_list[[14]],
+                     worldclim_project_list[[15]], worldclim_project_list[[16]],
+                     worldclim_project_list[[17]], worldclim_project_list[[18]],
+                     worldclim_project_list[[19]])
 
 #######Load in soil layers 
 ##Set working directory 
-setwd("SDMs\\InputFiles\\soils\\data")
+setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\soils\\data")
 
 ##create multiple lists
 soils_list = list.files(pattern = ".tif$")
@@ -240,7 +248,7 @@ names(soil_stack) <- soil_names
 slope_aspect <- slopeAspect(extent_project, out=c('slope', 'aspect'), unit='radians')
 
 ##now extract values
-worldclim_extract <- extract(worldclim_project, butternut_pa[,1:2])
+worldclim_extract <- extract(worldclim_stack, butternut_pa[,1:2])
 soil_extract <- extract(soil_stack, butternut_pa[,1:2])
 slopeaspect_extract <- extract(slope_aspect, butternut_pa[,1:2])
 elevation_extract <- extract(extent_project, butternut_pa[,1:2])
@@ -252,14 +260,14 @@ butternut_var <- cbind(butternut_pa, elevation_extract, slopeaspect_extract, wor
 butternut_var <- na.omit(butternut_var)
 
 ##rename
-colnames(butternut_var) <- c("Longitude", "Latitude", "PA", "Elevation", "Slope", "Aspect", "MAT", "MDR", "ISO", "Temp_Season", "MTWM", "MTCM", "range", "MTwetQ", "MTDQ", "MTwarQ", "MTCQ", "MAP", "PWM", "PDM", "Precip_Season", "PWetQ", "PDQ","PwarQ", "PCQ","Dom_Soil_Comp", "Max_Soil_Depth","Sub_cat","Sub_Clay","Sub_Gravel","Sub_OC","Sub_ph","Sub_bulk","Sub_Sand","Sub_Silt","Top_cat","Top_Clay","Top_Gravel","Top_OC","Top_ph","Top_Bulk","Top_Sand","Top_Silt")
+colnames(butternut_var) <- c("Longitude", "Latitude", "PA", "Elevation", "Slope", "Aspect", "MAT", "MDR", "ISO", "Temp_Season", "MTWM", "MTCM", "temp_range", "MTwetQ", "MTDQ", "MTwarQ", "MTCQ", "MAP", "PWM", "PDM", "Precip_Season", "PWetQ", "PDQ","PwarQ", "PCQ","Dom_Soil_Comp", "Max_Soil_Depth","Sub_cat","Sub_Clay","Sub_Gravel","Sub_OC","Sub_ph","Sub_bulk","Sub_Sand","Sub_Silt","Top_cat","Top_Clay","Top_Gravel","Top_OC","Top_ph","Top_Bulk","Top_Sand","Top_Silt")
 
 ##check out how many individuals are left 
 length(butternut_var[butternut_var$PA == "1",]$PA) ##Presence points, 5666
 length(butternut_var[butternut_var$PA == "0",]$PA) ##Absence points, 5226
 
 ##write out points with variables
-write.csv(butternut_var, "SDMs\\InputFiles\\Points\\butternut_variables.csv")
+write.csv(butternut_var, "G:\\Shared drives\\Emily_Schumacher\\SDMs\\OutputFiles\\butternut_variables.csv")
 
 ##########creation correlation dissimilarity matrix
 
@@ -361,7 +369,7 @@ for (i in 1:length(lr)){
         pred.train = predict.gbm(butternut_model, traindata, n.trees = butternut_model$gbm.call$best.trees, type = "response") 
         train=calc.deviance(traindata$PA, pred.train)
         
-        ##Model external metrics , calculated over an evaluation datasetevaluation.dfâ      
+        ##Model external metrics , calculated over an evaluation datasetevaluation    
         pred_test = predict.gbm(butternut_model, testdata, n.trees = butternut_model$gbm.call$best.trees, type = "response") 
         d <- cbind(testdata$PA, pred_test) 
         pres <- d[d[,1]==1, 2]
@@ -375,7 +383,7 @@ for (i in 1:length(lr)){
         independent=calc.deviance(testdata$PA, pred_test)  
         #residual deviance was calculated between observed presence/absence data (v 1) and predicted probability of presence (v 2 ),
         ext.residual.deviance = calc.deviance(testdata$PA, pred_test, calc.mean=T)
-        ext.null.deviance = calc.deviance(testdata$PA,rep(mean(testdata$PA), 7274),calc.mean=T) 
+        ext.null.deviance = calc.deviance(testdata$PA,rep(mean(testdata$PA), 5715),calc.mean=T) 
        #Calculating deviance explained in the evaluation dataset. Portion of data withheld during model building
         ext.dev=(ext.null.deviance - ext.residual.deviance)/ext.null.deviance
         
