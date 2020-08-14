@@ -400,19 +400,19 @@ th
 summary(butternut_model)
 
 ###List out butternut predictors 
-butternut_predictors<-c("Seasonal Precipitation (mm)", "Subsoil Gravel Fraction", "Topsoil Bulk Density", "Isothermality", "Topsoil Silt Fraction", "Precipitation of the Wettest Month", "Slope", "Maximum Soil Depth (m)", "Topsoil Clay Fraction", "Precipitation of the Warmest Quarter (mm)")
-butternut_predictors<-factor(butternut_predictors,levels= c("Seasonal Precipitation (mm)", "Subsoil Gravel Fraction", "Topsoil Bulk Density", "Isothermality", "Topsoil Silt Fraction", "Precipitation of the Wettest Month", "Slope", "Maximum Soil Depth (m)", "Topsoil Clay Fraction", "Precipitation of the Warmest Quarter (mm)"))
-butternut_influences<-data.frame(butternut_predictors,percentages=c(20.3, 10.8, 10.4, 9.34, 9.34, 8.81, 8.72, 8.52, 6.89, 6.82))
-                                 
+butternut_predictors<-c("Precipitation of the Wettest Month (mm)", "Topsoil Silt Fraction","Mean Temperature of the Coldest Quarter (C)", "Subsoil pH", "Topsoil Clay Fraction", "Slope")
+butternut_predictors<-factor(butternut_predictors,levels= c("Precipitation of the Wettest Month (mm)", "Topsoil Silt Fraction","Mean Temperature of the Coldest Quarter (C)", "Subsoil pH", "Topsoil Clay Fraction", "Slope"))
+butternut_influences<-data.frame(butternut_predictors,percentages=c(31.7, 18.2, 14.0, 13.3, 12.4, 10.3))
+
 butternut_contribution_bp <- ggplot(data=butternut_influences, aes(x=butternut_predictors, y=percentages)) +
   geom_bar(stat="identity", color="black", fill="dodgerblue",width=.4)+
   geom_text(aes(y=percentages, label=paste0(percentages, '%')), vjust=.5, hjust=-.1,size=3)+
-  theme_minimal()+ggtitle("Relative Influence of Predictors (CV AUC = 0.865)")+theme_light(base_size=14)+theme(plot.margin = unit(c(1,1,1,1), "cm"))+ylim(0,100)+
+  theme_minimal()+ggtitle("Relative Influence of Predictors (CV AUC = 0.836)")+theme_light(base_size=14)+theme(plot.margin = unit(c(1,1,1,1), "cm"))+ylim(0,100)+
   xlab("Predictors") + ylab("Percent Contribution to the Model")
 
 butternut_contribution_bp2 <- butternut_contribution_bp + coord_flip()
 
-pdf("SDMs\\OutputFiles\\tenvar_bp.pdf", width = 10, height = 8)
+pdf("G:\\Shared drives\\Emily_Schumacher\\SDMs\\OutputFiles\\contribution_bp.pdf", width = 10, height = 8)
 butternut_contribution_bp2
 dev.off()  
 
