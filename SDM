@@ -24,13 +24,13 @@ library(geosphere)
 
 ##set working directory
 ##load data points
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI")
+setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs")
 
 ######################################################################
 ################# Reduce Spatial Autocorrelation #####################
 ######################################################################
 ##read in occurrence records
-butternut_presence <- read.csv("SDMs/InputFiles/Points/butternut_occurrence_points.csv")
+butternut_presence <- read.csv("InputFiles/Points/butternut_presence.csv")
 butternut_presence <- butternut_presence[,-1]
 
 ######################################################################
@@ -96,7 +96,7 @@ write.csv(occurence_no_auto, "SDMs/InputFiles/Points/occurrence_noauto.csv")
 ################# Generated Pseudo-Absence Points ####################
 ######################################################################
 ##load in data 
-butternut_presence <- read.csv("SDMs/InputFiles/Points/occurrence_noautocorrelation.csv")
+butternut_presence <- read.csv("InputFiles/Points/occurrence_noautocorrelation.csv")
 butternut_presence <- butternut_presence[,-1]
 
 coordinates(butternut_presence) <- c('Longitude', 'Latitude')
@@ -123,8 +123,11 @@ background_2 <- gridSample(background_points, extent_project, n=1)
 bg_proj <- SpatialPoints(background_2, proj4string=CRS("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"))
 
 ##now set occurrence records to a spatial gridded object
+presence_proj <- spTransform(occurrence_wo_auto, CRS("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"))
+
+##now set occurrence records to a spatial gridded object
 set.seed(8)
-extent_sample <- gridSample(butternut_presence, extent_project, n=1) 
+extent_sample <- gridSample(presence_proj, extent_project, n=1) 
 
 ##turn into a spatial points object
 occurrence_grid_spatial <-SpatialPoints(extent_sample, CRS("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"))
@@ -133,26 +136,23 @@ occurrence_grid_spatial <-SpatialPoints(extent_sample, CRS("+proj=aea +lat_1=20 
 butternut_diff <- gDifference(bg_proj, occurrence_grid_spatial)
 
 ##Butternut absence data frame
-butternut_diff_df <- data.frame(butternut_diff)
+butternut_abs <- data.frame(butternut_diff)
 
-##two of the points needs to be removed - they are out of the extent
-butternut_diff_df <- butternut_diff_df[-c(5714:5715),]
+##presence df
+butternut_pres <- data.frame(presence_proj)
 
 ##now we can write out to file 
-write.csv(butternut_diff_df, "SDMs\\InputFiles\\Points\\butternut_abs.csv")
+write.csv(butternut_diff_df, "InputFiles\\Points\\butternut_abs.csv")
 
 ######################################################################
 ###################### Variable Selection ############################
 ######################################################################
 ##combine to one document
 ##Absence column added 
-butternut_diff_df$PA <- "0"
+butternut_abs$PA <- "0"
 
 ##Add presence column to presence points
-butternut_presence$PA <- "1"
-
-##Presence points 
-butternut_presence <- butternut_presence[,-1]
+butternut_pres$PA <- "1"
 
 ##get col names
 col_names <- colnames(butternut_presence) 
@@ -161,7 +161,7 @@ col_names <- colnames(butternut_presence)
 colnames(butternut_diff_df) <- col_names
 
 ##combine into one data frame
-butternut_pa <- rbind(butternut_presence, butternut_diff_df)
+butternut_pa <- rbind(butternut_pres, butternut_abs)
 
 ##write out presence and absence point values
 write.csv(butternut_pa, "SDMs/InputFiles/Points/butternut_pa.csv")
