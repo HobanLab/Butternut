@@ -55,6 +55,9 @@ elev_crop <- crop(elev_raster, extent_raster)
 ##project
 extent_project <- projectRaster(elev_crop, crs = paste0(projection))
 
+##write out raster
+writeRaster(extent_project, "InputFiles\\extent_project.tif")
+
 ##Now project presence points
 pres_proj <- spTransform(butternut_pres, CRS(paste0(projection)))
 
