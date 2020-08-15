@@ -42,7 +42,7 @@ proj4string(butternut_presence) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84"
 ######################################################################
 
 ##Projection
-projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83")
 
 ##Project to Albers Equal Area Conic 
 butternut_presence_2 <- spTransform(butternut_presence, CRS(paste0(projection)))
