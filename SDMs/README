@@ -5,3 +5,11 @@ This project was to determine how butternut's ecological preferences in the pres
 Then, the ecological preferences using WorldClim were projected into the past using Paleoclim variables to generate habitat suitability models for the last 22,000 YBP. 
 
 Finally, this was used to generate predicted suitable habitat for the 130,000 YBP - now. 
+
+Folder description:
+The original species distribution modeling code is stored in SDMs_soil. These were ecological niche models for present day for butternut with soil variables included. 
+
+SDMs_Ecological --> contains SDM code with only worldclim variables that were then projected into the past using the Paleoclim variables. I attempted ecological niche models using pollen records but the model can't work with so few records, so prediction maps were generated from predicting suitable habitat. 
+
+
+
