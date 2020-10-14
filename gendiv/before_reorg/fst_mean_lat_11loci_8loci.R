@@ -46,10 +46,7 @@ butternut_latlon_nomd <- butternut_latlon[butternut_latlon$Ind %in% rownames(but
 butternut_24pop_fst <- as.matrix(pairwise.neifst(butternut_24pop[,-1]))
 
 ##code to create name file
-butternut_24pop_names <- unique(butternut_latlon_nomd$Pop)
-
-rownames(butternut_24pop_fst) <- butternut_24pop_names
-colnames(butternut_24pop_fst) <- butternut_24pop_names
+butternut_24pop_names <- rownames(butternut_24pop_fst)
 
 ##now do lon lat calcs
 butternut_mean_lon <- matrix()
