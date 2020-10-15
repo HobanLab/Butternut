@@ -1,1 +1,7 @@
-For the butternut project, I processed the scores sent by Jeanne in order to determine genetic patterns. I then reorganized the populations and removed individuals based on missing data to make sure the patterns observed were correct. 
+Butternut - Juglans cinerea - data from Sean Hoban and Jeanne Romero-Severson lab, code by Emily Schumacher (January 2020 - October 2020)
+
+For the butternut project, I processed the scores sent by Jeanne in order to determine genetic patterns. I then reorganized the populations and removed individuals based on missing data to make sure the patterns observed were correct.
+
+"Before the reorg" documents refer to figures created before I reorganized loci documents based on scoring differences between windows of time. This project usees genotype files that were created between the years of 2010 - 2015, so there were different calls based on different people calling. Therefore, we ran documents with 11 loci and 8 loci because 3 loci were identified to differ between who was scoring. Data files are stored in Hoban Lab Google Drive. 
+
+The "after the reorg" contains documents created after loci documents were edited for potential binning differenes. This is documented in the Butternut_JUCI folder on the Hoban Lab Google Drive. These are the most recent genetic diversity documents as of 10/15/20. This includes a switch to GESTE Fst instead of pairwise Fst as well as a switch to using distance to range edge for determining genetic diversity reduction instead of just using mean latitude for populations. Also documents are now stored on the "Shared Drive" under Emily Schumacher instead of the main lab Google Drive.   
