@@ -103,9 +103,47 @@ butternut_buffer_WGS84 <- spTransform(butternut_buffer, CRS("+proj=longlat +ellp
 dist_to_edge <- dist2Line(butternut_coord_df, butternut_buffer_WGS84, distfun = distGeo)
 
 ####Now combine into a data frame
-butternut_dist <- cbind(butternut_mean_lon, butternut_mean_lat, (dist_to_edge[,1]/1000))
+butternut_dist <- data.frame(cbind(butternut_mean_lon, butternut_mean_lat, (dist_to_edge[,1]/1000)))
 colnames(butternut_dist) <- c("MeanLong", "MeanLat", "Dist_To_Edge")
 rownames(butternut_dist) <- butternut_24pop_names
+butternut_dist$col <- NA
+butternut_dist[1:6,4] <- "firebrick1"
+butternut_dist[7:11,4] <- "firebrick4"
+butternut_dist[12:24,4] <- "dodgerblue"
 
+##calculate regression
+edgedist_fst_lm <- lm(reorg_geste_fst[,2]~butternut_dist[,3])
+edgedist_fst_lm_sum <- summary(edgedist_fst_lm)
+
+##create r2 and p values
+edgefst_r2 <- edgedist_fst_lm_sum$adj.r.squared
+edgefst_coef <- edgedist_fst_lm_sum$coefficients
+edgefst_pvalue <- edgefst_coef[2,4]
+edgefst_rp <- vector('expression',2)
+edgefst_rp[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
+                           list(MYVALUE = format(edgefst_r2,dig=3)))[2]
+edgefst_rp[2] <- substitute(expression(italic(p) == MYOTHERVALUE), 
+                           list(MYOTHERVALUE = format(edgefst_pvalue, digits = 2)))[2]
+
+
+##plot comparison 
+pdf(paste0(dist_edge_path,"fst_dist_edge.pdf"), width = 8, height = 6)
+
+plotCI(butternut_dist[,3], reorg_geste_fst[,2], ui = reorg_geste_fst[,5], li = reorg_geste_fst[,4], 
+       ylim = c(0,0.15), pch = 17, xlab = "Mean Distance to Edge (km)",
+       xlim = c(0,600),
+       ylab = "GESTE Fst", col = butternut_dist[,4], cex = (butternut_24pop_poppr[1:24,2]/50), 
+       main = "GESTE Fst Comapred to Distance to Range Edge (km)")
+
+text(butternut_dist[,3], reorg_geste_fst[,2], labels = butternut_24pop_names, 
+     cex = 0.8, pos = 3)
+
+abline(edgedist_fst_lm, col = "dodgerblue4")
+
+legend('topright', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
+
+legend('topleft', legend = edgefst_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
+
+dev.off()
 
 
