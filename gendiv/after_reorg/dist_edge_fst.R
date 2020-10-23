@@ -111,6 +111,9 @@ butternut_dist[1:6,4] <- "firebrick1"
 butternut_dist[7:11,4] <- "firebrick4"
 butternut_dist[12:24,4] <- "dodgerblue"
 
+##write out distance to edge csv
+write.csv(butternut_dist, paste0(dist_edge_path, "dist_edge_df.csv"))
+
 ##calculate regression
 edgedist_fst_lm <- lm(reorg_geste_fst[,2]~butternut_dist[,3])
 edgedist_fst_lm_sum <- summary(edgedist_fst_lm)
