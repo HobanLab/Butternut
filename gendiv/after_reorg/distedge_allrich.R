@@ -217,8 +217,8 @@ legend('topleft', legend = quad_allrich_dist_rp, pch = 4, col = "darkslategray2"
        title = "Regression with WI",
        bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
 
-legend('bottomleft', legend = linear_allrich_dist_red_rp, pch = 4, 
-       col = "darkorchid", title = "Regression without WI",
+legend('bottomleft', legend = quad_allrich_dist_red_rp, pch = 4, 
+       col = "darkseagreen4", title = "Regression without WI",
        bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
 
 legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), 
