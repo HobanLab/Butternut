@@ -55,7 +55,6 @@ butternut_poppr <- poppr(butternutgen_reorg)
 #############################################
 ############# Mean Lat and Long #############
 #############################################
-
 ##Calculate mean latitude and longitude for every population
 ##now do lon lat calcs
 butternut_mean_lon <- matrix()
@@ -89,9 +88,8 @@ min_lat <- min(butternut_mean_lat)
 max_lat <- max(butternut_mean_lat)
 
 ##########################################################
-################ Genetic Diversity Plotting ##############
+################### Linear Modeling ######################
 ##########################################################
-################Allelic Richness
 ##Calculate Allelic Richness
 reorg_allrich <- colSums(allelic.richness(butternutgen_reorg)$Ar)/length(butternutgen_reorg@loc.n.all)
 
@@ -136,18 +134,31 @@ allrich_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                            list(MYOTHERVALUE = format(allrich_red_pvalue, digits = 2)))[2]
 
 ##Allelic Richness Linear
-setwd("G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures")
-pdf("AllRich_Lat.pdf", width = 8, height = 6)
-plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], pch = 17, main = "Number of Alleles Compared to Mean Latitude", ylab = "Number of Alleles", xlab = "Mean Latitude", cex = (butternut_poppr[1:24,2]/80), ylim = c(5,10))
+pdf(paste0(shared_drive,"\\all_rich_lat_linear.pdf"), width = 8, height = 6)
+
+##create plot
+plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], pch = 17, 
+     main = "Number of Alleles Compared to Mean Latitude", ylab = "Number of Alleles", 
+     xlab = "Mean Latitude", cex = (butternut_poppr[1:24,2]/80), ylim = c(5,10))
+##write text
 text(all_rich_lat_df[,2]~all_rich_lat_df[,1], labels = butternut_24pop_names, cex = 0.8, pos = 1)
+##write a linear model
 abline(allrich_lm, col = "dodgerblue4")
 abline(allrich_red_lm, col = "darkorchid4")
-legend('topleft', legend = allrich_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 4, col = "dodgerblue4")
-legend('bottomleft', legend = allrich_red_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 4, col = "darkorchid4")
-legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
+##Write legends
+legend('topleft', legend = allrich_rp, bty = 'n', border = "black", 
+       pt.cex = 1, cex = 0.8, pch = 4, col = "dodgerblue4",
+       title = "With WI Populations")
+legend('bottomleft', legend = allrich_red_rp, bty = 'n', border = "black", 
+       pt.cex = 1, cex = 0.8, pch = 4, col = "darkorchid4",
+       title = "Without WI Populations")
+legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), 
+       pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
 dev.off()
 
-##Do quadratic
+##########################################################
+################# Quadratic Modeling #####################
+##########################################################
 #calculate data points 
 points <- all_rich_lat_df[,1]
 points2 <- points^2
@@ -196,17 +207,39 @@ allrich_quad_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                                list(MYOTHERVALUE = format(allrich_quad_red_pvalue, digits = 2)))[2]
 
 ##Now Plot 
-pdf("quad_reg_num_all.pdf", width = 8, height = 6)
+pdf(paste0(shared_drive, "\\quad_all_rich_lat.pdf"), width = 8, height = 6)
+
+##start plot 
 plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], 
      pch = 17, main = "Number of Alleles Compared to Mean Latitude", ylab = "Number of Alleles", 
      xlab = "Mean Latitude", 
      cex = (butternut_poppr[1:24,2]/100), ylim = c(5,10))
+##label text
 text(all_rich_lat_df[,2]~all_rich_lat_df[,1], labels = butternut_24pop_names, cex = 0.8, pos = 1)
+##draw quadratic lines
 lines(points_values, points_counts, col = "darkslategray3", lwd = 3)
 lines(points_values_21, points_counts_21, col = "darkseagreen4", lwd = 3)
+##draw legends
 legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, 
        col = c("firebrick1", "firebrick4","dodgerblue"))
-legend('topleft', legend = allrich_quad_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 4, col = "darkslategray3")
-legend('bottomleft', legend = allrich_quad_red_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 4, col = "darkseagreen4")
+legend('topleft', legend = allrich_quad_rp, bty = 'n', border = "black", 
+       pt.cex = 1, cex = 0.8, pch = 4, col = "darkslategray3",
+       title = "With WI Populations")
+legend('bottomleft', legend = allrich_quad_red_rp, bty = 'n', border = "black", 
+       pt.cex = 1, cex = 0.8, pch = 4, col = "darkseagreen4",
+       title = "Without WI Populations")
 dev.off()
 
+##create df of r2 and pvalues 
+lat_all_rich_df <- matrix(nrow = 4, ncol = 2)
+rownames(lat_all_rich_df) <- c("Linear_Lat_AllRich", "Linear_Lat_AllRich_woWI",
+                               "Quadratic_Lat_AllRich", "Quadratic_Lat_AllRich_woWI")
+colnames(lat_all_rich_df) <- c("Pvalues","R2")
+##add values
+lat_all_rich_df[1,] <- c(allrich_pvalue,allrich_r2)
+lat_all_rich_df[2,] <- c(allrich_red_pvalue, allrich_red_r2)
+lat_all_rich_df[3,] <- c(allrich_quad_pvalue, allrich_quad_r2)
+lat_all_rich_df[4,] <- c(allrich_quad_red_pvalue, allrich_quad_red_r2)
+
+##write out csv
+write.csv(lat_all_rich_df, paste0(shared_drive, "\\r2_pvalue_lat_all_rich_df.csv"))
