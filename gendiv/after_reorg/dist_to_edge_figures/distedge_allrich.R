@@ -227,4 +227,19 @@ legend('bottom', legend = c("New Brunswick", "Ontario", "United States"),
 
 dev.off()
 
+##create data frame of pvalues r2 for linear and quad models
+dist_edge_allrich_df <- matrix(nrow = 4, ncol = 2)
+rownames(dist_edge_allrich_df) <- c("linear_allrich_dist_edge",
+                                    "linear_allrich_dist_edge_woWI",
+                                    "quadratic_allrich_dist_edge",
+                                    "quadratic_allrich_dist_edge_woWI")
+colnames(dist_edge_allrich_df) <- c("Pvalue","R2")
+##write values
+dist_edge_allrich_df[1,] <- c(linear_allrich_dist_pvalue, linear_allrich_dist_r2)
+dist_edge_allrich_df[2,] <- c(linear_allrich_dist_red_pvalue, linear_allrich_dist_red_r2)
+dist_edge_allrich_df[3,] <- c(quad_allrich_dist_pvalue, quad_allrich_dist_r2)
+dist_edge_allrich_df[4,] <- c(quad_allrich_dist_red_pvalue, quad_allrich_dist_red_r2)
+
+##write out
+write.csv(dist_edge_allrich_df, paste0("G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures\\pvalue_r2_dist_edge_allrich.csv"))
 
