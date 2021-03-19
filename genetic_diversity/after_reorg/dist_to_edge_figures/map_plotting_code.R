@@ -26,7 +26,7 @@ library(PopGenReport)
 #####################################
 ############ Directories ############
 #####################################
-shared_drive <- "G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures"
+shared_drive <- "G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures"
 butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI"
 
 #####################################
@@ -136,9 +136,30 @@ coordinates(coord_df) <- c('Longitude', 'Latitude')
 proj4string(coord_df) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 coord_df_proj <- spTransform(coord_df, proj_out)
 
-###plot the data
-pdf("G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures\\pop_map.pdf", width = 10, height = 8)
+##read in buffer shapefile 
+butternut_buffer <- readOGR(dsn = paste0(shared_drive, "\\dist_edge"), layer = "butternut_buffer")
+butternut_buffer_trans <- sp::spTransform(na_shp, proj_out)
+
+##list of 24 colors for populations 
+butternut_col <- c("darkmagenta", "darkorchid3", "deeppink3", "darkviolet", "deeppink","lightpink",
+                   "lightcoral","orangered3","red4","firebrick1","brown1", "darkgoldenrod1",
+                   "darkseagreen", "darkgoldenrod4","gold","deepskyblue", "lightsalmon1","khaki", 
+                   "olivedrab4", "olivedrab3","forestgreen","lightblue3","dodgerblue2","orange3")
+
+butternut_col_df <- matrix(nrow = length(butternut_reorg_lonlat[,1]), ncol = 2)
+butternut_col_df[,1] <- as.character(butternut_reorg_lonlat$Pop)
+for(i in 1:length(butternut_24pop_names)){
+  
+  butternut_col_df[butternut_col_df[,1] == paste0(butternut_24pop_names[i]),][,2] <- butternut_col[i]
+  
+}
+
+#scalebar(d, xy = NULL, type = "line", divs = 2, below = "kilometers", lonlat = NULL, label, adj=c(0.5, -0.5), lwd = 2)
+
+##plot mean population coordinates 
+pdf("G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures\\pop_map_allind.pdf", width = 10, height = 8)
 plot(north_america, xlim = c(max_min_df_trans[,1]), ylim = c(max_min_df_trans[,2]))
-points(coord_df_proj, pch = 17, col = "dodgerblue")
-text(butternut_coord_transform, labels = butternut_24pop_names, pos = 2, cex = 0.8)
+points(coord_df_proj, pch = 17, col = butternut_col_df[,2])
+legend('bottomright',legend = butternut_24pop_names, pch = 17, col = butternut_col, cex = 0.6)
+scalebar(500)
 dev.off()
