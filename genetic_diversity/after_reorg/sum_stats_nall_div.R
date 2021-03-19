@@ -3,22 +3,8 @@
 ######################################
 
 library(adegenet)
-library(stringr)
-library(tidyr)
-library(hierfstat)
 library(poppr)
-library(Demerelate)
-library(rworldmap)
-library(data.table)
-library(ggplot2)
-library(ggrepel)
-library(geosphere)
-library(strataG)
-library(plotrix)
-library(ggpmisc)
-library(factoextra)
-library(diveRsity)
-library(PopGenReport)
+library(pegas)
 
 #####################################
 ############# Load Files ############
@@ -61,13 +47,21 @@ bn_null_all_df <- matrix(nrow = length(rownames(bn_null_all$null.allele.freq$sum
 bn_null_all_df <- bn_null_all$null.allele.freq$summary1
 
 ##bn HWE test
-bn_hwe <- hw.test(butternutgen_reorg)
+bn_hwe <- hw.test(butternutgen_reorg, B = 1000)
+bn_hwe_pop <- seppop(butternutgen_reorg) %>% lapply(hw.test, B = 0)
+
+##create table by populations
+bn_hwe_reorg <- sapply(bn_hwe_pop, "[", i = TRUE, j = 3)
+
+##name columns
+colnames(bn_hwe_reorg) <- butternut_24pop_names
 
 ##test for LD
-bn_loci <- genind2loci(butternutgen_reorg)
+ld_comp <- pair.ia(butternutgen_reorg, sample = 1000)
+ld_comp_df <- data.frame(round(ld_comp,digits = 2))
 
-bn_loci <- na.omit(bn_loci)
-
-LD2(bn_loci, details = FALSE)
-
+##write out data files 
+write.csv(bn_hwe, "G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures\\bn_hwe.csv")
+write.csv(bn_hwe_reorg, "G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures\\bn_hwe_reorg.csv")
+write.csv(ld_comp_df, "G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures\\ld_loci.csv")
 
