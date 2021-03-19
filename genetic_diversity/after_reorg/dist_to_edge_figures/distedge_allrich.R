@@ -25,7 +25,7 @@ library(sp)
 #####################################
 ############ Directories ############
 #####################################
-dist_edge_path <- "G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures\\dist_edge\\"
+dist_edge_path <- "G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures\\dist_edge\\"
 butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\"
 
 ##load butternut
@@ -114,16 +114,16 @@ linear_allrich_dist_red_rp[2] <- substitute(expression(italic(p) == MYOTHERVALUE
 pdf(paste0(dist_edge_path, "linear_allrich_dist.pdf"), width = 8, height = 6)
 
 plot(all_rich_dist_df[,2]~all_rich_dist_df[,1], 
-     col = all_rich_dist_df[,3], pch = 17,
+     col = as.character(all_rich_dist_df[,3]), pch = 17,
      ylab = "Number of Alleles", xlab = "Distance to Range Edge (km)", 
-     cex = (butternut_24pop_poppr[1:24,2]/80), ylim = c(5,10), xlim = c(0,600),
+     cex = (butternut_24pop_poppr[1:24,2]/42), ylim = c(5,10), xlim = c(0,600),
      main = "Number of Alleles Compared with Distance to Range Edge (km)")
 
 text(all_rich_dist_df[,2]~all_rich_dist_df[,1], 
-     labels = butternut_24pop_names, cex = 0.8, pos = 1)
+     labels = c(1:24), cex = 0.8, pos = 1)
 
-abline(allrich_lm, col = "dodgerblue4")
-abline(allrich_red_lm, col = "darkorchid")
+abline(allrich_lm, col = "dodgerblue4", lwd = 3)
+abline(allrich_red_lm, col = "darkorchid", lwd = 3)
 
 ##legends
 legend('topleft', legend = linear_allrich_dist_rp, pch = 4, col = "dodgerblue4",
