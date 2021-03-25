@@ -7,7 +7,9 @@ Then, the ecological preferences using WorldClim were projected into the past us
 This was then used to generate predicted suitable habitat for the 130,000 YBP - now. 
 
 Here is a visualization of this workflow: 
-![alt text](https://github.com/ekschumacher/butternut/blob/master/butternut_sdms_flowchart.jpg)
+<p align="center">
+  <img src="https://github.com/ekschumacher/butternut/blob/master/butternut_sdms_flowchart.jpg" width="350" title="butternut_sdms">
+</p>
 
 Within this folder, these steps are separated into different scripts. The first is SDM_reduced_spatialautocorrelation, then move to creating pseudoabsence points, then move to variable selection, and finally move to the BRT and prediction maps generation.    
 
