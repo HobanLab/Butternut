@@ -20,12 +20,16 @@ library(HH)
 library(ltm)
 library(geosphere)
 
+#####################################
+############ Load Files #############
+#####################################
+
 ##load data points
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs")
-worldclim_only <- "G:\\Shared drives\\Emily_Schumacher\\SDMs\\worldclim_only_SDM\\"
+worldclim_only <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\SDMs\\worldclim_only"
+setwd(paste0(worldclim_only, "\\InputFiles"))
 
 ##Load in data file without autocorrelation
-butternut_pres <- read.csv(paste0(worldclim_only, "occurrence_no_auto_noproj.csv"))
+butternut_pres <- read.csv("occurrence_noauto_noproj.csv")
 butternut_pres <- butternut_pres[,-1]
 
 ##calculate crop limits
@@ -38,28 +42,21 @@ max_lat <- max(butternut_pres$Latitude)
 coordinates(butternut_pres) <- c('Longitude', 'Latitude')
 proj4string(butternut_pres) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 
-##Projection
+##Projection string
 projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
 
-##project
+##project presence points
 butternut_pres <- spTransform(butternut_pres,projection)
+
+##write in extent raster
+extent_project <- raster("extent_project.tif")
 
 ######################################################################
 ################## Generate Pseudo-Absence Points ####################
 ######################################################################
-##Load raster extent
-extent_raster <- raster("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\elevation_extent.tif")
 
-##project Raster
-extent_project <- projectRaster(extent_raster, crs = projection)
 
-####plot to compare
-pdf("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\extent_project_plot.pdf")
-plot(extent_project)
-points(butternut_pres)
-dev.off()
-
-##validating aligning projetion
+##validating aligning projection -- make sure all points are within study area
 pres_ext <- extract(extent_project, butternut_pres)
 pres_ext_df <- data.frame(pres_ext)
 pres_points_df <- data.frame(butternut_pres)
@@ -68,12 +65,13 @@ pres_df <- cbind(pres_points_df, pres_ext_df)
 pres_df <- na.omit(pres_df) ### limit to 5713 occurrence records
 
 ##write out presence clean 
-write.csv(pres_df[,-3], "InputFiles\\Points\\pres_clean_df.csv")
+write.csv(pres_df[,-3], "pres_clean_df.csv")
 
 ##presence clean spatial
 coordinates(pres_df) <- c('Longitude', 'Latitude')
 proj4string(pres_df) <- CRS(projection)
 
+##visualize
 plot(extent_project)
 points(pres_df)
 
@@ -107,9 +105,10 @@ abs_ext_df <- na.omit(abs_ext_df) ##no points get removed
 ##no na points, good to go
 ##Butternut absence data frame
 butternut_abs_df <- data.frame(butternut_abs)
+colnames(butternut_abs_df) <- c("Absence_points")
 
 ##write out absence 
-write.csv(butternut_abs_df, paste0(worldclim_only, "butternut_abs.csv"))
+write.csv(butternut_abs_df, paste0("butternut_abs.csv"))
 
 ##Now rename columns and set up data frame
 col_names <- colnames(pres_points_df)
@@ -127,10 +126,10 @@ pres_points_df$PA <- "1"
 butternut_pa <- rbind(pres_points_df, butternut_abs_df)
 
 ##Write out files 
-write.csv(butternut_pa, paste0(worldclim_only, "butternut_pa.csv"))
+write.csv(butternut_pa, "butternut_pa.csv")
 
-##
-pdf("InputFiles\\pres_abs_points.pdf", width = 6, height = 6)
+##Visualize results 
+pdf("pres_abs_points.pdf", width = 6, height = 6)
 plot(extent_project)
 points(butternut_abs, pch = 16, col = "dodgerblue4")
 points(butternut_pres, pch = 16, col = "dodgerblue")
