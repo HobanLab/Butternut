@@ -21,14 +21,19 @@ library(HH)
 library(ltm)
 library(geosphere)
 
+#####################################
+############ Load Files #############
+#####################################
 ##load data points
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs")
+worldclim_only <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\SDMs\\worldclim_only"
+setwd(paste0(worldclim_only, "\\InputFiles"))
 
-butternut_pa <- read.csv("InputFiles\\Points\\butternut_pa_clean.csv")
+##load in presence/absence points file
+butternut_pa <- read.csv("butternut_pa.csv")
 butternut_pa <- butternut_pa[,-1]
 
 ##load in elevation crop
-elevation_crop <- raster("InputFiles\\elevation_extent.tif")
+elevation_crop <- raster("elevation_extent.tif")
 
 #####Projection
 projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
@@ -40,7 +45,7 @@ extent_project <- projectRaster(elevation_crop, crs = projection)
 ##### Variable Selection ###########
 ####################################
 ########Load worldclim documents
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\wc2-5")
+setwd(paste0(worldclim_only,"\\InputFiles\\bio_2-5m_bil"))
 
 ##create multiple lists
 worldclim_list = list.files(pattern = ".bil$")
@@ -51,7 +56,7 @@ worldclim_project_list <- list()
 ##loop through soil docs to crop and project every layer 
 for(j in 1:length(worldclim_list)) {
   #convert to rasters
-  worldclim_raster_list[[j]] = raster(paste0("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\wc2-5\\", worldclim_list[[j]]))
+  worldclim_raster_list[[j]] = raster(paste0(worldclim_only,"\\InputFiles\\bio_2-5m_bil\\", worldclim_list[[j]]))
   
   worldclim_crop_list[[j]] <- crop(worldclim_raster_list[[j]], elevation_crop)
   
@@ -102,7 +107,12 @@ length(butternut_var[butternut_var$PA == "1",]$PA) ##Presence points, 5713
 length(butternut_var[butternut_var$PA == "0",]$PA) ##Absence points, 5708
 
 ##write out points with variables
-write.csv(butternut_var, paste0(worldclim_only, "butternut_variables.csv"))
+write.csv(butternut_var, paste0(worldclim_only, "\\InputFiles\\", "butternut_variables.csv"))
+
+####################################
+####### Variable Correlation #######
+####################################
+setwd(paste0(worldclim_only,"\\OutputFiles"))
 
 ######correlation matrix
 predictors_correlation <- cor(butternut_var[,4:22])
@@ -114,21 +124,23 @@ predictors_dist <- as.dist(abs(predictors_correlation))
 predictor_cluster <- hclust(1-(predictors_dist))
 
 #plot
-pdf(paste0(worldclim_only, "ecogeo_dendrogram.pdf"), width = 20, height = 10)
+pdf("ecogeo_dendrogram.pdf", width = 20, height = 10)
 plot(as.dendrogram(predictor_cluster), horiz =T, main="Dissimilarity Cluster of Ecogeorgaphic Varibales", cex.main=0.8)
 abline(v=0.5, col='red')
 dev.off()
 
 #Bisserial correlation
-
 variable_names <- names(butternut_var[,1:22])
 
-cor_result <- 22
+##create matrix dimensions
+cor_result <- length(variable_names)
 butternut_col <- 2 
 
+##create matrix to store biserial correlation
 biserial_cor_matrix <- matrix(ncol=butternut_col, nrow=cor_result)
 
-for (i in 4:22){
+##calculate biserial correlation and store in matrix
+for (i in 4:length(variable_names)){
   
   biserial_cor_coef <- biserial.cor(butternut_var[,i],butternut_var$PA)
   
@@ -136,17 +148,15 @@ for (i in 4:22){
   
 }
 
-##Biserial correlation 
+##update output 
 biserial_cor_out <- data.frame(biserial_cor_matrix[-1:-3,])
 colnames(biserial_cor_out) <- c("Variable", "Correlation Coef")
 
 ##write out data frame
-write.csv(biserial_cor_out, paste0(worldclim_only,"biserial_cor_matrix.csv"))
+write.csv(biserial_cor_out, "biserial_cor_matrix.csv")
 
 ####write out rasters
-writeRaster(worldclim_stack, "G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\worldclim_stack")
-writeRaster(soil_stack, "G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\soil_stack")
-writeRaster(slope_aspect, "G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\slope_aspect_stack")
+writeRaster(worldclim_stack, "worldclim_stack.tiff")
 
 ##write out final variable selection data file
-write.csv(butternut_var, paste0(worldclim_only,"final_df_pa_var.csv"))
+write.csv(butternut_var, "butternut_var.csv")
