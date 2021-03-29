@@ -1,7 +1,9 @@
 Project Description:
-This project file contains R Scripts created for a project on <i>Juglans cinerea</i>, also known as butternut. We are focused on assessing the genetic diversity and structure in butternut with increased sampling of its northern range as well as assessing the niche of this species. This project is divided into two main folders: genetic_analyses and SDMs.
+This project file contains R Scripts created for a project on <i>Juglans cinerea</i>, also known as butternut. We are focused on determining how butternut's range has shifted in response to past glacier movements. Hoban et al. (2010) determined that butternut's genetic patterns were most inluenced by glacial patterns, so this study added individuals sampled by the Jeanne Romero-Severson and Martin Williams labs. We also wanted to more specifically examine past sources of data to identify the range shifts of this taxon. Therefore, the workflow of this project is presented below: 
 
-![Alt text](Images/butternut_gendiv_flowchart.jpg?raw=true "Flowchart for project") 
+![Alt text](Images/worflow_github.jpg.jpg?raw=true "Flowchart for project") 
+
+The code written for executing two of those steps are in this Github; code for downloading, projecting, and creating pollen and glacier maps were created by Dr. Alissa Brown. This Github project is split into two parts: genetic_analyses, where genetic diversity and structure analyses were performed, and the addition of a butternut species distribution model that was projected into past into past climate scenarions. Here is a description of what these projects entailed: 
 
 genetic_analyses: We used genetic data from the publication Hoban et al. (2010) and newer sampling efforts on butternut from 2011 - 2015. These individuals were collected by Jeanne Romero-Severson, Sean Hoban, and Martin Williams over the course of near ten years with a major sampling effort closer to 2009 and then followed up by another round of sampling 2012 - 2015. The initial individuals that were collected were genotyped by Sean Hoban and then subsequent individuals were genotyped in the Romero-Severson lab at Notre Dame non-consequetively. The first script labeled "comparison_barplot" was code used to determine if there were scoring differences between researcher. 
 
