@@ -20,24 +20,22 @@ library(HH)
 library(ltm)
 library(geosphere)
 
+#####################################
+############ Load Files #############
+#####################################
 ##load data points
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs")
+worldclim_only <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\SDMs\\worldclim_only"
+setwd(paste0(worldclim_only, "\\InputFiles"))
 
-##Projection
-projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+##load in variable data frame
+butternut_var <- read.csv("butternut_variables.csv")
+butternut_var <- butternut_var[,-1]
 
 ######################################################################
 ####################### Running the Model ############################
 ######################################################################
-##load in variable data frame
-worldclim_only <- "G:\\Shared drives\\Emily_Schumacher\\SDMs\\worldclim_only_SDM\\"
-###
-butternut_var <- read.csv(paste0(worldclim_only,"butternut_variables.csv"))
-butternut_var <- butternut_var[,-1]
 
 ##now limit to important variables
-##all var - butternut_list_variables <- c("pwetm", "mdr","mtdq", "mtwetq", "precip_season")
-
 butternut_list_variables <- c("pwetm", "mdr","mtdq", "mtwetq", "precip_season")
 
 ##now load variables for model running
@@ -114,53 +112,46 @@ for (i in 1:length(lr)){
 }
 th
 
-
-bf=c(.7)
-lr=c(0.07)
-tc=c(2)
-ss=c(25)
-#Initiate the loop to identify the best number of trees. Call your model whatever you want- the "gbm.x = 4:7" are the columns of your climate variables and the "gbm.y=3" is the column on your csv file that has 0's and 1's for presence/absence 
-
-
 ##tree number save -- look at red printed text
 tree_number <- 1150
 
 ##summarize model - percent contribution of each variable
 summary(butternut_model)
 
-###
+###create list of variables in order with % contribution of each variable
 butternut_predictors <- c("Seasonal Precipitation (mm)", "Mean Temperature of the Driest Quarter (C)",
                         "Mean Temperature of the Wettest Quarter (C)", "Precipitation of the Wettest Month (mm)", "Mean Diurnal Range")
+##create factors
 butternut_predictors <- factor(butternut_predictors, levels= c("Seasonal Precipitation (mm)", "Mean Temperature of the Driest Quarter (C)",
                                                             "Mean Temperature of the Wettest Quarter (C)", "Precipitation of the Wettest Month (mm)",
                                                             "Mean Diurnal Range"))
+
+##data frame combination with the % contribution and the factors
 butternut_influences <- data.frame(butternut_predictors,percentages=c(29.5, 25.0, 23.7, 11.7, 10.2))
 
+##create barplot with % contribution of each variable
 butternut_contribution_bp <- ggplot(data=butternut_influences, aes(x=butternut_predictors, y=percentages)) +
   geom_bar(stat="identity", color="black", fill="dodgerblue",width=.4)+
   geom_text(aes(y=percentages, label=paste0(percentages, '%')), vjust=.5, hjust=-.1,size=3)+
   theme_minimal()+ggtitle("Relative Influence of Predictors (CV AUC = 0.882)")+theme_light(base_size=14)+theme(plot.margin = unit(c(1,1,1,1), "cm"))+ylim(0,100)+
   xlab("Predictors") + ylab("Percent Contribution to the Model")
 
+##flip it to be horizontal
 butternut_contribution_bp2 <- butternut_contribution_bp + coord_flip()
 
-pdf(paste0(worldclim_only,"contribution_bp_allvar.pdf"), width = 10, height = 8)
+##write out file 
+pdf("contribution_bp_allvar.pdf", width = 10, height = 8)
 butternut_contribution_bp2
 dev.off()  
 
-#######################
-#### Prediction map ###
-#######################
-##load data stacks
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs")
-##load in elevation crop
-elevation_crop <- raster("InputFiles\\elevation_extent.tif")
-
+################################
+######## Prediction map ########
+################################
 ##load in elevation extent
 extent_project <- projectRaster(elevation_crop, crs = projection)
 
-##load in stacks of variables
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\bio_2-5m_bil")
+##set wd for the worldclim variables 
+setwd("bio_2-5m_bil")
 
 ##create multiple lists
 worldclim_list = list.files(pattern = ".bil$")
@@ -171,7 +162,7 @@ worldclim_project_list <- list()
 ##loop through soil docs to crop and project every layer 
 for(j in 1:length(worldclim_list)) {
   #convert to rasters
-  worldclim_raster_list[[j]] = raster(paste0("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\bio_2-5m_bil\\", worldclim_list[[j]]))
+  worldclim_raster_list[[j]] = raster(worldclim_list[[j]])
   
   worldclim_crop_list[[j]] <- crop(worldclim_raster_list[[j]], elevation_crop)
   
@@ -179,18 +170,7 @@ for(j in 1:length(worldclim_list)) {
   
 }
 
-##Rename layers
-worldclim_names <- c("mat", "mtwarq", "mtcq", "map", "pwetm", "pdm", "precip_season",
-                     "pwetq", "pdq", "pwarq", "pcq", "mdr","iso","temp_season", 
-                     "mtwm","mtcm", "temp_range", "mtwetq", "mtdq")
-
-for(p in 1:length(worldclim_names)) {
-  
-  names(worldclim_project_list[[p]]) <- worldclim_names[[p]]
-  
-}
-
-##now create a raster stack of these variables
+##stack world clim variables 
 worldclim_stack <- stack(worldclim_project_list[[1]], worldclim_project_list[[2]],
                          worldclim_project_list[[3]], worldclim_project_list[[4]],
                          worldclim_project_list[[5]], worldclim_project_list[[6]],
@@ -201,6 +181,18 @@ worldclim_stack <- stack(worldclim_project_list[[1]], worldclim_project_list[[2]
                          worldclim_project_list[[15]], worldclim_project_list[[16]],
                          worldclim_project_list[[17]], worldclim_project_list[[18]],
                          worldclim_project_list[[19]])
+
+##Rename layers
+worldclim_names <- c("mat", "mtwarq", "mtcq", "map", "pwetm", "pdm", "precip_season",
+                     "pwetq", "pdq", "pwarq", "pcq", "mdr","iso","temp_season", 
+                     "mtwm","mtcm", "temp_range", "mtwetq", "mtdq")
+
+
+for(p in 1:length(worldclim_names)) {
+  
+  names(worldclim_project_list[[p]]) <- worldclim_names[[p]]
+  
+}
 
 ########Now begin to stack variables that contribute most to the model
 
@@ -219,9 +211,13 @@ names(butternut_model_stack) <- butternut_model$var.names
 ##now create prediction map
 butternut_prediction_map <- predict(butternut_model_stack, butternut_model,n.trees=1150, type='response')
 
-setwd(worldclim_only)
 ##write out Raster
-writeRaster(butternut_prediction_map, "hsm_worldclim_only_raster.tif")
+writeRaster(butternut_prediction_map, paste0(worldclim_only, "\\OutputFiles\\hsm_worldclim_only_raster.tif"))
+
+#############################
+######## Plot maps ##########
+#############################
+setwd(paste0(worldclim_only, "\\OutputFiles"))
 
 ##Load in presence and absence points 
 butternut_pres <- butternut_sel_df[butternut_sel_df$PA == 1,]
@@ -327,328 +323,78 @@ performance_matrix <- round(performance_matrix, digits = 1)
 write.csv(performance_matrix,"performance_matrix.csv")
 
 ######################################################################
-########################## LGM and Holocene ##########################
+############################# Hindcast SDMs ##########################
 ######################################################################
-##stack prediction variable layers
-worldclim_path <- "G:\\Shared drives\\Emily_Schumacher\\SDMs\\worldclim_only_SDM"
-
 ##write out raster
-##Load in LGM layers
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs\\Paleo_Files\\LGM_BCV_2-5m")
-pwetm_lgm <- raster("mrlgmbi13.tif")
-mdr_lgm <- raster("mrlgmbi2.tif")
-mtdq_lgm  <- raster("mrlgmbi9.tif")
-mtwetq_lgm <- raster("mrlgmbi8.tif")
-precip_season_lgm <- raster("mrlgmbi15.tif")
+##Load in layers 
+setwd(paste0(worldclim_only,"\\InputFiles\\Paleo_Files"))
+
+##time periods list
+time_periods <- list.files(pattern = "_v1_2_5m")
+
+##variables list 
+var_list <- c("bio_13.tif", "bio_2.tif","bio_9.tif","bio_8.tif",
+              "bio_15.tif")
+
+##raster list
+paleo_raster <- list(list(), list(), list(), list(), list(),
+                     list(), list(), list())
+
+##create paleo stacks
+paleo_stack <- list()
+
+##crop paleo rasters
+paleo_crop <- list()
+
+##project them into albers
+paleo_project <- list()
+
+##list for habitat suitability models 
+hsm_list <- list()
+
+###Write a loop to load in past raster files 
+for(j in 1:length(time_periods)){
+  for(k in 1:length(var_list)){
+  paleo_raster[[j]][[k]] <- raster(paste0(time_periods[[j]], "\\", var_list[[k]]))
+  
+  ##stack rasters
+  paleo_stack[[j]] <- stack(paleo_raster[[j]])
+  
+  ##crop them
+  paleo_crop[[j]] <- crop(paleo_stack[[j]], elevation_crop)
+  
+  ##project the crop
+  paleo_project[[j]] <- projectRaster(paleo_crop[[j]], crs = projection)
+  
+  ##name the layers of the butternut model 
+  names(paleo_project[[j]]) <- butternut_model$var.names
+  
+  }
+}
+
+
+###Create predicted suitable habitat models for all time periods
+setwd(paste0(worldclim_only,"\\OutputFiles"))
+
+##create names for time period 
+time_period_names <- gsub("_.*","",time_periods)
+
+##years before present for each time period 
+ybp <- c("14.7-12.9 ka YBP", "11.7-8.326 ka YBP", "17.0-14.7 ka YBP", "21 ka YBP", "4.2-0.3 ka YBP", "130 ka YBP",
+         "8.326-4.2 ka YBP", "12.9-11.7 ka YBP")
+
+#generate habitat suitability models for all time periods 
+for(i in 1:length(paleo_project)){
+  
+  ##use predict to calculate habitat suitabiltiy from current model
+  hsm_list[[i]] <- predict(paleo_project[[i]],butternut_model,n.trees=tree_number,type='response')
+
+  ##write Rasters out
+  writeRaster(hsm_list[[j]], paste0(time_period_names[[i]], "_hsm.tif"), overwrite = TRUE)
+  
+  pdf(paste0(time_period_names[[i]], "_(", ybp[[i]], ")_hsm.pdf"))
+  plot(hsm_list[[i]], main = ybp[[i]])
+  dev.off()
+  
+}
 
-##now check out stack
-var_list 
-
-lgm_stack <- stack(pwetm_lgm, mdr_lgm, mtdq_lgm, mtwetq_lgm,
-                   precip_season_lgm)
-
-##now project and crop
-lgm_stack_crop <- crop(lgm_stack, elevation_crop)
-lgm_stack_project <- projectRaster(lgm_stack_crop, crs = projection)
-names(lgm_stack_project) <- butternut_model$var.names
-
-####now create HSM
-lgm_hsm <- predict(lgm_stack_project,butternut_model,n.trees=tree_number,type='response')
-plot(lgm_hsm)
-
-##write Raster out
-writeRaster(lgm_hsm, paste0(worldclim_only, "hsm_lgm.tif"))
-
-pdf(paste0(worldclim_only, "hsm_lgm.pdf"))
-plot(lgm_hsm, main = "HSM for butternut at the LGM (22000 YBP)")
-dev.off()
-
-###6000 YBP - Mid-Hol
-##Load in LGM layers
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs\\Paleo_Files\\mid_hol")
-
-##look at var list to see stacking order
-
-##load in mid Holocene rasters
-pwetm_mid_hol <- raster("mrmidbi13.tif")
-mdr_mid_hol <- raster("mrmidbi2.tif")
-mtdq_mid_hol <- raster("mrmidbi9.tif")
-mtwetq_mid_hol <- raster("mrmidbi8.tif")
-precip_season_mid_hol <- raster("mrmidbi15.tif")
-
-###Stack 
-mid_hol_stack <- stack(pwetm_mid_hol,mdr_mid_hol,mtdq_mid_hol,
-                       mtwetq_mid_hol, precip_season_mid_hol)
-
-##Crop 
-mid_hol_stack_crop <- crop(mid_hol_stack, elevation_crop)
-
-##project to raster
-mid_hol_project <- projectRaster(mid_hol_stack_crop, crs = projection)
-
-###Mid-Holocene 
-names(mid_hol_project) <- var_list
-
-##Now predict 
-mid_hol_hsm <- predict(mid_hol_project,butternut_model,
-                       n.trees= tree_number,type='response')
-
-##plot the hsm
-plot(mid_hol_hsm)
-
-##write out image
-pdf(paste0(worldclim_only, "mid_hol_hsm.pdf"))
-plot(mid_hol_hsm, main = "Habitat Suitability Model for Butternut in the Mid-Holocene (6000 YBP)")
-dev.off()
-
-##now write out raster
-writeRaster(mid_hol_hsm, paste0(worldclim_only, "mid_hol_hsm.tif"))
-
-##############LIG
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs\\Paleo_Files\\LIG_v1_2_5m")
-pwetm_lig <- raster("bio_13.tif")
-mdr_lig <- raster("bio_2.tif")
-mtdq_lig <- raster("bio_9.tif")
-mtwetq_lig <- raster("bio_8.tif")
-precip_season_lig <- raster("bio_15.tif")
-
-###now stack
-var_list
-lig_stack <- stack(pwetm_lig, mdr_lig, mtdq_lig,
-                   mtwetq_lig, precip_season_lig)
-##########
-##Crop 
-lig_stack_crop <- crop(lig_stack, elevation_crop)
-
-##project to raster
-lig_project <- projectRaster(lig_stack_crop, crs = projection)
-
-###Name lig
-names(lig_project) <- var_list
-
-##Now predict 
-lig_hsm <- predict(lig_project,butternut_model,
-                       n.trees= tree_number,type='response')
-
-writeRaster(lig_hsm, "lig_hsm.tif")
-writeRaster(lig_hsm > 0.63, "lig_suitability.tif")
-
-###################BA
-paleo_path <- "G:\\Shared drives\\Emily_Schumacher\\SDMs\\Paleo_Files"
-
-##setwd 
-setwd(paleo_path)
-
-##ok load rasters 
-pwetm_ba <- raster("ba_v1_2_5m\\bio_13.tif")
-mdr_ba <- raster("ba_v1_2_5m\\bio_2.tif")
-mtdq_ba <- raster("ba_v1_2_5m\\bio_9.tif")
-mtwetq_ba <- raster("ba_v1_2_5m\\bio_8.tif")
-precip_season_ba <- raster("ba_v1_2_5m\\bio_15.tif")
-
-##now stack the rasters
-ba_stack <- stack(pwetm_ba, mdr_ba, mtdq_ba, mtwetq_ba, 
-                  precip_season_ba)
-
-##Crop 
-ba_stack_crop <- crop(ba_stack, elevation_crop)
-
-##project to raster
-ba_project <- projectRaster(ba_stack_crop, crs = projection)
-
-###Name ba
-names(ba_project) <- var_list
-
-##Now predict 
-ba_hsm <- predict(ba_project,butternut_model,
-                   n.trees= tree_number,type='response')
-##set wd
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs\\worldclim_only_SDM")
-
-##write out BA HSM 
-writeRaster(ba_hsm, "ba_hsm.tif")
-writeRaster(ba_hsm > 0.63, "ba_suitability.tif")
-
-############EH
-##setwd 
-setwd(paleo_path)
-
-##ok load rasters 
-pwetm_eh <- raster("eh_v1_2_5m\\bio_13.tif")
-mdr_eh <- raster("eh_v1_2_5m\\bio_2.tif")
-mtdq_eh <- raster("eh_v1_2_5m\\bio_9.tif")
-mtwetq_eh <- raster("eh_v1_2_5m\\bio_8.tif")
-precip_season_eh <- raster("eh_v1_2_5m\\bio_15.tif")
-
-##now stack the rasters
-eh_stack <- stack(pwetm_eh, mdr_eh, mtdq_eh, mtwetq_eh, 
-                  precip_season_eh)
-
-##Crop 
-eh_stack_crop <- crop(eh_stack, elevation_crop)
-
-##project to raster
-eh_project <- projectRaster(eh_stack_crop, crs = projection)
-
-###Name ba
-names(eh_project) <- var_list
-
-##Now predict 
-eh_hsm <- predict(eh_project,butternut_model,
-                  n.trees= tree_number,type='response')
-##set wd
-setwd(worldclim_path)
-
-##write out BA HSM 
-writeRaster(eh_hsm, "eh_hsm.tif")
-writeRaster(eh_hsm > 0.63, "eh_suitability.tif")
-
-############HS
-##setwd 
-setwd(paleo_path)
-
-##ok load rasters 
-pwetm_hs <- raster("hs_v1_2_5m\\bio_13.tif")
-mdr_hs <- raster("hs_v1_2_5m\\bio_2.tif")
-mtdq_hs <- raster("hs_v1_2_5m\\bio_9.tif")
-mtwetq_hs <- raster("hs_v1_2_5m\\bio_8.tif")
-precip_season_hs <- raster("hs_v1_2_5m\\bio_15.tif")
-
-##now stack the rasters
-hs_stack <- stack(pwetm_hs, mdr_hs, mtdq_hs, mtwetq_hs, 
-                  precip_season_hs)
-
-##Crop 
-hs_stack_crop <- crop(hs_stack, elevation_crop)
-
-##project to raster
-hs_project <- projectRaster(hs_stack_crop, crs = projection)
-
-###Name hs
-names(hs_project) <- var_list
-
-##Now predict 
-hs_hsm <- predict(hs_project,butternut_model,
-                  n.trees= tree_number,type='response')
-##set wd
-setwd(worldclim_path)
-
-##write out HS HSM 
-writeRaster(hs_hsm, "hs_hsm.tif")
-writeRaster(hs_hsm > 0.63, "hs_suitability.tif")
-
-############LH HSM
-setwd(paleo_path)
-
-##ok load rasters 
-pwetm_lh <- raster("lh_v1_2_5m\\bio_13.tif")
-mdr_lh <- raster("lh_v1_2_5m\\bio_2.tif")
-mtdq_lh <- raster("lh_v1_2_5m\\bio_9.tif")
-mtwetq_lh <- raster("lh_v1_2_5m\\bio_8.tif")
-precip_season_lh <- raster("lh_v1_2_5m\\bio_15.tif")
-
-##now stack the rasters
-lh_stack <- stack(pwetm_lh, mdr_lh, mtdq_lh, mtwetq_lh, 
-                  precip_season_lh)
-##Crop 
-lh_stack_crop <- crop(lh_stack, elevation_crop)
-
-##project to raster
-lh_project <- projectRaster(lh_stack_crop, crs = projection)
-
-###Name ba
-names(lh_project) <- var_list
-
-##Now predict 
-lh_hsm <- predict(lh_project,butternut_model,
-                  n.trees= tree_number,type='response')
-##set wd
-setwd(worldclim_path)
-
-##write out BA HSM 
-writeRaster(lh_hsm, "lh_hsm.tif")
-writeRaster(lh_hsm > 0.63, "lh_suitability.tif")
-
-############YDS HSM
-setwd(paleo_path)
-
-##ok load rasters 
-pwetm_yds <- raster("yds_v1_2_5m\\bio_13.tif")
-mdr_yds <- raster("yds_v1_2_5m\\bio_2.tif")
-mtdq_yds <- raster("yds_v1_2_5m\\bio_9.tif")
-mtwetq_yds <- raster("yds_v1_2_5m\\bio_8.tif")
-precip_season_yds <- raster("yds_v1_2_5m\\bio_15.tif")
-
-##now stack the rasters
-yds_stack <- stack(pwetm_yds, mdr_yds, mtdq_yds, mtwetq_yds, 
-                  precip_season_yds)
-##Crop 
-yds_stack_crop <- crop(yds_stack, elevation_crop)
-
-##project to raster
-yds_project <- projectRaster(yds_stack_crop, crs = projection)
-
-###Name yds hsm
-names(yds_project) <- var_list
-
-##Now predict 
-yds_hsm <- predict(yds_project,butternut_model,
-                  n.trees= tree_number,type='response')
-##set wd
-setwd(worldclim_path)
-
-##write out BA HSM 
-writeRaster(yds_hsm, "yds_hsm.tif")
-writeRaster(yds_hsm > 0.63, "yds_suitability.tif")
-
-###pdf comparing all habitat suitability plots
-setwd(worldclim_only)
-pdf("HSM_comparison_worldclim_only.pdf", width = 10, height = 10)
-par(mfrow = c(2,2))
-plot(lgm_hsm, main = "Butternut Habitat Suitability at the LGM (22000 YBP)")
-plot(mid_hol_hsm, main = "Butternut Habitat Suitability in the Mid-Holocene (6000 YBP)")
-plot(butternut_prediction_map, main = "Butternut Habitat Suitability in the Prsent (1970-2000)")
-dev.off()
-
-pdf("HSM_lig_worldclim_only.pdf", width = 10, height = 10)
-plot(lig_hsm, main = "Butternut Habitat Suitability in the Last Interglacial Period (130,000 YBP)")
-dev.off()
-
-###############Run some stats
-library(dataMaid)
-
-quartiles(hsm_performance_pa[hsm_performance_pa$PA == 1,][,1])
-
-###try plotting 
-par(mfrow = c(1,2))
-plot(butternut_prediction_map > 0.63)
-plot(lig_hsm > 0.63)
-##transform everything else? 
-butternut_prediction_map_proj <- projectRaster(butternut_prediction_map, crs = "+proj=longlat +ellps=WGS84 +datum=WGS84")
-
-###get map
-butternut_map <- getMap(resolution = "low", projection = projection)
-
-##project a bunch of rasters
-butternut_prediction_map_proj <- projectRaster(butternut_prediction_map,
-                                               crs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
-##LIG hsm projection
-lig_proj <- projectRaster(lig_hsm, butternut_prediction_map_proj)
-
-##mid-hol
-mid_hol_proj <- projectRaster(mid_hol_hsm, butternut_prediction_map_proj)
-
-##LGM 
-lgm_proj <- projectRaster(lgm_hsm, butternut_prediction_map_proj)
-
-###write out rasters
-writeRaster(butternut_prediction_map_proj,paste0(worldclim_only, "present_hsm_project.tif"))
-writeRaster(lgm_proj,paste0(worldclim_only, "lgm_hsm_project.tif"))
-writeRaster(mid_hol_proj, paste0(worldclim_only, "mid_hol_hsm_project.tif"))
-writeRaster(lig_proj, paste0(worldclim_only, "lig_hsm_project.tif"))
-
-##write raster
-writeRaster(present_occurrence_raster, paste0(worldclim_only, "present_occurrence_raster.tif"))
-writeRaster(lgm_presence_raster, paste0(worldclim_only, "lgm_presence_raster.tif"))
-writeRaster(mid_hol_presence, paste0(worldclim_only, "mid_hol_presence.tif"))
-writeRaster(lig_presence, paste0(worldclim_only, "lig_presence.tif"))
