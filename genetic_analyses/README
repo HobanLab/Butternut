@@ -2,7 +2,7 @@ Butternut (<i>Juglans cinerea</i>) data from Sean Hoban and Jeanne Romero-Severs
 
 Below is a flowchart of how the analyses of these individuals were conducted:  
 
-![Alt text](Images/butternut_gendiv_flowchart.jpg?raw=true "Flowchart of how these analyses were performed. First, identifying scoring differences, then combining bins and population reorganization, and finally conducting final genetic diversity and structure analyses.")
+![Alt text](Images/butternut_gendiv_flowchart.jpg?raw=true "")
 
 Genetic data were first processed to determine if there were differences by person scoring the data. 1,004 individuals were scored by Sean Hoban (2010 - 2011) and the remaining 757 individuals were scored in the Jeanne Romero-Severson following Sean Hoban's work (2012 - 2015), so there may have been differences in allele calling depending on who was scoring the fragments. Therefore, barplots of each locus and its frequency, compared by scorer, were made to determine if there were differences (e.g., adjacent alleles). There were 3 loci that had differences by person scoring. The code for making these barplots is stored in the comparison_barplot file. Initially some analyses were performed with and without these 3 loci (11 and 8 loci analyses, respectively) in the before the reorg folder, but eventually the best plan of action was determined to be rebinning alleles that differed by scorer.  
 
