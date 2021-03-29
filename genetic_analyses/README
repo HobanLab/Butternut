@@ -1,7 +1,11 @@
-Butternut - Juglans cinerea - data from Sean Hoban and Jeanne Romero-Severson lab, code by Emily Schumacher (January 2020 - March 2021)
+Butternut (<i>Juglans cinerea</i>) data from Sean Hoban and Jeanne Romero-Severson lab, code by Emily Schumacher (January 2020 - March 2021).
 
-For the butternut project, I processed the scores sent by Jeanne in order to determine genetic patterns. I then reorganized the populations and removed individuals based on missing data to make sure the patterns observed were correct.
+Below is a flowchart of how the analyses of these individuals were conducted:  
 
-"Before the reorg" documents refer to figures created before I rebinned loci documents based on scoring differences between windows of time. This project usees genotype files that were created between the years of 2010 - 2015, so there were different calls based on who scoared the microsatellite data. Therefore, we ran documents with 11 loci and 8 loci because 3 loci were identified to differ between who was scoring. Data files are stored in Hoban Lab Google Drive. 
+![Alt text](Images/butternut_gendiv_flowchart.jpg?raw=true "Flowchart of how these analyses were performed. First, identifying scoring differences, then combining bins and population reorganization, and finally conducting final genetic diversity and structure analyses.")
 
-The "after the reorg" contains documents created after loci documents were edited for potential binning differenes. This is documented in the Butternut_JUCI folder on the Hoban Lab Google Drive. This includes a switch to GESTE Fst instead of pairwise Fst as well as a switch to using distance to range edge for determining genetic diversity reduction instead of just using mean latitude for populations. 
+Genetic data were first processed to determine if there were differences by person scoring the data. 1,004 individuals were scored by Sean Hoban (2010 - 2011) and the remaining 757 individuals were scored in the Jeanne Romero-Severson following Sean Hoban's work (2012 - 2015), so there may have been differences in allele calling depending on who was scoring the fragments. Therefore, barplots of each locus and its frequency, compared by scorer, were made to determine if there were differences (e.g., adjacent alleles). There were 3 loci that had differences by person scoring. The code for making these barplots is stored in the comparison_barplot file. Initially some analyses were performed with and without these 3 loci (11 and 8 loci analyses, respectively) in the before the reorg folder, but eventually the best plan of action was determined to be rebinning alleles that differed by scorer.  
+
+Before the reorg folder holds code created before rebinning analyses and population reorganization. These files were not used in the final paper but were important to determine initial results and conclusions for this project. 
+
+After the reorg folder includes code dealing with butternut individuals following rebinning analyses and organization into populations. These analyses also include a switch to GESTE Fst instead of pwFst and includes the distance to range edge for each population as well as mean latitude. 
