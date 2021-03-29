@@ -20,30 +20,43 @@ library(HH)
 library(ltm)
 library(geosphere)
 
+#####################################
+############ Load Files #############
+#####################################
+
 ##load data points
-setwd("G:\\Shared drives\\Emily_Schumacher\\SDMs")
-worldclim_only <- "G:\\Shared drives\\Emily_Schumacher\\SDMs\\worldclim_only_SDM\\"
+worldclim_only <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\SDMs\\worldclim_only"
+setwd(paste0(worldclim_only, "\\InputFiles"))
 
 ##read in occurrence records
-butternut_presence <- read.csv("InputFiles\\Points\\butternut_presence.csv")
+butternut_presence <- read.csv("butternut_presence.csv")
 butternut_presence <- butternut_presence[,-1]
 
-##set limits
+##set extent 
 min_lon <- min(butternut_presence$Longitude)
 max_lon <- max(butternut_presence$Longitude)
 min_lat <- min(butternut_presence$Latitude)
 max_lat <- max(butternut_presence$Latitude)
 
-##turns coordinates into Spatial Points
+##set spatial components of the data frame 
 coordinates(butternut_presence) <- c('Longitude', 'Latitude')
 proj4string(butternut_presence) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
+
+##Projection string
+projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+
+##Load raster extent
+extent_raster <- raster("elevation_extent.tif")
+
+##project Raster
+extent_project <- projectRaster(extent_raster, crs = projection)
+
+##write out 
+writeRaster(extent_project, "extent_project.tif")
 
 ######################################################################
 ######## Project and Remove Spatial Autocorrelation ##################
 ######################################################################
-
-##Projection
-projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
 
 ##Project to Albers Equal Area Conic 
 butternut_presence_2 <- spTransform(butternut_presence, CRS(paste0(projection)))
@@ -51,7 +64,7 @@ butternut_presence_2 <- spTransform(butternut_presence, CRS(paste0(projection)))
 ##First remove points at the exact same place
 butternut_presence_2 <- remove.duplicates(butternut_presence_2)
 
-##First we need to reduce spatial autocorrelation
+##Reduce spatial autocorrelation, identifying points within certain distances
 
 #####100 meters
 points_matrix <- gWithinDistance(butternut_presence_2, dist = .00086206895, byid = TRUE)
@@ -77,17 +90,15 @@ occurrence_wo_auto <- butternut_presence[auto_cols,]
 occurrence_no_auto <- data.frame(occurrence_wo_auto)
 
 ##occurrence no autocorrelation write out 
-write.csv(occurrence_no_auto, paste0(worldclim_only, "\\occurrence_no_auto_noproj.csv"))
+write.csv(occurrence_no_auto, "occurrence_noauto_noproj.csv")
 
-##plot extent and occurrence without auto
-extent_raster <- raster("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\elevation_extent.tif")
-
-####write out points
-
+##read in elevation extent document
+extent_raster <- raster("elevation_extent.tif")
 
 ##Check to make sure extents align
-pdf("G:\\Shared drives\\Emily_Schumacher\\SDMs\\InputFiles\\extent_pointsnoauto.pdf")
+setwd(paste0(worldclim_only, "\\OutputFiles"))
+pdf("extent_pointsnoauto.pdf")
 plot(extent_raster)
-points(butternut_presence)
+points(butternut_presence, pch = 16, col = "dodgerblue")
 dev.off()
 
