@@ -1,7 +1,7 @@
 Project Description:
 This project file contains R Scripts created for a project on <i>Juglans cinerea</i>, also known as butternut. We are focused on determining how butternut's range has shifted in response to past glacier movements. Hoban et al. (2010) determined that butternut's genetic patterns were most inluenced by glacial patterns, so this study added individuals sampled by the Jeanne Romero-Severson and Martin Williams labs. We also wanted to more specifically examine past sources of data to identify the range shifts of this taxon. Therefore, the workflow of this project is presented below: 
 
-![Alt text](Images/worflow_github.jpg.jpg?raw=true "Flowchart for project") 
+![Alt text](Images/worflow_github.jpg?raw=true "Flowchart for project") 
 
 The code written for executing two of those steps are in this Github; code for downloading, projecting, and creating pollen and glacier maps were created by Dr. Alissa Brown. This Github project is split into two parts: genetic_analyses, where genetic diversity and structure analyses were performed, and the addition of a butternut species distribution model that was projected into past into past climate scenarions. Here is a description of what these projects entailed: 
 
