@@ -9,28 +9,14 @@ library(tidyr)
 library(hierfstat)
 library(poppr)
 library(Demerelate)
-library(rworldmap)
-library(data.table)
-library(ggplot2)
-library(ggrepel)
 library(geosphere)
-library(plotrix)
-library(ggpmisc)
-library(factoextra)
-library(GISTools)
-library(raster)
-library(rgdal)
-library(sp)
 
 #####################################
 ############ Directories ############
 #####################################
-
 butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\"
 
-##load butternut
-setwd(dist_edge_path)
-butternut_buffer <- shapefile("butternut_buffer")
+butternut_buffer <- shapefile("Graphical_Stat_Results\\PostIndRemoval\\GeographicImages\\butternut_buffer")
 
 ##############################################################
 #################### Load Genetic Files  #####################
@@ -57,6 +43,7 @@ levels(butternutgen_reorg@pop) <- butternut_24pop_names
 
 ##calculate poppr
 butternut_24pop_poppr <- poppr(butternutgen_reorg)
+
 
 ####################################################
 ########### Genetic Diversity Calcs ################
@@ -112,7 +99,7 @@ butternut_dist[7:11,4] <- "firebrick4"
 butternut_dist[12:24,4] <- "dodgerblue"
 
 ##write out distance to edge csv
-write.csv(butternut_dist, paste0(dist_edge_path, "dist_edge_df.csv"))
+write.csv("Graphical_Stat_Results\\PostIndRemoval\\GeographicImages\\dist_edge_df.csv")
 
 ##calculate regression
 edgedist_fst_lm <- lm(reorg_geste_fst[,2]~butternut_dist[,3])
@@ -130,9 +117,9 @@ edgefst_rp[2] <- substitute(expression(italic(p) == MYOTHERVALUE),
 
 
 ##plot comparison 
-pdf(paste0(dist_edge_path,"fst_dist_edge.pdf"), width = 8, height = 6)
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\STR\\fst_dist_edge.pdf", width = 8, height = 6)
 
-plotCI(butternut_dist[,3], reorg_geste_fst[,2], ui = reorg_geste_fst[,5], li = reorg_geste_fst[,4], 
+plot(butternut_dist[,3], reorg_geste_fst[,2], 
        ylim = c(0,0.15), pch = 17, xlab = "Mean Distance to Edge (km)",
        xlim = c(0,600),
        ylab = "GESTE Fst", col = butternut_dist[,4], cex = (butternut_24pop_poppr[1:24,2]/50), 
