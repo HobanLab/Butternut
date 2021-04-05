@@ -25,7 +25,7 @@ library(sp)
 #####################################
 ############ Directories ############
 #####################################
-dist_edge_path <- "G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures\\dist_edge\\"
+
 butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\"
 
 ##load butternut
