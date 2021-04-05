@@ -9,24 +9,11 @@ library(tidyr)
 library(hierfstat)
 library(poppr)
 library(Demerelate)
-library(rworldmap)
-library(data.table)
-library(ggplot2)
-library(ggrepel)
-library(geosphere)
-library(plotrix)
-library(ggpmisc)
-library(factoextra)
-library(GISTools)
-library(raster)
-library(rgdal)
-library(sp)
 library(PopGenReport)
 
 #####################################
 ############ Directories ############
 #####################################
-shared_drive <- "G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures"
 butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI"
 
 #####################################
@@ -139,7 +126,7 @@ hexp_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                         list(MYOTHERVALUE = format(hexp_red_pvalue, digits = 2)))[2]
 
 ###Linear Regression
-pdf(paste0(shared_drive,"\\hexp_lat_linear.pdf"), width = 8, height = 6)
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\hexp_lat_linear.pdf", width = 8, height = 6)
 
 ##plotting code
 plot(hexp_lat_df[,2]~hexp_lat_df[,1], col = hexp_lat_df[,3], pch = 17, ylim = c(0.7, 0.9), 
@@ -148,9 +135,12 @@ plot(hexp_lat_df[,2]~hexp_lat_df[,1], col = hexp_lat_df[,3], pch = 17, ylim = c(
 text(hexp_lat_df[,2]~hexp_lat_df[,1],labels = butternut_24pop_names, cex = 0.8, pos = 1)
 abline(hexp_lat_lm, col = "dodgerblue4")
 abline(hexp_lat_red_lm, col = "darkorchid4")
-legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
-legend('topleft', legend = hexp_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 4, col = "dodgerblue4")
-legend('bottomleft', legend = hexp_red_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 4, col = "darkorchid4")
+legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, 
+       col = c("firebrick1", "firebrick4","dodgerblue"))
+legend('topleft', legend = hexp_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 17, col = "dodgerblue4",
+       title = "With WI populations")
+legend('bottomleft', legend = hexp_red_rp, bty = 'n', border = "black", pt.cex = 1, 
+       cex = 1, pch = 17, col = "darkorchid4", title = "Without WI populations")
 
 dev.off()
 
@@ -203,17 +193,35 @@ hexp_quad_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                              list(MYOTHERVALUE = format(hexp_quad_red_pvalue, digits = 2)))[2]
 
 #####plot 
-pdf(paste0(shared_drive,"\\lat_hexp_quad.pdf"), width = 8, height = 6)
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\lat_hexp_quad.pdf", width = 8, height = 6)
 
 plot(hexp_lat_df[,2]~hexp_lat_df[,1], col = hexp_lat_df[,3], pch = 17, 
-     main = "Expected Heterozygosity Compared to Mean latitude", ylab = "Expected Heterozygosity", 
+     main = "Expected Heterozygosity Compared to Mean Latitude", ylab = "Expected Heterozygosity", 
      xlab = "Mean Latitude", cex = (butternut_poppr[1:24,2]/80), ylim = c(0.7, 0.9))
 text(hexp_lat_df[,2]~hexp_lat_df[,1], labels = butternut_24pop_names, cex = 0.8, pos = 1)
 lines(points_hexp_values, points_hexp_counts, col = "darkslategray3", lwd = 3)
 lines(points_hexp_values_21, points_hexp_counts_21, col = "darkseagreen4", lwd = 3)
 legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, 
        col = c("firebrick1", "firebrick4","dodgerblue"))
-legend('topleft', legend = hexp_quad_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 4, col = "darkslategray3")
-legend('bottomleft', legend = hexp_quad_red_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 4, col = "darkseagreen4")
+legend('topleft', legend = hexp_quad_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 17, 
+       col = "darkslategray3", title = "With WI populations")
+legend('bottomleft', legend = hexp_quad_red_rp, bty = 'n', border = "black", pt.cex = 1, cex = 1, pch = 17, 
+       col = "darkseagreen4", title = "Without WI populations")
 
 dev.off()
+
+#####write out data frames 
+##paste into a df 
+hexp_r2_pvalue_lat <- matrix(nrow = 4, ncol = 2)
+rownames(hexp_r2_pvalue_lat) <- c("Linear_hexp", "Linear_hexp_woWI","Quad_Hexp","Quadatric_hexp_woWI")
+colnames(hexp_r2_pvalue_lat) <- c("Pvalue", "R2")
+
+##Input r2 and pvalues 
+hexp_r2_pvalue_lat[1,] <- c(hexp_pvalue, hexp_r2)
+hexp_r2_pvalue_lat[2,] <- c(hexp_red_pvalue, hexp_red_r2)
+hexp_r2_pvalue_lat[3,] <- c(hexp_quad_pvalue, hexp_quad_r2)
+hexp_r2_pvalue_lat[4,] <- c(hexp_red_pvalue, hexp_quad_red_r2)
+
+##write out table
+write.csv(hexp_r2_pvalue_lat,"Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\hexp_r2_pvalue_lat.csv")
+
