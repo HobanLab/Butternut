@@ -2,25 +2,11 @@
 ######## Libraries #######
 ##########################
 
-library(diveRsity)
 library(adegenet)
 library(stringr)
 library(tidyr)
-library(hierfstat)
 library(poppr)
 library(Demerelate)
-library(rworldmap)
-library(data.table)
-library(ggplot2)
-library(ggrepel)
-library(geosphere)
-library(plotrix)
-library(ggpmisc)
-library(factoextra)
-library(GISTools)
-library(raster)
-library(rgdal)
-library(sp)
 library(PopGenReport)
 
 #####################################
@@ -87,14 +73,23 @@ pc1 <- (butternut_reorg_pco$eig[[1]]/sum_eig)*100
 pc2 <- (butternut_reorg_pco$eig[[2]]/sum_eig)*100
 
 ##PCOA of the reorg
-pdf("G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Graphics\\PCoA.pdf", width = 8, height = 8)
-plot(butternut_pco_nb$A1, butternut_pco_nb$A2, pch = 17, xlab = paste0("PC1", sep = " ", "(",round(pc1, digits = 1), "%", ")"), ylab = paste0("PC2", sep = " ", "(",round(pc2, digits = 1), "%",")"), main = "PCoA 24 Populations Reorg", col = "firebrick1", xlim = c(-0.3, 0.3), ylim = c(-0.3, 0.3))
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\STR\\PCoA.pdf", width = 8, height = 8)
+##plot New Brunswick populations
+plot(butternut_pco_nb$A1, butternut_pco_nb$A2, pch = 17, 
+     xlab = paste0("PC1", sep = " ", "(",round(pc1, digits = 1), "%", ")"), 
+     ylab = paste0("PC2", sep = " ", "(",round(pc2, digits = 1), "%",")"), 
+     main = "PCoA 24 Populations Reorg", col = "firebrick1", xlim = c(-0.3, 0.3), ylim = c(-0.3, 0.3))
 text(butternut_pco_nb$A1, butternut_pco_nb$A2, label = rownames(butternut_pco_nb), pos = 2, cex = 0.8)
+##plot Ontario populations
 points(butternut_pco_ot$A1, butternut_pco_ot$A2,pch = 17, col = "firebrick4")
 text(butternut_pco_ot$A1, butternut_pco_ot$A2, label = rownames(butternut_pco_ot), pos = 3, cex = 0.8)
+##plot US populations 
 points(butternut_reorg_pco[12:24,]$li$A1, butternut_reorg_pco[12:24,]$li$A2, col = "dodgerblue", pch = 17)
-text(butternut_reorg_pco[12:24,]$li$A1, butternut_reorg_pco[12:24,]$li$A2, label = rownames(butternut_reorg_pco[12:24,]$li), pos = 4, cex = 0.8)
-legend('topleft', pch = 17, col = c("firebrick1","firebrick4", "dodgerblue"), legend = c("New Brunswick", "Ontario", "United States"))
+text(butternut_reorg_pco[12:24,]$li$A1, butternut_reorg_pco[12:24,]$li$A2, 
+     label = rownames(butternut_reorg_pco[12:24,]$li), pos = 4, cex = 0.8)
+##create legend 
+legend('topleft', pch = 17, col = c("firebrick1","firebrick4", "dodgerblue"), 
+       legend = c("New Brunswick", "Ontario", "United States"))
 abline(h = 0)
 abline(v = 0)
 dev.off()
