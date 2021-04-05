@@ -4,35 +4,20 @@
 
 library(diveRsity)
 library(adegenet)
-library(stringr)
 library(tidyr)
 library(hierfstat)
 library(poppr)
-library(Demerelate)
-library(rworldmap)
-library(data.table)
-library(ggplot2)
-library(ggrepel)
-library(geosphere)
-library(plotrix)
-library(ggpmisc)
-library(factoextra)
-library(GISTools)
-library(raster)
-library(rgdal)
-library(sp)
 library(PopGenReport)
 
 #####################################
 ############ Directories ############
 #####################################
-shared_drive <- "G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures"
 butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI"
 
 #####################################
 ############# Load Files ############
 #####################################
-setwd(paste0(butternut_drive))
+setwd(butternut_drive)
 
 ##load current working reorganized genepop file 
 butternutgen_reorg <- read.genepop("DataFiles\\24Populations\\reorg\\reorg_gen_24pop.gen", ncode = 3)
@@ -146,7 +131,7 @@ allrich_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                                list(MYOTHERVALUE = format(allrich_red_pvalue, digits = 2)))[2]
 
 ##Allelic Richness Linear
-pdf(paste0(shared_drive, "\\linear_woNB_all_rich_Lat.pdf"), width = 8, height = 6)
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\linear_woNB_all_rich_Lat.pdf", width = 8, height = 6)
 
 ##first plot
 plot(all_rich_lat_df_wo_NB[,2]~all_rich_lat_df_wo_NB[,1], col = all_rich_lat_df_wo_NB[,3], pch = 17, 
@@ -162,9 +147,9 @@ abline(allrich_lm, col = "dodgerblue4")
 abline(allrich_red_lm, col = "darkorchid4")
 
 ##create linear model 
-legend('topleft', legend = allrich_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8, pch = 4, 
+legend('topleft', legend = allrich_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8, pch = 17, 
        col = "dodgerblue4", title = "With WI")
-legend('bottomleft', legend = allrich_red_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8, pch = 4, 
+legend('bottomleft', legend = allrich_red_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8, pch = 17, 
        col = "darkorchid4", title = "Without WI")
 legend('bottom', legend = c("Ontario", "United States"), pch = 17, col = c("firebrick4","dodgerblue"))
 dev.off()
@@ -187,7 +172,7 @@ allrich_NB_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                            list(MYOTHERVALUE = format(allrich_NB_pvalue, digits = 2)))[2]
 
 ##Allelic Richness Linear
-pdf(paste0(shared_drive, "\\linear_NB_all_rich_Lat.pdf"), width = 8, height = 6)
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\linear_NB_all_rich_Lat.pdf", width = 8, height = 6)
 
 ##first plot
 plot(all_rich_lat_df_NB[,2]~all_rich_lat_df_NB[,1], col = all_rich_lat_df_NB[,3], pch = 17, 
@@ -202,7 +187,7 @@ text(all_rich_lat_df_NB[,2]~all_rich_lat_df_NB[,1], labels = rownames(all_rich_l
 abline(allrich_NB_lm, col = "dodgerblue4")
 
 ##create linear model 
-legend('topleft', legend = allrich_NB_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8, pch = 4, 
+legend('topleft', legend = allrich_NB_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8, pch = 17, 
        col = "dodgerblue4")
 
 legend('bottom', legend = c("New Brunswick"), pch = 17, col = c("firebrick1"))
@@ -265,7 +250,7 @@ wo_NB_allrich_quad_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                                     list(MYOTHERVALUE = format(wo_NB_allrich_quad_red_pvalue, digits = 2)))[2]
 
 ########Now Plot quadatric
-pdf(paste0(shared_drive, "\\quad_wo_NB_all_rich_quad.pdf"), width = 8, height = 6)
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\wo_NB_allrich_quad.pdf", width = 8, height = 6)
 
 ###Plot same thing 
 plot(all_rich_lat_df_wo_NB[,2]~all_rich_lat_df_wo_NB[,1], col = all_rich_lat_df_wo_NB[,3], 
@@ -285,10 +270,10 @@ lines(wo_NB_points_values_red, wo_NB_points_counts_red, col = "darkseagreen4", l
 ##Create legends 
 legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, 
        col = c("firebrick1", "firebrick4","dodgerblue"))
-legend('topleft', legend = wo_NB_allrich_quad_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8, pch = 4, 
+legend('topleft', legend = wo_NB_allrich_quad_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8, pch = 17, 
        col = "darkslategray3", title = "Quad Regression wo NB")
 legend('bottomleft', legend = wo_NB_allrich_quad_red_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8, 
-       pch = 4, col = "darkseagreen4",
+       pch = 17, col = "darkseagreen4",
        title = "Quad Regression wo NB and WI")
 dev.off()
 
@@ -307,7 +292,7 @@ allrich_r2_pvalue_quad_linear_wo_NB_df[4,] <- c(wo_NB_allrich_quad_red_pvalue, w
 allrich_r2_pvalue_quad_linear_wo_NB_df[5,] <- c(allrich_NB_pvalue,allrich_NB_r2)
 
 ##write out table
-write.csv(allrich_r2_pvalue_quad_linear_wo_NB_df,paste0(shared_drive,"\\lat_allrich_pvalue_r2.csv"))
+write.csv(allrich_r2_pvalue_quad_linear_wo_NB_df,"Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\allrich_r2_pvalue_quad_linear_wo_NB_df.csv")
 
 
 
