@@ -5,12 +5,14 @@
 library(adegenet)
 library(poppr)
 library(pegas)
+library(PopGenReport)
 
 #####################################
 ############# Load Files ############
 #####################################
 ##set working directory
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI")
+butternut_dir <- "G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI"
+setwd(butternut_dir)
 
 ##load reorg genind
 butternutgen_reorg <- read.genepop("DataFiles/24Populations/reorg/reorg_gen_24pop.gen", ncode = 3)
@@ -30,14 +32,14 @@ rownames(butternutgen_reorg@tab) <- butternut_reorg_lonlat$Ind
 ##reorg data file 
 bn_sumstats <- summary(butternutgen_reorg)
 
+##create poppr file 
 BN_poppr <- poppr(butternutgen_reorg)
 
-##
+##calculate heterozygosity
 BN_hexp <- BN_poppr[1:24, 10]
 bn_hexp_df <- data.frame(butternut_24pop_names,BN_hexp)
 
-
-##null alleles 
+##calculate null alleles 
 bn_null_all <- null.all(butternutgen_reorg)
 
 ##create null allele table
@@ -61,7 +63,7 @@ ld_comp <- pair.ia(butternutgen_reorg, sample = 1000)
 ld_comp_df <- data.frame(round(ld_comp,digits = 2))
 
 ##write out data files 
-write.csv(bn_hwe, "G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures\\bn_hwe.csv")
-write.csv(bn_hwe_reorg, "G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures\\bn_hwe_reorg.csv")
-write.csv(ld_comp_df, "G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures\\ld_loci.csv")
+write.csv(bn_hwe, "Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\bn_hwe.csv")
+write.csv(bn_hwe_reorg, "Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\bn_hwe_reorg.csv")
+write.csv(ld_comp_df, "Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\ld_loci.csv")
 
