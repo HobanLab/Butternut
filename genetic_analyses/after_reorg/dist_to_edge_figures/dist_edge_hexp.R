@@ -4,28 +4,14 @@
 
 library(diveRsity)
 library(adegenet)
-library(stringr)
 library(tidyr)
 library(hierfstat)
 library(poppr)
 library(Demerelate)
-library(rworldmap)
-library(data.table)
-library(ggplot2)
-library(ggrepel)
-library(geosphere)
-library(plotrix)
-library(ggpmisc)
-library(factoextra)
-library(GISTools)
-library(raster)
-library(rgdal)
-library(sp)
 
 #####################################
 ############ Directories ############
 #####################################
-dist_edge_path <- "G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures\\dist_edge\\"
 butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\"
 
 ##############################################################
@@ -55,7 +41,7 @@ levels(butternutgen_reorg@pop) <- butternut_24pop_names
 butternut_24pop_poppr <- poppr(butternutgen_reorg)
 
 ##get distance to range edge for each pop
-dist_edge_df <- read.csv(paste0(dist_edge_path, "dist_edge_df.csv"))
+dist_edge_df <- read.csv("Graphical_Stat_Results\\PostIndRemoval\\GeographicImages\\dist_edge_df.csv")
 
 ######################################################################
 #################### Run Analyses and Create DF  #####################
@@ -103,12 +89,11 @@ hexp_wo_wi_dist_rp[2] <- substitute(expression(italic(p) == MYOTHERVALUE),
 ##################################################################
 ######################## Plotting Models  ########################
 ##################################################################
-
 ##HExp
-pdf(paste0(dist_edge_path, "hexp_dist.pdf"), width = 8, height = 6)
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\hexp_dist.pdf", width = 8, height = 6)
 
 plot(hexp_dist_df[,2]~hexp_dist_df[,1], 
-     col = hexp_dist_df[,3], pch = 17, ylim = c(0.74,0.86),
+     col = as.character(hexp_dist_df[,3]), pch = 17, ylim = c(0.74,0.86),
      ylab = "Expected Heterozygosity", xlab = "Distance to Range Edge (km)", 
      cex = (butternut_24pop_poppr[1:24,2]/80), xlim = c(0,600),
      main = "Expected Heterozygosity Compared with Distance to Range Edge (km)")
@@ -120,15 +105,15 @@ abline(hexp_dist_lm, col = "dodgerblue4")
 abline(hexp_wo_wi_lm, col = "darkorchid")
 
 ##legends
-legend('topleft', legend = hexp_dist_rp, pch = 4, col = "dodgerblue4",
+legend('topleft', legend = hexp_dist_rp, pch = 17, col = "dodgerblue4",
        title = "Regression with WI",
        bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
 
-legend('bottomleft', legend = hexp_wo_wi_dist_rp, pch = 4, 
+legend('bottomleft', legend = hexp_wo_wi_dist_rp, pch = 17, 
        col = "darkorchid", title = "Regression without WI",
        bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
 
-legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
+legend('bottomright', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
 
 dev.off()
 
@@ -141,5 +126,5 @@ dist_edge_hexp_df[1,] <- c(hexp_dist_pvalue, hexp_dist_r2)
 dist_edge_hexp_df[2,] <- c(hexp_wo_wi_dist_pvalue, hexp_wo_wi_dist_r2)
 
 ##write out
-write.csv(dist_edge_hexp_df, paste0(dist_edge_path, "hexp_dist_pvalue_r2.csv"))
+write.csv(dist_edge_hexp_df, "Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\hexp_dist_pvalue_r2.csv")
 
