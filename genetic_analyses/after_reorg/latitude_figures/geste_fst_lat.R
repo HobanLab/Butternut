@@ -2,37 +2,20 @@
 ######## Libraries #######
 ##########################
 
-library(diveRsity)
 library(adegenet)
-library(stringr)
-library(tidyr)
 library(hierfstat)
 library(poppr)
-library(Demerelate)
-library(rworldmap)
-library(data.table)
-library(ggplot2)
-library(ggrepel)
-library(geosphere)
-library(plotrix)
-library(ggpmisc)
-library(factoextra)
-library(GISTools)
-library(raster)
-library(rgdal)
-library(sp)
 library(PopGenReport)
 
 #####################################
 ############ Directories ############
 #####################################
-shared_drive <- "G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures"
 butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI"
 
 #####################################
 ############# Load Files ############
 #####################################
-setwd(paste0(butternut_drive))
+setwd(butternut_drive)
 
 ##load current working reorganized genepop file 
 butternutgen_reorg <- read.genepop("DataFiles\\24Populations\\reorg\\reorg_gen_24pop.gen", ncode = 3)
@@ -55,6 +38,9 @@ butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
 ##calculate poppr
 butternut_24pop_poppr <- poppr(butternutgen_reorg)
 
+#####################################
+######### Comparison Plot ###########
+#####################################
 ##Calculate mean latitude and longitude for every population
 ##now do lon lat calcs
 butternut_mean_lon <- matrix()
@@ -105,12 +91,14 @@ latfst_rp[2] <- substitute(expression(italic(p) == MYOTHERVALUE),
                                  list(MYOTHERVALUE = format(latfst_pvalue, digits = 2)))[2]
 
 ##plot against each other
-pdf("G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures\\fst_lat_linear_9_1_20.pdf", width = 10, height = 8)
-plotCI(butternut_mean_lat, reorg_geste_fst[,2], ui = reorg_geste_fst[,5], li = reorg_geste_fst[,4], 
-       ylim = c(0,0.15), pch = 17, xlab = "Mean Latitude", 
+pdf("G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\STR\\geste_fst_linear.pdf", width = 10, height = 8)
+##plot fst lat in comparison
+plot(fst_lat$Mean~fst_lat$butternut_mean_lat, ylim = c(0,0.15), pch = 17, xlab = "Mean Latitude", 
        ylab = "GESTE Fst", col = fst_lat[,6], cex = (butternut_24pop_poppr[1:24,2]/50), 
        main = "GESTE Fst Comapred to Mean Latitude")
+##add population names
 text(fst_lat[,1], fst_lat[,2], labels = butternut_24pop_names, cex = 0.8, pos = 3)
+##add model
 abline(fst_lat_lm, col = "dodgerblue4")
 legend('topleft', legend = latfst_rp, bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
 legend('top', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
