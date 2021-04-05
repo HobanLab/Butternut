@@ -4,29 +4,20 @@
 
 library(diveRsity)
 library(adegenet)
-library(stringr)
 library(tidyr)
-library(hierfstat)
 library(poppr)
 library(Demerelate)
 library(rworldmap)
-library(data.table)
-library(ggplot2)
-library(ggrepel)
 library(geosphere)
-library(plotrix)
-library(ggpmisc)
-library(factoextra)
-library(GISTools)
 library(raster)
 library(rgdal)
 library(sp)
 library(PopGenReport)
+library(hierfstat)
 
 #####################################
 ############ Directories ############
 #####################################
-shared_drive <- "G:\\Shared drives\\Emily_Schumacher\\butternut_publication_figures"
 butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI"
 
 #####################################
@@ -134,7 +125,7 @@ allrich_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                            list(MYOTHERVALUE = format(allrich_red_pvalue, digits = 2)))[2]
 
 ##Allelic Richness Linear
-pdf(paste0(shared_drive,"\\all_rich_lat_linear.pdf"), width = 8, height = 6)
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\all_rich_lat_linear.pdf", width = 8, height = 8)
 
 ##create plot
 plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], pch = 17, 
@@ -147,10 +138,10 @@ abline(allrich_lm, col = "dodgerblue4")
 abline(allrich_red_lm, col = "darkorchid4")
 ##Write legends
 legend('topleft', legend = allrich_rp, bty = 'n', border = "black", 
-       pt.cex = 1, cex = 0.8, pch = 4, col = "dodgerblue4",
+       pt.cex = 1, cex = 0.8, pch = 17, col = "dodgerblue4",
        title = "With WI Populations")
 legend('bottomleft', legend = allrich_red_rp, bty = 'n', border = "black", 
-       pt.cex = 1, cex = 0.8, pch = 4, col = "darkorchid4",
+       pt.cex = 1, cex = 0.8, pch = 17, col = "darkorchid4",
        title = "Without WI Populations")
 legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), 
        pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
@@ -207,7 +198,7 @@ allrich_quad_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                                list(MYOTHERVALUE = format(allrich_quad_red_pvalue, digits = 2)))[2]
 
 ##Now Plot 
-pdf(paste0(shared_drive, "\\quad_all_rich_lat.pdf"), width = 8, height = 6)
+pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\all_rich_lat_quad.pdf", width = 8, height = 8)
 
 ##start plot 
 plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], 
@@ -223,10 +214,10 @@ lines(points_values_21, points_counts_21, col = "darkseagreen4", lwd = 3)
 legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, 
        col = c("firebrick1", "firebrick4","dodgerblue"))
 legend('topleft', legend = allrich_quad_rp, bty = 'n', border = "black", 
-       pt.cex = 1, cex = 0.8, pch = 4, col = "darkslategray3",
+       pt.cex = 1, cex = 0.8, pch = 17, col = "darkslategray3",
        title = "With WI Populations")
 legend('bottomleft', legend = allrich_quad_red_rp, bty = 'n', border = "black", 
-       pt.cex = 1, cex = 0.8, pch = 4, col = "darkseagreen4",
+       pt.cex = 1, cex = 0.8, pch = 17, col = "darkseagreen4",
        title = "Without WI Populations")
 dev.off()
 
@@ -242,4 +233,4 @@ lat_all_rich_df[3,] <- c(allrich_quad_pvalue, allrich_quad_r2)
 lat_all_rich_df[4,] <- c(allrich_quad_red_pvalue, allrich_quad_red_r2)
 
 ##write out csv
-write.csv(lat_all_rich_df, paste0(shared_drive, "\\r2_pvalue_lat_all_rich_df.csv"))
+write.csv(lat_all_rich_df, "Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\r2_pvalue_lat_all_rich_df.csv")
