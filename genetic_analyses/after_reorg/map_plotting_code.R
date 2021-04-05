@@ -4,29 +4,16 @@
 
 library(diveRsity)
 library(adegenet)
-library(stringr)
 library(tidyr)
-library(hierfstat)
-library(poppr)
-library(Demerelate)
 library(rworldmap)
-library(data.table)
-library(ggplot2)
-library(ggrepel)
 library(geosphere)
-library(plotrix)
-library(ggpmisc)
-library(factoextra)
-library(GISTools)
 library(raster)
 library(rgdal)
 library(sp)
-library(PopGenReport)
 
 #####################################
 ############ Directories ############
 #####################################
-shared_drive <- "G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures"
 butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI"
 
 #####################################
@@ -54,9 +41,6 @@ rownames(butternutgen_reorg@tab) <- butternut_reorg_lonlat$Ind
 
 ##rename populations 
 levels(butternutgen_reorg@pop) <- butternut_24pop_names
-
-##create butternut poppr
-butternut_poppr <- poppr(butternutgen_reorg)
 
 #############################################
 ############# Mean Lat and Long #############
@@ -96,7 +80,7 @@ max_lat <- max(butternut_mean_lat)
 ###########################
 ###### Better Pop Map #####
 ###########################
-setwd(paste0(shared_drive, "\\dist_edge"))
+setwd(paste0(butternut_drive, "\\Graphical_Stat_Results\\PostIndRemoval\\GeographicImages"))
 
 ##projection you want to use
 proj_out <- "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"
@@ -137,7 +121,7 @@ proj4string(coord_df) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 coord_df_proj <- spTransform(coord_df, proj_out)
 
 ##read in buffer shapefile 
-butternut_buffer <- readOGR(dsn = paste0(shared_drive, "\\dist_edge"), layer = "butternut_buffer")
+butternut_buffer <- readOGR(dsn = "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\Graphical_Stat_Results\\PostIndRemoval\\GeographicImages" , layer = "butternut_buffer")
 butternut_buffer_trans <- sp::spTransform(na_shp, proj_out)
 
 ##list of 24 colors for populations 
@@ -146,6 +130,7 @@ butternut_col <- c("darkmagenta", "darkorchid3", "deeppink3", "darkviolet", "dee
                    "darkseagreen", "darkgoldenrod4","gold","deepskyblue", "lightsalmon1","khaki", 
                    "olivedrab4", "olivedrab3","forestgreen","lightblue3","dodgerblue2","orange3")
 
+##add colors to data frame 
 butternut_col_df <- matrix(nrow = length(butternut_reorg_lonlat[,1]), ncol = 2)
 butternut_col_df[,1] <- as.character(butternut_reorg_lonlat$Pop)
 for(i in 1:length(butternut_24pop_names)){
@@ -154,12 +139,14 @@ for(i in 1:length(butternut_24pop_names)){
   
 }
 
-#scalebar(d, xy = NULL, type = "line", divs = 2, below = "kilometers", lonlat = NULL, label, adj=c(0.5, -0.5), lwd = 2)
-
 ##plot mean population coordinates 
-pdf("G:\\Shared drives\\Emily_Schumacher\\Butternut\\butternut_publication_figures\\pop_map_allind.pdf", width = 10, height = 8)
+setwd("G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\Graphical_Stat_Results\\PostIndRemoval\\GeographicImages")
+pdf("pop_map_allind.pdf", width = 8, height = 8)
 plot(north_america, xlim = c(max_min_df_trans[,1]), ylim = c(max_min_df_trans[,2]))
 points(coord_df_proj, pch = 17, col = butternut_col_df[,2])
 legend('bottomright',legend = butternut_24pop_names, pch = 17, col = butternut_col, cex = 0.6)
-scalebar(500)
 dev.off()
+
+##write out coordinate df 
+butternut_coord_df <- cbind(as.numeric(butternut_mean_lon), as.numeric(butternut_mean_lat), butternut_col)
+write.csv(butternut_coord_df, "butternut_coord_df.csv")
