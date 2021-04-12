@@ -67,15 +67,15 @@ butternut_presence_2 <- remove.duplicates(butternut_presence_2)
 ##Reduce spatial autocorrelation, identifying points within certain distances
 
 #####100 meters
-points_matrix <- gWithinDistance(butternut_presence_2, dist = .00086206895, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence, dist = .00086206895, byid = TRUE)
 #####300 meters
-points_matrix <- gWithinDistance(butternut_presence_2, dist = .00258620685, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence, dist = .00258620685, byid = TRUE)
 ######500 m
-points_matrix <- gWithinDistance(butternut_presence_2, dist = .0043103448, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence, dist = .0043103448, byid = TRUE)
 #####1 km
-points_matrix <- gWithinDistance(butternut_presence_2, dist = .0086206897, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence, dist = .0086206897, byid = TRUE)
 ####2km
-points_matrix <- gWithinDistance(butternut_presence_2, dist = .0172413794, byid = TRUE)
+points_matrix <- gWithinDistance(butternut_presence, dist = .0172413794, byid = TRUE)
 
 ##create tri matrix with NAs for bottom rows
 points_matrix[lower.tri(points_matrix, diag=TRUE)] <- NA
@@ -87,7 +87,7 @@ auto_cols <- colSums(points_matrix, na.rm=TRUE) == 0
 occurrence_wo_auto <- butternut_presence[auto_cols,]
 
 ##convert to a data frame
-occurrence_no_auto <- data.frame(occurrence_wo_auto)
+occurrence_no_auto <- data.frame(occurrence_wo_auto) ##reduced to 3053 individuals 
 
 ##occurrence no autocorrelation write out 
 write.csv(occurrence_no_auto, "occurrence_noauto_noproj.csv")
