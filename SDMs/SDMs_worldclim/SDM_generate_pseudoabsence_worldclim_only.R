@@ -23,7 +23,6 @@ library(geosphere)
 #####################################
 ############ Load Files #############
 #####################################
-
 ##load data points
 worldclim_only <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\SDMs\\worldclim_only"
 setwd(paste0(worldclim_only, "\\InputFiles"))
@@ -54,18 +53,20 @@ extent_project <- raster("extent_project.tif")
 ######################################################################
 ################## Generate Pseudo-Absence Points ####################
 ######################################################################
-
-
 ##validating aligning projection -- make sure all points are within study area
 pres_ext <- extract(extent_project, butternut_pres)
 pres_ext_df <- data.frame(pres_ext)
 pres_points_df <- data.frame(butternut_pres)
 
+##limit by individuals that are within geographic extent 
 pres_df <- cbind(pres_points_df, pres_ext_df)
-pres_df <- na.omit(pres_df) ### limit to 5713 occurrence records
+pres_df <- na.omit(pres_df) ### remove 2 individuals -- limited to 3051 individuals 
+
+##clean up data frame 
+pres_df <- pres_df[,-c(1,2,5,6)]
 
 ##write out presence clean 
-write.csv(pres_df[,-3], "pres_clean_df.csv")
+write.csv(pres_df, "pres_clean_df.csv")
 
 ##presence clean spatial
 coordinates(pres_df) <- c('Longitude', 'Latitude')
@@ -76,7 +77,7 @@ plot(extent_project)
 points(pres_df)
 
 ##Now start generating background points
-background_points <- randomPoints(extent_project, 5713)
+background_points <- randomPoints(extent_project, 3051)
 
 ##now continue to sample
 set.seed(25)
@@ -118,6 +119,10 @@ colnames(butternut_abs_df) <- col_names
 ##Prepare presence and absence records
 ##Absence column added 
 butternut_abs_df$PA <- "0"
+
+##clean up presence points df 
+pres_points_df <- pres_points_df[,-c(1,2,5)]
+
 
 ##Add presence column to presence points
 pres_points_df$PA <- "1"
