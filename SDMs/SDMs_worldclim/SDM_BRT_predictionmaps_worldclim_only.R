@@ -31,6 +31,12 @@ setwd(paste0(worldclim_only, "\\InputFiles"))
 butternut_var <- read.csv("butternut_variables.csv")
 butternut_var <- butternut_var[,-1]
 
+##load in elevation crop
+elevation_crop <- raster("elevation_extent.tif")
+
+#####Projection
+projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+
 ######################################################################
 ####################### Running the Model ############################
 ######################################################################
@@ -113,7 +119,7 @@ for (i in 1:length(lr)){
 th
 
 ##tree number save -- look at red printed text
-tree_number <- 1150
+tree_number <- 550 
 
 ##summarize model - percent contribution of each variable
 summary(butternut_model)
@@ -139,6 +145,7 @@ butternut_contribution_bp <- ggplot(data=butternut_influences, aes(x=butternut_p
 ##flip it to be horizontal
 butternut_contribution_bp2 <- butternut_contribution_bp + coord_flip()
 
+setwd(paste0(worldclim_only, "\\OutputFiles"))
 ##write out file 
 pdf("contribution_bp_allvar.pdf", width = 10, height = 8)
 butternut_contribution_bp2
@@ -148,7 +155,9 @@ dev.off()
 ######## Prediction map ########
 ################################
 ##load in elevation extent
-extent_project <- projectRaster(elevation_crop, crs = projection)
+setwd(paste0(worldclim_only, "\\InputFiles"))
+elevation_extent <- raster("elevation_extent.tif")
+extent_project <- raster("extent_project.tif")
 
 ##set wd for the worldclim variables 
 setwd("bio_2-5m_bil")
@@ -164,13 +173,26 @@ for(j in 1:length(worldclim_list)) {
   #convert to rasters
   worldclim_raster_list[[j]] = raster(worldclim_list[[j]])
   
-  worldclim_crop_list[[j]] <- crop(worldclim_raster_list[[j]], elevation_crop)
+  worldclim_crop_list[[j]] <- crop(worldclim_raster_list[[j]], elevation_extent)
   
   worldclim_project_list[[j]] <- projectRaster(worldclim_crop_list[[j]], crs = projection)
   
 }
 
-##stack world clim variables 
+##Rename layers
+worldclim_names <- c("mat", "mtwarq", "mtcq", "map", "pwetm", "pdm", "precip_season",
+                     "pwetq", "pdq", "pwarq", "pcq", "mdr","iso","temp_season", 
+                     "mtwm","mtcm", "temp_range", "mtwetq", "mtdq")
+
+##now add to worldclim list
+for(p in 1:length(worldclim_names)) {
+  
+  names(worldclim_project_list[[p]]) <- worldclim_names[[p]]
+  
+}
+
+
+##stack worldclim variables 
 worldclim_stack <- stack(worldclim_project_list[[1]], worldclim_project_list[[2]],
                          worldclim_project_list[[3]], worldclim_project_list[[4]],
                          worldclim_project_list[[5]], worldclim_project_list[[6]],
@@ -182,20 +204,10 @@ worldclim_stack <- stack(worldclim_project_list[[1]], worldclim_project_list[[2]
                          worldclim_project_list[[17]], worldclim_project_list[[18]],
                          worldclim_project_list[[19]])
 
-##Rename layers
-worldclim_names <- c("mat", "mtwarq", "mtcq", "map", "pwetm", "pdm", "precip_season",
-                     "pwetq", "pdq", "pwarq", "pcq", "mdr","iso","temp_season", 
-                     "mtwm","mtcm", "temp_range", "mtwetq", "mtdq")
 
 
-for(p in 1:length(worldclim_names)) {
-  
-  names(worldclim_project_list[[p]]) <- worldclim_names[[p]]
-  
-}
 
 ########Now begin to stack variables that contribute most to the model
-
 ##to get list of names for ordering stack 
 var_list <- butternut_model$var.names
 
@@ -209,10 +221,11 @@ butternut_model_stack <- stack(worldclim_stack$pwetm, worldclim_stack$mdr,
 names(butternut_model_stack) <- butternut_model$var.names
 
 ##now create prediction map
-butternut_prediction_map <- predict(butternut_model_stack, butternut_model,n.trees=1150, type='response')
+butternut_prediction_map <- predict(butternut_model_stack, butternut_model,n.trees=tree_number, type='response')
 
 ##write out Raster
-writeRaster(butternut_prediction_map, paste0(worldclim_only, "\\OutputFiles\\hsm_worldclim_only_raster.tif"))
+writeRaster(butternut_prediction_map, paste0(worldclim_only, "\\OutputFiles\\hsm_worldclim_only_raster.tif"),
+            overwrite=TRUE)
 
 #############################
 ######## Plot maps ##########
@@ -277,7 +290,7 @@ pdf("hsm_performance.pdf", width = 6, height = 6)
 boxplot(hsm_performance_pa[hsm_performance_pa$PA == 1,][,1], hsm_performance_pa[hsm_performance_pa$PA == 0,][,1], names = c("Presence", "Absence"), main = "Presence and Absence Range of Habitat Suitability", ylab = "Percent Habitat Suitability", xlab = "Type of Point", ylim = c(0,1))
 dev.off()
 
-##maybe do a t test
+##do a t test
 wilcox.test(hsm_performance_pa[hsm_performance_pa$PA == 1,][,1], hsm_performance_pa[hsm_performance_pa$PA == 0,][,1])
 
 ####Calculate range
@@ -361,15 +374,14 @@ for(j in 1:length(time_periods)){
   paleo_stack[[j]] <- stack(paleo_raster[[j]])
   
   ##crop them
-  paleo_crop[[j]] <- crop(paleo_stack[[j]], elevation_crop)
+  paleo_crop[[j]] <- crop(paleo_stack[[j]], elevation_extent)
   
   ##project the crop
   paleo_project[[j]] <- projectRaster(paleo_crop[[j]], crs = projection)
   
-  ##name the layers of the butternut model 
-  names(paleo_project[[j]]) <- butternut_model$var.names
-  
   }
+  ##name the variables 
+  names(paleo_project[[j]]) <- butternut_model$var.names
 }
 
 
@@ -390,7 +402,7 @@ for(i in 1:length(paleo_project)){
   hsm_list[[i]] <- predict(paleo_project[[i]],butternut_model,n.trees=tree_number,type='response')
 
   ##write Rasters out
-  writeRaster(hsm_list[[j]], paste0(time_period_names[[i]], "_hsm.tif"), overwrite = TRUE)
+  writeRaster(hsm_list[[i]], paste0(time_period_names[[i]], "_hsm.tif"), overwrite = TRUE)
   
   pdf(paste0(time_period_names[[i]], "_(", ybp[[i]], ")_hsm.pdf"))
   plot(hsm_list[[i]], main = ybp[[i]])
