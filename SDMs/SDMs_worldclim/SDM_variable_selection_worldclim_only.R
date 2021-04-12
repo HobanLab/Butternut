@@ -20,6 +20,7 @@ library(plyr)
 library(HH)
 library(ltm)
 library(geosphere)
+library(dendextend)
 
 #####################################
 ############ Load Files #############
@@ -65,9 +66,6 @@ for(j in 1:length(worldclim_list)) {
 }
 
 ##Rename layers
-worldclim_names <- c("mat", "mtwarq", "mtcq", "map", "pwetm", "pdm", "precip_season",
-                     "pwetq", "pdq", "pwarq", "pcq", "mdr","iso","temp_season", 
-                     "mtwm","mtcm", "temp_range", "mtwetq", "mtdq")
 
 for(p in 1:length(worldclim_names)) {
   
@@ -103,8 +101,8 @@ colnames(butternut_var) <- c("Longitude", "Latitude", "PA",
                              
                              
 ##check out how many individuals are left 
-length(butternut_var[butternut_var$PA == "1",]$PA) ##Presence points, 5713
-length(butternut_var[butternut_var$PA == "0",]$PA) ##Absence points, 5708
+length(butternut_var[butternut_var$PA == "1",]$PA) ##Presence points, 3051
+length(butternut_var[butternut_var$PA == "0",]$PA) ##Absence points, 3049
 
 ##write out points with variables
 write.csv(butternut_var, paste0(worldclim_only, "\\InputFiles\\", "butternut_variables.csv"))
@@ -123,11 +121,32 @@ predictors_dist <- as.dist(abs(predictors_correlation))
 #create dissimilarity tree 
 predictor_cluster <- hclust(1-(predictors_dist))
 
-#plot
-pdf("ecogeo_dendrogram.pdf", width = 20, height = 10)
-plot(as.dendrogram(predictor_cluster), horiz =T, main="Dissimilarity Cluster of Ecogeorgaphic Varibales", cex.main=0.8)
-abline(v=0.5, col='red')
-dev.off()
+##now create dendrogram 
+predictor_dendrogram <- as.dendrogram(predictor_cluster)
+
+##create names 
+worldclim_names <- c("Precipitation of the Driest Quarter (mm)", "Precipitation of the Driest Month (mm)",
+                     "Precipitation of the Coldest Quarter (mm)", "Mean Annual Precipitation (mm)", 
+                     "Annual Temperature Range (C)", "Temperature Seasonality (C)", "Seasonal Precipitation (mm)",
+                     "Mean Temperature of the Wettest Quarter (C)", "Precipitation of the Wettest Quarter (mm)",  
+                     "Precipitation of the Wettest Month (mm)", "Precipitation of the Warmest Quarter (mm)", 
+                     "Mean Diurnal Range", "Mean Temperature of the Coldest Month (C)", 
+                     "Mean Temperature of the Coldest Quarter(C)", "Mean Annual Temperature (C)",
+                     "Isothermality", "Mean Temperature of the Wettest Quarter (C)", 
+                     "Mean Temperature of the Warmest Month (C)", "Mean Temperature of the Warmest Quarter (C)")
+
+##set labels 
+predict_dend_2 <- predictor_dendrogram %>% 
+                    set("labels", worldclim_names) %>%
+                    set("labels_cex", 0.8)
+                  
+
+par(mar = c(2,2,2,20))
+
+predict_dend_2 %>% 
+
+  plot(main="", horiz = TRUE)
+
 
 #Bisserial correlation
 variable_names <- names(butternut_var[,1:22])
