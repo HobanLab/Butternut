@@ -42,7 +42,7 @@ projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=
 ######################################################################
 
 ##now limit to important variables
-butternut_list_variables <- c("pwetm", "mdr","mtdq", "mtwetq", "precip_season")
+butternut_list_variables <- c("PwetM", "MDR","MTDQ", "MTwetQ", "precip_season")
 
 ##now load variables for model running
 butternut_sel_var <- butternut_var[,butternut_list_variables]
