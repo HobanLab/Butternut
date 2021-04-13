@@ -67,7 +67,7 @@ for(j in 1:length(worldclim_list)) {
 
 ##layer names 
 worldclim_names <- c("MAT","MTwarQ","MTCQ","MAP","PwetM","PDM","precip_season","PwetQ","PDQ","PwarQ","PCQ",
-                     "MDR","ISO","temp_season","MTwarmM","MTCM","temp_range","MTwetQ","MTDQ")
+                     "MDR","ISO","temp_season","MTwarM","MTCM","temp_range","MTwetQ","MTDQ")
 
 ##Rename layers
 for(p in 1:length(worldclim_names)) {
@@ -128,7 +128,7 @@ predictor_cluster <- hclust(1-(predictors_dist))
 predictor_dendrogram <- as.dendrogram(predictor_cluster)
 
 ##set names 
-worldclim_full_names <- c('Mean Temperature of the Warmest Quarter (C)',"Mean Temperature of the Warmest Month (C)", 
+worldclim_full_names <- c('Mean Temperature of the Warmest Quarter (C)',"Maximum Temperature of the Warmest Month (C)", 
                           "Mean Temperature of the Driest Quarter(C)","Isothermality","Mean Annual Temperature (C)",
                           "Mean Temperature of the Coldest Quarter (C)", "Mean Temperature of the Coldest Month (C)",
                           "Mean Diurnal Range (C)","Precipitation of the Warmest Quarter (mm)",
@@ -178,7 +178,6 @@ for (i in 4:length(variable_names)){
 ##update output 
 biserial_cor_out <- data.frame(biserial_cor_matrix[-1:-3,])
 colnames(biserial_cor_out) <- c("Variable", "Correlation Coef")
-biserial_cor_out[,1] <- worldclim_full_names
 
 ##write out data frame
 write.csv(biserial_cor_out, "biserial_cor_matrix.csv")
