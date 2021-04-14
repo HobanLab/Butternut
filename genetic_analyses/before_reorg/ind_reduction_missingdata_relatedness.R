@@ -58,7 +58,8 @@ lonlat_df_list <- list()
 ##lon lat reduction from missing data 
 lonlat_nomd_list <- list()
 
-##
+##reduced 
+lonlat_red_rel_list <- list()
 
 ##loop to read in genind files, convert and reduce 
 for(i in 1:length(gen_list)){
@@ -96,28 +97,23 @@ for(i in 1:length(gen_list)){
   ##load in lon/lat documents 
   lonlat_df_list[[i]] <- read.csv(paste0(paste0("DataFiles\\before_reorg\\",lonlat_list[[i]])))
   
+  ##reduce lon lat data frame by missing data 
+  lonlat_nomd_list[[i]] <- lonlat_df_list[[i]][as.character(lonlat_df_list[[i]][,1]) %in% 
+                                                            rownames(genind_nomd_list[[i]]@tab),]
   
+  ##reduce data frame by relatedness individuals 
+  lonlat_red_rel_list[[i]] <- lonlat_nomd_list[[i]][!as.character(lonlat_nomd_list[[i]][,1]) %in% 
+                                                      relate_ind_list[[i]],]
+ 
+  ##write out reduced data files 
+  if(i == 1){
+    
+    write.csv(lonlat_red_rel_list[[1]], paste0("DataFiles\\before_reorg\\", "lonlat_rel_red_11loci.csv"))
+    
+  } else {
+    
+    write.csv(lonlat_red_rel_list[[2]], paste0("DataFiles\\before_reorg\\", "lonlat_rel_red_8loci.csv"))
+    
+  }
   
 }
-
-##data frame to reduce loading
-butternut_lonlat_11loci <- read.csv("DataFiles\\butternut_24pops_lonlat_11loci.csv")
-
-##reduce lon lat data frame by missing data 
-butternut_lonlat_nomd_11loci <- butternut_lonlat_11loci[as.character(butternut_lonlat_11loci$Ind ) %in% 
-                                                          rownames(butternutgen_nomd_11loci@tab),]
-
-##then reduce it by relatedness individuals
-butternut_lonlat_rel_red_11loci <- butternut_lonlat_nomd_11loci[!butternut_lonlat_nomd_11loci$Ind %in% 
-                                                                  relate_ind_remove,]
-
-#############################################
-############# Write out Files ###############
-#############################################
-setwd("genetic_analyses\\genetic_analyses_results")
-###write out data frames
-write.csv(butternut_red_11loci, "DataFiles\\before_reorg\\butternut_11loci_rel.csv")
-write.csv(butternut_lonlat_nomd_11loci, "butternut_lonlat_nomd_11loci.csv")
-write.csv(butternut_lonlat_rel_red_11loci, "butternut_lonlat_rel_red_11loci.csv")
-
-
