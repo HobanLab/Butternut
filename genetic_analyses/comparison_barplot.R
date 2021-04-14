@@ -3,18 +3,6 @@
 ##########################
 
 library(adegenet)
-library(stringr)
-library(tidyr)
-library(hierfstat)
-library(poppr)
-library(Demerelate)
-library(rworldmap)
-library(data.table)
-library(ggplot2)
-library(ggrepel)
-library(geosphere)
-library(strataG)
-library(plotrix)
 
 ###############################################
 ############## Working Directory ##############
