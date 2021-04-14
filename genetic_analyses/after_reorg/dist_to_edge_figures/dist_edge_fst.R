@@ -44,7 +44,6 @@ levels(butternutgen_reorg@pop) <- butternut_24pop_names
 ##calculate poppr
 butternut_24pop_poppr <- poppr(butternutgen_reorg)
 
-
 ####################################################
 ########### Genetic Diversity Calcs ################
 ####################################################
