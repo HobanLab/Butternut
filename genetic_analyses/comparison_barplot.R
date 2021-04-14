@@ -8,21 +8,21 @@ library(adegenet)
 ############## Working Directory ##############
 ###############################################
 
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI")
+setwd("C:\\Users\\eschumacher\\Documents\\GitHub\\butternut")
 
 ###############################################
 ############# Scoring Comparison ##############
 ###############################################
 
 ##three pop genind and genpop files
-butternut_3pop_gen <- read.genepop("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/butternut3.gen", ncode = 3)
+butternut_3pop_gen <- read.genepop("DataFiles\\butternut_3pops.gen", ncode = 3)
 butternut_3pop_pop <- genind2genpop(butternut_3pop_gen)
 
 ##create list of loci 
 loci <- c("B114","B159","WGA","A5_2","B157","B212_2","B121",	"B147",	"B249",	"B262","B264")
 
 ##loop to compare scoring between Jeanne and Sean
-pdf(file=paste0("butternut_3pop_scoring_barplot.pdf"),width=40,height=9)
+pdf("genetic_analyses\\genetic_analyses_results\\butternut_3pop_scoring_barplot.pdf",width=40,height=9)
 
 for(a in loci){
   
