@@ -198,21 +198,21 @@ allrich_quad_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                                list(MYOTHERVALUE = format(allrich_quad_red_pvalue, digits = 2)))[2]
 
 ##Now Plot 
-pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\all_rich_lat_quad.pdf", width = 8, height = 8)
+pdf("C:\\Users\\eschumacher\\Documents\\GitHub\\butternut\\genetic_analyses\\genetic_analyses_results\\all_rich_lat_quad.pdf", width = 8, height = 6)
 
 ##start plot 
 plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], 
-     pch = 17, main = "Number of Alleles Compared to Mean Latitude", ylab = "Number of Alleles", 
+     pch = 17, main = "Allelic Richness Compared to Mean Latitude", ylab = "Allelic Richness", 
      xlab = "Mean Latitude", 
-     cex = (butternut_poppr[1:24,2]/100), ylim = c(5,10))
+     cex = (butternut_poppr[1:24,2]/50), ylim = c(5,10))
 ##label text
 text(all_rich_lat_df[,2]~all_rich_lat_df[,1], labels = butternut_24pop_names, cex = 0.8, pos = 1)
 ##draw quadratic lines
 lines(points_values, points_counts, col = "darkslategray3", lwd = 3)
 lines(points_values_21, points_counts_21, col = "darkseagreen4", lwd = 3)
 ##draw legends
-legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, 
-       col = c("firebrick1", "firebrick4","dodgerblue"))
+legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec", "United States"), pch = 17, 
+       col = c("firebrick1", "firebrick4", "lightsalmon","dodgerblue"))
 legend('topleft', legend = allrich_quad_rp, bty = 'n', border = "black", 
        pt.cex = 1, cex = 0.8, pch = 17, col = "darkslategray3",
        title = "With WI Populations")
