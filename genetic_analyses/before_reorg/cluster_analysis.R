@@ -10,26 +10,89 @@ library(adegenet)
 ##set working directory
 setwd("C:\\Users\\eschumacher\\Documents\\GitHub\\butternut")
 
-
-
 ###############################################
 ################ run PCoAs ####################
 ###############################################
+##PCoA list 
+related_red_list <- list.files(path = "DataFiles\\before_reorg", pattern = "_rel_red.csv$")
 
-##24 pops
-butternut_24pop_names <- unique(butternut_latlon$Pop)
+##list out 
+relatedness_reduced_df_list <- list()
 
-##prepare doc 
-pco_prep <- tab(butternutgen_24pop_reduced, freq = TRUE, NA.method = "mean")
+##genind list 
+gen_list <- list.files(path = "DataFiles\\before_reorg", pattern = "24pops.gen$")
 
-##run PCoA
-pco1 <- dudi.pco(dist(pco_prep), scannf = FALSE, nf = 2)
+##create genind list 
+genind_list <- list()
+
+##reduce genind
+genind_red_list <- list()
+
+##convert to genpop
+genpop_list <- list()
+
+##create list for the tab documents
+pco_tab_list <- list()
+
+##pcoa list
+pco_list <- list()
+
+##loop to create PCoA plots
+for(i in 1:length(related_red_list)){
+  
+  ##read in csv files 
+  relatedness_reduced_df_list[[i]] <- read.csv(paste0("DataFiles\\before_reorg\\", related_red_list[[i]]))
+  
+}
+
+##24 population names 
+butternut_24pop_names <- unique(relatedness_reduced_df_list[[1]]$Pop)
+
+##load in lon/lat data frame 
+butternut_lonlat_8loci_nomd <- read.csv("DataFiles\\before_reorg\\butternut_lonlat_8loci_nomd.csv")
+
+##reduce genind files 
+for(i in 1:length(gen_list)){
+  
+  ##read in genind files
+  genind_list[[i]] <- read.genepop(paste0("DataFiles\\before_reorg\\", gen_list[[i]]), ncode = 3)
+  
+  
+}
+
+##name rows in the 8 loci document 
+rownames(genind_list[[2]]@tab) <- butternut_lonlat_8loci_nomd$Pop
+
+##reduce genind files 
+for(i in 1:length(gen_list)){
+  
+  ##read in genind files
+  genind_red_list[[i]] <- genind_list[[i]][!rownames(genind_list[[i]]@tab) %in% relatedness_reduced_df_list[[i]][,1] ,]
+  
+  ##create genpop files
+  genpop_list[[i]] <- genind2genpop(genind_red_list[[i]])
+  
+  ##prepare doc 
+  pco_tab_list[[i]] <- tab(genpop_list[[i]], freq = TRUE, NA.method = "mean")
+  
+  ##run PCoA
+  pco_list[[i]] <- dudi.pco(dist(pco_tab_list[[i]]), scannf = FALSE, nf = 2)
+  
+}
+
+##Calculate percent variation explained 
+sum_eig <- sum(butternut_reorg_pco$eig)
+pc1 <- (butternut_reorg_pco$eig[[1]]/sum_eig)*100
+pc2 <- (butternut_reorg_pco$eig[[2]]/sum_eig)*100
 
 ##pcoa data frame
 pco_df <- data.frame(cbind(pco1$li$A1, pco1$li$A2))
 pco_df$col <- NA
 pco_df[1:504,3] <- "firebrick1"
 pco_df[505:977,3] <- "dodgerblue"
+
+butternut_pco_nb <- rbind(butternut_reorg_pco$li[c("31","568","1014","7917","9101113a","9101113b"),1:2])
+butternut_pco_ot <- rbind(butternut_reorg_pco$li[c("151","170","125147","126147","171188"),1:2])
 
 ##now plot 
 pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\indlevel_PCoA_10_14_20.pdf")
