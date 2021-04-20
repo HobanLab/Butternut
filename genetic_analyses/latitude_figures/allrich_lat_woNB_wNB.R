@@ -240,6 +240,3 @@ allrich_r2_pvalue_quad_linear_wo_NB_df[5,] <- c(allrich_NB_pvalue,allrich_NB_r2)
 
 ##write out table
 write.csv(allrich_r2_pvalue_quad_linear_wo_NB_df,"genetic_analyses_results\\allrich_r2_pvalue_quad_linear_wo_NB_df.csv")
-
-
-
