@@ -4,6 +4,7 @@
 
 library(adegenet)
 library(Demerelate)
+library(poppr)
 
 #####################################
 ############ Directories ############
@@ -50,3 +51,9 @@ butternutgen_relatedness_reduced <- butternutgen_reorg[!rownames(butternutgen_re
 
 ###name pops
 levels(butternutgen_relatedness_reduced@pop) <- butternut_24pop_names
+ 
+##write out genind file in genalex format
+setwd("data_files\\after_reorg")
+butternutgen_relatedness_reduced <- genind2genalex(butternutgen_relatedness_reduced, 
+                                                   filename = "butternutgen_relatedness_reduced.csv")
+
