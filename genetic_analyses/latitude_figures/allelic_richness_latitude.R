@@ -128,7 +128,7 @@ quadratic_model_lm_sum <- summary(quadratic_model_lm)
 
 #calculate model out of points 
 points_values <- seq(butternut_lonlat_max_min_df[1,3], butternut_lonlat_max_min_df[2,3], 0.5)
-points_counts <- predict(quadratic_model_lm,list(points=points_values, points2=points_values^2))
+points_counts <- predict(quadratic_model_lm, list(points=points_values, points2=points_values^2))
 
 ###pointsance without wisconsin populations
 points_21 <- allrich_lat_red_df[,1]
