@@ -49,6 +49,9 @@ relate_ind_remove <- unique(butternut_halfsib_names_cleanback)
 ##then subset genind file
 butternutgen_relatedness_reduced <- butternutgen_reorg[!rownames(butternutgen_reorg@tab) %in% relate_ind_remove,]
 
+##subset data frame 
+reorg_relatedness_reduced <- reorg_relatedness[!reorg_relatedness$Ind %in% relate_ind_remove,]
+
 ###name pops
 levels(butternutgen_relatedness_reduced@pop) <- butternut_24pop_names
  
@@ -56,4 +59,4 @@ levels(butternutgen_relatedness_reduced@pop) <- butternut_24pop_names
 setwd("data_files\\after_reorg")
 butternutgen_relatedness_reduced <- genind2genalex(butternutgen_relatedness_reduced, 
                                                    filename = "butternutgen_relatedness_reduced.csv")
-
+write.csv(reorg_relatedness_reduced, "reorg_relatedness_reduced.csv")
