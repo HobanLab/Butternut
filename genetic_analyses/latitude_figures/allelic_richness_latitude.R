@@ -2,81 +2,46 @@
 ######## Libraries #######
 ##########################
 
-library(diveRsity)
 library(adegenet)
-library(tidyr)
 library(poppr)
-library(Demerelate)
-library(rworldmap)
-library(geosphere)
-library(raster)
-library(rgdal)
-library(sp)
-library(PopGenReport)
 library(hierfstat)
 
 #####################################
 ############ Directories ############
 #####################################
-butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI"
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 
 #####################################
 ############# Load Files ############
 #####################################
-setwd(paste0(butternut_drive))
+setwd(butternut_drive)
 
 ##load current working reorganized genepop file 
-butternutgen_reorg <- read.genepop("DataFiles\\24Populations\\reorg\\reorg_gen_24pop.gen", ncode = 3)
+butternutgen_reorg <- read.genepop("data_files\\after_reorg\\reorg_gen_24pop.gen", ncode = 3)
 
-##load relatedness
-reorg_relatedness <- read.csv("DataFiles\\24Populations\\reorg\\reorg_relatedness.csv")
+##load relatedness document to name individuals 
+reorg_relatedness <- read.csv("data_files\\after_reorg\\reorg_relatedness.csv")
 
-##rename genind 
+##name individuals in the genind file  
 rownames(butternutgen_reorg@tab) <- reorg_relatedness$Ind
 
-##Lon lat files 
-butternut_reorg_lonlat <- read.csv("DataFiles\\24Populations\\reorg\\reorg_lon_lat.csv")
+##load in mean longitude and latitude by population 
+butternut_mean_lonlat <- read.csv("data_files\\geographic_files\\butternut_coord_df.csv")
 
-##pop name
-butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
+##get pop names 
+butternut_24pop_names <- unique(reorg_relatedness$Pop)
+
+##name butternut lon and lat 
+butternut_mean_lonlat[,1] <- butternut_24pop_names
+
+##name populations in genind file 
+levels(butternutgen_reorg@pop) <- butternut_24pop_names
 
 ##create butternut poppr
 butternut_poppr <- poppr(butternutgen_reorg)
 
-#############################################
-############# Mean Lat and Long #############
-#############################################
-##Calculate mean latitude and longitude for every population
-##now do lon lat calcs
-butternut_mean_lon <- matrix()
-butternut_mean_lat <- matrix()
-
-##loops for mean lat/lon
-for(pop in butternut_24pop_names){
-  
-  butternut_mean_lon[pop] <- mean(butternut_reorg_lonlat[butternut_reorg_lonlat$Pop == pop,][,3])  
-  
-}
-
-for(pop in butternut_24pop_names){
-  
-  butternut_mean_lat[pop] <- mean(butternut_reorg_lonlat[butternut_reorg_lonlat$Pop == pop,][,4])  
-  
-}
-
-##convert to matrix
-butternut_mean_lon <- matrix(butternut_mean_lon)
-butternut_mean_lat <- matrix(butternut_mean_lat)
-
-##document cleanup
-butternut_mean_lon <- butternut_mean_lon[-1]
-butternut_mean_lat <- butternut_mean_lat[-1]
-
-##create min and max documents
-min_lon <- min(butternut_mean_lon)
-max_lon <- max(butternut_mean_lon)
-min_lat <- min(butternut_mean_lat)
-max_lat <- max(butternut_mean_lat)
+##load min and maximum latitude and longitude document 
+butternut_lonlat_max_min_df <- read.csv("data_files\\geographic_files\\max_min_lonlat_df.csv")
 
 ##########################################################
 ################### Linear Modeling ######################
@@ -85,12 +50,13 @@ max_lat <- max(butternut_mean_lat)
 reorg_allrich <- colSums(allelic.richness(butternutgen_reorg)$Ar)/length(butternutgen_reorg@loc.n.all)
 
 ##create df with allelic richness and latitude
-all_rich_lat_df <- data.frame(butternut_mean_lat, reorg_allrich)
+all_rich_lat_df <- data.frame(butternut_mean_lonlat[,3], reorg_allrich)
 colnames(all_rich_lat_df) <- c("Mean_Lat", "Allelic_Richness")
 rownames(all_rich_lat_df) <- butternut_24pop_names
 all_rich_lat_df$Color <- NA
 all_rich_lat_df[1:6,3] <- "firebrick1"
-all_rich_lat_df[7:11,3] <- "firebrick4"
+all_rich_lat_df[c(8,11),3] <- "lightsalmon"
+all_rich_lat_df[c(7,9:10),3] <- "firebrick4"
 all_rich_lat_df[12:24,3] <- "dodgerblue"
 
 ##Create linear relationship with lat and number of alleles 
@@ -125,12 +91,12 @@ allrich_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                            list(MYOTHERVALUE = format(allrich_red_pvalue, digits = 2)))[2]
 
 ##Allelic Richness Linear
-pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\all_rich_lat_linear.pdf", width = 8, height = 8)
+pdf("genetic_analyses_results\\all_rich_lat_linear.pdf", width = 8, height = 6)
 
 ##create plot
 plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], pch = 17, 
      main = "Number of Alleles Compared to Mean Latitude", ylab = "Number of Alleles", 
-     xlab = "Mean Latitude", cex = (butternut_poppr[1:24,2]/80), ylim = c(5,10))
+     xlab = "Mean Latitude", cex = (butternut_poppr[1:24,2]/50), ylim = c(5,10))
 ##write text
 text(all_rich_lat_df[,2]~all_rich_lat_df[,1], labels = butternut_24pop_names, cex = 0.8, pos = 1)
 ##write a linear model
@@ -143,8 +109,8 @@ legend('topleft', legend = allrich_rp, bty = 'n', border = "black",
 legend('bottomleft', legend = allrich_red_rp, bty = 'n', border = "black", 
        pt.cex = 1, cex = 0.8, pch = 17, col = "darkorchid4",
        title = "Without WI Populations")
-legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), 
-       pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
+legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec","United States"), 
+       pch = 17, col = c("firebrick1", "firebrick4","lightsalmon","dodgerblue"))
 dev.off()
 
 ##########################################################
@@ -161,7 +127,7 @@ quadratic_model_lm <-lm(all_rich_lat_df[,2] ~
 quadratic_model_lm_sum <- summary(quadratic_model_lm)
 
 #calculate model out of points 
-points_values <- seq(min_lat, max_lat, 0.5)
+points_values <- seq(butternut_lonlat_max_min_df[1,3], butternut_lonlat_max_min_df[2,3], 0.5)
 points_counts <- predict(quadratic_model_lm,list(points=points_values, points2=points_values^2))
 
 ###pointsance without wisconsin populations
@@ -174,7 +140,7 @@ quadratic_21pops_model_lm <-lm(allrich_lat_red_df[,2] ~
 quadratic_21pops_model_lm_sum <- summary(quadratic_21pops_model_lm)
 
 ##values and pointsance
-points_values_21 <- seq(min_lat, max_lat, 0.5)
+points_values_21 <- seq(butternut_lonlat_max_min_df[1,3], butternut_lonlat_max_min_df[2,3], 0.5)
 points_counts_21 <- predict(quadratic_21pops_model_lm,list(points_21=points_values_21, points2_21=points_values_21^2))
 
 ##create r2 and p values
@@ -198,7 +164,7 @@ allrich_quad_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                                list(MYOTHERVALUE = format(allrich_quad_red_pvalue, digits = 2)))[2]
 
 ##Now Plot 
-pdf("C:\\Users\\eschumacher\\Documents\\GitHub\\butternut\\genetic_analyses\\genetic_analyses_results\\all_rich_lat_quad.pdf", width = 8, height = 6)
+pdf("genetic_analyses_results\\all_rich_lat_quad.pdf", width = 8, height = 6)
 
 ##start plot 
 plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], 
@@ -233,4 +199,4 @@ lat_all_rich_df[3,] <- c(allrich_quad_pvalue, allrich_quad_r2)
 lat_all_rich_df[4,] <- c(allrich_quad_red_pvalue, allrich_quad_red_r2)
 
 ##write out csv
-write.csv(lat_all_rich_df, "Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\r2_pvalue_lat_all_rich_df.csv")
+write.csv(lat_all_rich_df, "genetic_analyses_results\\r2_pvalue_lat_all_rich_df.csv")
