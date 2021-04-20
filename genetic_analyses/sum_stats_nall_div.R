@@ -5,6 +5,8 @@
 library(adegenet)
 library(poppr)
 library(hierfstat)
+library(PopGenReport)
+library(pegas)
 
 ##########################################
 ############# Set directories ############
@@ -91,7 +93,7 @@ ld_comp <- pair.ia(butternutgen_reorg, sample = 1000)
 ld_comp_df <- data.frame(round(ld_comp,digits = 2))
 
 ##write out data files 
-write.csv(bn_hwe, "Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\bn_hwe.csv")
-write.csv(bn_hwe_reorg, "Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\bn_hwe_reorg.csv")
-write.csv(ld_comp_df, "Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\ld_loci.csv")
+write.csv(bn_hwe, "genetic_analyses_results\\bn_hwe.csv")
+write.csv(bn_hwe_reorg, "genetic_analyses_results\\bn_hwe_reorg.csv")
+write.csv(ld_comp_df, "genetic_analyses_results\\ld_loci.csv")
 
