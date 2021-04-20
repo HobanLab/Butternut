@@ -2,51 +2,30 @@
 ######## Libraries #######
 ##########################
 
-library(diveRsity)
-library(adegenet)
-library(tidyr)
-library(rworldmap)
-library(geosphere)
-library(raster)
 library(rgdal)
-library(sp)
 
 #####################################
 ############ Directories ############
 #####################################
-butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI"
+##create document for butternut pathway
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 
 #####################################
 ############# Load Files ############
 #####################################
+##set working directory
 setwd(butternut_drive)
 
-##load current working reorganized genepop file 
-butternutgen_reorg <- read.genepop("DataFiles\\24Populations\\reorg\\reorg_gen_24pop.gen", ncode = 3)
-
-##load relatedness
-reorg_relatedness <- read.csv("DataFiles\\24Populations\\reorg\\reorg_relatedness.csv")
-
-##rename genind 
-rownames(butternutgen_reorg@tab) <- reorg_relatedness$Ind
-
 ##Lon lat files 
-butternut_reorg_lonlat <- read.csv("DataFiles\\24Populations\\reorg\\reorg_lon_lat.csv")
+butternut_reorg_lonlat <- read.csv("data_files\\after_reorg\\reorg_lon_lat.csv")
 
-##pop name
+##population names document 
 butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
-
-##rename individuals 
-rownames(butternutgen_reorg@tab) <- butternut_reorg_lonlat$Ind
-
-##rename populations 
-levels(butternutgen_reorg@pop) <- butternut_24pop_names
 
 #############################################
 ############# Mean Lat and Long #############
 #############################################
-##Calculate mean latitude and longitude for every population
-##now do lon lat calcs
+##calculate mean longitude and latitude for each population
 butternut_mean_lon <- matrix()
 butternut_mean_lat <- matrix()
 
@@ -80,7 +59,7 @@ max_lat <- max(butternut_mean_lat)
 ###########################
 ###### Better Pop Map #####
 ###########################
-setwd(paste0(butternut_drive, "\\Graphical_Stat_Results\\PostIndRemoval\\GeographicImages"))
+setwd("data_files\\geographic_files")
 
 ##projection you want to use
 proj_out <- "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"
@@ -121,7 +100,9 @@ proj4string(coord_df) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 coord_df_proj <- spTransform(coord_df, proj_out)
 
 ##read in buffer shapefile 
-butternut_buffer <- readOGR(dsn = "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\Graphical_Stat_Results\\PostIndRemoval\\GeographicImages" , layer = "butternut_buffer")
+setwd(butternut_drive)
+butternut_buffer <- readOGR(dsn = paste0(butternut_drive,"\\data_files\\geographic_files") , 
+                            layer = "butternut_buffer")
 butternut_buffer_trans <- sp::spTransform(na_shp, proj_out)
 
 ##list of 24 colors for populations 
@@ -140,7 +121,7 @@ for(i in 1:length(butternut_24pop_names)){
 }
 
 ##plot mean population coordinates 
-setwd("G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\Graphical_Stat_Results\\PostIndRemoval\\GeographicImages")
+setwd("Images\\geographic_images")
 pdf("pop_map_allind.pdf", width = 8, height = 8)
 plot(north_america, xlim = c(max_min_df_trans[,1]), ylim = c(max_min_df_trans[,2]))
 points(coord_df_proj, pch = 17, col = butternut_col_df[,2])
@@ -148,5 +129,6 @@ legend('bottomright',legend = butternut_24pop_names, pch = 17, col = butternut_c
 dev.off()
 
 ##write out coordinate df 
+setwd(paste0(butternut_drive, "\\data_files\\geographic_files"))
 butternut_coord_df <- cbind(as.numeric(butternut_mean_lon), as.numeric(butternut_mean_lat), butternut_col)
 write.csv(butternut_coord_df, "butternut_coord_df.csv")
