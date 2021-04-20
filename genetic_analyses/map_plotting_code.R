@@ -56,6 +56,17 @@ max_lon <- max(butternut_mean_lon)
 min_lat <- min(butternut_mean_lat)
 max_lat <- max(butternut_mean_lat)
 
+##create a minimum and maximum data frame for longitude and latitude 
+max_min_df <- matrix(nrow = 2, ncol = 2)
+max_min_df[,1] <- c(min_lon, max_lon)
+max_min_df[,2] <- c(min_lat, max_lat)
+max_min_df<- data.frame(max_min_df)
+colnames(max_min_df) <- c("Longitude", "Latitude")
+rownames(max_min_df) <- c("Min", "Max")
+
+##write out minimum and maximum coordinates 
+write.csv(max_min_df, "data_files\\geographic_files\\max_min_lonlat_df.csv")
+
 ###########################
 ###### Better Pop Map #####
 ###########################
@@ -73,14 +84,6 @@ na_shp <- sp::spTransform(na_shp, proj_out)
 
 ##north american shapefile 
 north_america <- spTransform(na_shp, proj_out)
-
-##Make max/min dataframe
-max_min_df <- matrix(nrow = 2, ncol = 2)
-max_min_df[,1] <- c(min_lon, max_lon)
-max_min_df[,2] <- c(min_lat, max_lat)
-max_min_df<- data.frame(max_min_df)
-colnames(max_min_df) <- c("Longitude", "Latitude")
-rownames(max_min_df) <- c("Min", "Max")
 
 ##Convert to spatial 
 coordinates(max_min_df) <- c('Longitude', 'Latitude')
@@ -130,5 +133,11 @@ dev.off()
 
 ##write out coordinate df 
 setwd(paste0(butternut_drive, "\\data_files\\geographic_files"))
+
+##combine coordinates and colors by population to create a data frame
 butternut_coord_df <- cbind(as.numeric(butternut_mean_lon), as.numeric(butternut_mean_lat), butternut_col)
+
+##name row 
+rownames(butternut_coord_df) <- butternut_24pop_names
+colnames(butternut_coord_df) <- c("Mean_Lon","Mean_Lat","col")
 write.csv(butternut_coord_df, "butternut_coord_df.csv")
