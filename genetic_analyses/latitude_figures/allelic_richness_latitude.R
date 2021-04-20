@@ -198,5 +198,8 @@ lat_all_rich_df[2,] <- c(allrich_red_pvalue, allrich_red_r2)
 lat_all_rich_df[3,] <- c(allrich_quad_pvalue, allrich_quad_r2)
 lat_all_rich_df[4,] <- c(allrich_quad_red_pvalue, allrich_quad_red_r2)
 
-##write out csv
+##write out data frame of statistics 
 write.csv(lat_all_rich_df, "genetic_analyses_results\\r2_pvalue_lat_all_rich_df.csv")
+
+##write out allelic richness data frame
+write.csv(all_rich_lat_df, "genetic_analyses_results\\all_rich_lat_df.csv")
