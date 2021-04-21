@@ -129,4 +129,4 @@ dist_edge_allrich_df[2,] <- c(linear_allrich_dist_red_pvalue, linear_allrich_dis
 write.csv(dist_edge_allrich_df, "genetic_analyses_results\\pvalue_r2_dist_edge_allrich.csv")
 
 ##write out data frame with distance to edge and allelic richness 
-write.csv(all_rich_dist_df, "genetic_analyses_results\\allrich_dist_df.csv")
+write.csv(all_rich_dist_df, "genetic_analyses_results\\allrich_dist_edge_df.csv")
