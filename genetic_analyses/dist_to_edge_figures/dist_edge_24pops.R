@@ -10,7 +10,7 @@ library(raster)
 #####################################
 butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 
-##########################################################
+##############################################################
 ####################### Load Files  ##########################
 ##############################################################
 setwd(butternut_drive)
@@ -60,10 +60,10 @@ colnames(butternut_dist_df) <- c("Pop","Mean_Lon", "Mean_Lat", "Dist_To_Edge")
 butternut_dist_df$Col <- "NA"
 
 ##add population colors for graphing 
-butternut_dist_df[1:6,4] <- "firebrick1"
-butternut_dist_df[c(8,11),4] <- "lightsalmon"
-butternut_dist_df[c(7,9:10),4] <- "firebrick4"
-butternut_dist_df[12:24,4] <- "dodgerblue"
+butternut_dist_df[1:6,5] <- "firebrick1"
+butternut_dist_df[c(8,11),5] <- "lightsalmon"
+butternut_dist_df[c(7,9:10),5] <- "firebrick4"
+butternut_dist_df[12:24,5] <- "dodgerblue"
 
 ##write out distance to edge csv
-write.csv(butternut_dist_df, "data_files\\geographic_files\\butternut_dist_df.csv")
+write.csv(butternut_dist_df, "data_files\\geographic_files\\butternut_dist_edge_df.csv")
