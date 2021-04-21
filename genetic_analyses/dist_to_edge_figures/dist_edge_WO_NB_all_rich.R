@@ -2,12 +2,7 @@
 ######## Libraries #######
 ##########################
 
-library(diveRsity)
 library(adegenet)
-library(tidyr)
-library(hierfstat)
-library(poppr)
-library(Demerelate)
 
 #####################################
 ############ Directories ############
@@ -17,28 +12,8 @@ butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\"
 ##############################################################
 #################### Load Genetic Files  #####################
 ##############################################################
+##set working directory
 setwd(butternut_drive)
-
-##load current working reorganized genepop file 
-butternutgen_reorg <- read.genepop("DataFiles\\24Populations\\reorg\\reorg_gen_24pop.gen", ncode = 3)
-
-##Lon lat files
-butternut_reorg_lonlat <- read.csv("DataFiles\\24Populations\\reorg\\reorg_lon_lat.csv")
-
-###Name the reorg file
-rownames(butternutgen_reorg@tab) <- butternut_reorg_lonlat$Ind
-
-##GESTE Results
-reorg_geste_fst <- read.csv(paste0(butternut_drive,"\\DataFiles\\24Populations\\reorg\\GESTE_fst.csv"))
-
-##create population name file 
-butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
-
-##Name levels
-levels(butternutgen_reorg@pop) <- butternut_24pop_names
-
-##calculate poppr
-butternut_24pop_poppr <- poppr(butternutgen_reorg)
 
 #############################################################################################
 #################### Run Analyses and Create DF of Just Ontario and US  #####################
