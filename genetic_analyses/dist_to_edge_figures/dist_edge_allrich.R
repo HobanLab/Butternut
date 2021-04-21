@@ -93,7 +93,7 @@ pdf("genetic_analyses_results\\linear_allrich_dist_edge.pdf", width = 8, height 
 plot(all_rich_dist_df[,2]~all_rich_dist_df[,1], 
      col = as.character(all_rich_dist_df[,3]), pch = 17,
      ylab = "Allelic Richness", xlab = "Distance to Range Edge (km)", 
-     cex = (butternut_24pop_poppr[1:24,2]/42), ylim = c(5,10), xlim = c(0,600),
+     cex = (butternut_24pop_poppr[1:24,2]/50), ylim = c(5,10), xlim = c(0,600),
      main = "Allelic Richness Compared with Distance to Range Edge (km)")
 
 text(all_rich_dist_df[,2]~all_rich_dist_df[,1], 
@@ -125,6 +125,8 @@ colnames(dist_edge_allrich_df) <- c("Pvalue","R2")
 dist_edge_allrich_df[1,] <- c(linear_allrich_dist_pvalue, linear_allrich_dist_r2)
 dist_edge_allrich_df[2,] <- c(linear_allrich_dist_red_pvalue, linear_allrich_dist_red_r2)
 
-##write out
-write.csv(dist_edge_allrich_df, paste0("genetic_analyses_results\\pvalue_r2_dist_edge_allrich.csv"))
+##write out data frame with r2 and p values
+write.csv(dist_edge_allrich_df, "genetic_analyses_results\\pvalue_r2_dist_edge_allrich.csv")
 
+##write out data frame with distance to edge and allelic richness 
+write.csv(all_rich_dist_df, "genetic_analyses_results\\allrich_dist_df.csv")
