@@ -19,7 +19,7 @@ First, occurrence records must be downloaded from herbarium databases (in this c
 
 The genetic diversity portion of this project is mainly contained in the three folders data_files, genetic_analyses, and genetic_analyses_results. The general flow of files is as described below: 
 
-![Alt text](Images/gendiv_flowchart.jpg.jpg?raw=true "Flowchart for genetic diversity results, more detail in the text below") 
+![Alt text](Images/gendiv_flowchart.jpg?raw=true "Flowchart for genetic diversity results, more detail in the text below") 
 
 data_files: Data files generated throughout the process of some of the analyses are stored here. Before_reorg contains the 3 population genind used for the comparison barplot code, after_reorg contains all of the genind and data frames generated following the re-binning process. geographic_files contains many of the geographic files used in analyses, including the range shapefile with the 100 km buffer (butternut_buffer) and many of the mea population longitude and latitude data frames. 
 
