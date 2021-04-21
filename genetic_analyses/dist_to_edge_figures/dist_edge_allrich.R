@@ -2,63 +2,54 @@
 ######## Libraries #######
 ##########################
 
-library(diveRsity)
 library(adegenet)
-library(tidyr)
-library(hierfstat)
 library(poppr)
-library(Demerelate)
-library(raster)
-library(rgdal)
-library(sp)
+library(hierfstat)
 
 #####################################
 ############ Directories ############
 #####################################
-butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\"
-
-##load butternut
-setwd(butternut_drive)
-butternut_buffer <- shapefile("Graphical_Stat_Results\\PostIndRemoval\\GeographicImages\\butternut_buffer")
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 
 ##############################################################
 #################### Load Genetic Files  #####################
 ##############################################################
-##load current working reorganized genepop file 
-butternutgen_reorg <- read.genepop("DataFiles\\24Populations\\reorg\\reorg_gen_24pop.gen", ncode = 3)
+##set working directory 
+setwd(butternut_drive)
 
-##Lon lat files
-butternut_reorg_lonlat <- read.csv("DataFiles\\24Populations\\reorg\\reorg_lon_lat.csv")
+##load current working reorganized genepop file 
+butternutgen_reorg <- read.genepop("data_files\\after_reorg\\reorg_gen_24pop.gen", ncode = 3)
+
+##load relatedness file to name individuals
+reorg_relatedness <- read.csv("data_files\\after_reorg\\reorg_relatedness.csv")
 
 ###Name the reorg file
-rownames(butternutgen_reorg@tab) <- butternut_reorg_lonlat$Ind
-
-##GESTE Results
-reorg_geste_fst <- read.csv(paste0(butternut_drive,"\\DataFiles\\24Populations\\reorg\\GESTE_fst.csv"))
+rownames(butternutgen_reorg@tab) <- reorg_relatedness$Ind
 
 ##create population name file 
-butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
+butternut_24pop_names <- unique(reorg_relatedness$Pop)
 
 ##Name levels
 levels(butternutgen_reorg@pop) <- butternut_24pop_names
 
-##calculate poppr
+##generate poppr file for population size and statistics
 butternut_24pop_poppr <- poppr(butternutgen_reorg)
 
 ##dist edge df 
-dist_edge_df <- read.csv("Graphical_Stat_Results\\PostIndRemoval\\GeographicImages\\dist_edge_df.csv")
+dist_edge_df <- read.csv("data_files\\geographic_files\\butternut_dist_edge_df.csv")
 
-######################################################################
-#################### Run Analyses and Create DF  #####################
-######################################################################
+############################################################################
+############ Calculate Allelic Richness and Create DF  #####################
+############################################################################
+##calculate allelic richness for each population 
 butternut_reorg_allrich <- colSums(allelic.richness(butternutgen_reorg)$Ar)/length(butternutgen_reorg@loc.n.all)
 
 ##create df with allelic richness and distance
-all_rich_dist_df <- data.frame(dist_edge_df[,4], butternut_reorg_allrich,dist_edge_df[,5])
+all_rich_dist_df <- data.frame(dist_edge_df$Dist_To_Edge, butternut_reorg_allrich, dist_edge_df$Col)
 colnames(all_rich_dist_df) <- c("Distance", "Allelic_Richness", "Col")
 rownames(all_rich_dist_df) <- butternut_24pop_names
 
-##reduced data frame
+##create data frame without Wisconsin populations 
 allrich_red <- all_rich_dist_df[-c(16,22,23),]
 
 ######################################################################
@@ -97,19 +88,19 @@ linear_allrich_dist_red_rp[2] <- substitute(expression(italic(p) == MYOTHERVALUE
 ##################################################################
 
 ##Allelic Richness Distance
-pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\linear_allrich_dist.pdf", width = 8, height = 6)
+pdf("genetic_analyses_results\\linear_allrich_dist_edge.pdf", width = 8, height = 6)
 
 plot(all_rich_dist_df[,2]~all_rich_dist_df[,1], 
      col = as.character(all_rich_dist_df[,3]), pch = 17,
-     ylab = "Number of Alleles", xlab = "Distance to Range Edge (km)", 
+     ylab = "Allelic Richness", xlab = "Distance to Range Edge (km)", 
      cex = (butternut_24pop_poppr[1:24,2]/42), ylim = c(5,10), xlim = c(0,600),
-     main = "Number of Alleles Compared with Distance to Range Edge (km)")
+     main = "Allelic Richness Compared with Distance to Range Edge (km)")
 
 text(all_rich_dist_df[,2]~all_rich_dist_df[,1], 
      labels = rownames(all_rich_dist_df), cex = 0.8, pos = 1)
 
-abline(allrich_lm, col = "dodgerblue4", lwd = 3)
-abline(allrich_red_lm, col = "darkorchid", lwd = 3)
+abline(allrich_lm, col = "dodgerblue4", lwd = 1)
+abline(allrich_red_lm, col = "darkorchid", lwd = 1)
 
 ##legends
 legend('topleft', legend = linear_allrich_dist_rp, pch = 17, col = "dodgerblue4",
@@ -120,8 +111,8 @@ legend('bottomleft', legend = linear_allrich_dist_red_rp, pch = 17,
        col = "darkorchid", title = "Regression without WI",
        bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
 
-legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, 
-       col = c("firebrick1", "firebrick4","dodgerblue"))
+legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec", "United States"), pch = 17, 
+       col = c("firebrick1", "firebrick4", "lightsalmon", "dodgerblue"))
 
 dev.off()
 
@@ -135,5 +126,5 @@ dist_edge_allrich_df[1,] <- c(linear_allrich_dist_pvalue, linear_allrich_dist_r2
 dist_edge_allrich_df[2,] <- c(linear_allrich_dist_red_pvalue, linear_allrich_dist_red_r2)
 
 ##write out
-write.csv(dist_edge_allrich_df, paste0("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\pvalue_r2_dist_edge_allrich.csv"))
+write.csv(dist_edge_allrich_df, paste0("genetic_analyses_results\\pvalue_r2_dist_edge_allrich.csv"))
 
