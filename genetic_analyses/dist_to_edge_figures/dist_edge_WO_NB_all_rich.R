@@ -3,42 +3,58 @@
 ##########################
 
 library(adegenet)
+library(poppr)
 
 #####################################
 ############ Directories ############
 #####################################
-butternut_drive <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\"
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 
-##############################################################
-#################### Load Genetic Files  #####################
-##############################################################
+######################################################
+#################### Load Files  #####################
+######################################################
 ##set working directory
 setwd(butternut_drive)
 
-#############################################################################################
-#################### Run Analyses and Create DF of Just Ontario and US  #####################
-#############################################################################################
-butternut_reorg_allrich <- colSums(allelic.richness(butternutgen_reorg)$Ar)/length(butternutgen_reorg@loc.n.all)
+##load current working reorganized genepop file 
+butternutgen_reorg <- read.genepop("data_files\\after_reorg\\reorg_gen_24pop.gen", ncode = 3)
 
-##create df with allelic richness and distance
-all_rich_dist_df <- data.frame(dist_edge_df[,4], butternut_reorg_allrich,dist_edge_df[,5])
-colnames(all_rich_dist_df) <- c("Distance", "Allelic_Richness", "Col")
-rownames(all_rich_dist_df) <- butternut_24pop_names
+##load relatedness file to name individuals
+reorg_relatedness <- read.csv("data_files\\after_reorg\\reorg_relatedness.csv")
 
-##remove New Brunswick
-all_rich_dist_df_wo_NB <- all_rich_dist_df[-c(1:6),]
+###Name the reorg file
+rownames(butternutgen_reorg@tab) <- reorg_relatedness$Ind
+
+##create population name file 
+butternut_24pop_names <- unique(reorg_relatedness$Pop)
+
+##Name levels
+levels(butternutgen_reorg@pop) <- butternut_24pop_names
+
+##generate a poppr document 
+butternut_24pop_poppr <- poppr(butternutgen_reorg)
+
+##load in allelic richness and distance edge document
+allrich_dist_edge_df <- read.csv("genetic_analyses_results\\allrich_dist_edge_df.csv")
+
+##############################################################################
+######## Run Analyses and Create DF of Just Ontario Quebec and US  ###########
+##############################################################################
+##remove New Brunswick and create DFs
+all_rich_dist_df_wo_NB <- allrich_dist_edge_df[-c(1:6),]
+
+##without wisconsin populations
 all_rich_dist_df_wo_NB_red <- all_rich_dist_df_wo_NB[-c(10,16:17),]
 
 ######################################################################
 ########################## Linear Models  ############################
 ######################################################################
-
 ###now calculate regressions - linear
-allrich_wo_NB_lm <- lm(all_rich_dist_df_wo_NB[,2]~all_rich_dist_df_wo_NB[,1])
+allrich_wo_NB_lm <- lm(all_rich_dist_df_wo_NB[,3]~all_rich_dist_df_wo_NB[,2])
 allrich_wo_NB_lm_sum <- summary(allrich_wo_NB_lm)
 
 ##Reduced data frame
-allrich_red_lm <- lm(all_rich_dist_df_wo_NB_red[,2]~all_rich_dist_df_wo_NB_red[,1])
+allrich_red_lm <- lm(all_rich_dist_df_wo_NB_red[,3]~all_rich_dist_df_wo_NB_red[,2])
 allrich_red_lm_sum <- summary(allrich_red_lm)
 
 ##create r2 and p for full df 
@@ -66,16 +82,16 @@ linear_allrich_dist_wo_NB_red_rp[2] <- substitute(expression(italic(p) == MYOTHE
 ##################################################################
 
 ##Allelic Richness Distance
-pdf("Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\linear_allrich_dist_woNB.pdf", width = 8, height = 6)
+pdf("genetic_analyses_results\\linear_allrich_dist_woNB.pdf", width = 8, height = 6)
 
-plot(all_rich_dist_df[,2]~all_rich_dist_df[,1], 
-     col = as.character(all_rich_dist_df[,3]), pch = 17,
-     ylab = "Number of Alleles", xlab = "Distance to Range Edge (km)", 
-     cex = (butternut_24pop_poppr[7:24,2]/80), ylim = c(5,10), xlim = c(0,600),
-     main = "Number of Alleles Compared with Distance to Range Edge (km)")
+plot(all_rich_dist_df_wo_NB[,3]~all_rich_dist_df_wo_NB[,2], 
+     col = as.character(all_rich_dist_df_wo_NB[,4]), pch = 17,
+     ylab = "Allelic Richness", xlab = "Distance to Range Edge (km)", 
+     cex = (butternut_24pop_poppr[7:24,2]/50), ylim = c(5,10), xlim = c(0,600),
+     main = "Allelic Richness Compared with Distance to Range Edge (km)")
 
-text(all_rich_dist_df[,2]~all_rich_dist_df[,1], 
-     labels = rownames(all_rich_dist_df), cex = 0.8, pos = 1)
+text(all_rich_dist_df_wo_NB[,3]~all_rich_dist_df_wo_NB[,2], 
+     labels = all_rich_dist_df_wo_NB[,1], cex = 0.8, pos = 1)
 
 abline(allrich_wo_NB_lm, col = "dodgerblue4")
 abline(allrich_red_lm, col = "darkorchid")
@@ -89,23 +105,25 @@ legend('bottomleft', legend = linear_allrich_dist_wo_NB_red_rp, pch = 17,
      col = "darkorchid", title = "Regression without WI wo NB",
      bty = 'n', border = "black", pt.cex = 1, cex = 0.8)
 
-legend('bottom', legend = c("New Brunswick","Ontario", "United States"), pch = 17, col = c("firebrick1","firebrick4","dodgerblue"))
+legend('bottom', legend = c("Ontario", "Quebec", "United States"), 
+       pch = 17, col = c("firebrick4", "lightsalmon","dodgerblue"))
 
 dev.off()
 
-###########################################
-########## Write out R2 and Plot ##########
-###########################################
-dist_edge_woNB_df <- matrix(nrow = 2, ncol = 2)
-dist_edge_woNB_df[1,] <- c(linear_allrich_dist_wo_NB_pvalue,linear_allrich_dist_wo_NB_r2)
-dist_edge_woNB_df[2,] <- c(linear_allrich_dist_wo_NB_red_pvalue, linear_allrich_dist_wo_NB_red_r2)
+###write out data frame with p values and r2
+##create data frame
+dist_edge_allrich_woNB_df <- matrix(nrow = 2, ncol = 2)
+
+##insert values
+dist_edge_allrich_woNB_df[1,] <- c(linear_allrich_dist_wo_NB_pvalue,linear_allrich_dist_wo_NB_r2)
+dist_edge_allrich_woNB_df[2,] <- c(linear_allrich_dist_wo_NB_red_pvalue, linear_allrich_dist_wo_NB_red_r2)
 
 ##name columns and row names 
-rownames(dist_edge_woNB_df) <- c("Distance to Edge Allelic Richness without NB",
+rownames(dist_edge_allrich_woNB_df) <- c("Distance to Edge Allelic Richness without NB",
                                  "Distance to Edge Allelic Richness without NB and without WI")
-colnames(dist_edge_woNB_df) <- c("P-value","R2")
+colnames(dist_edge_allrich_woNB_df) <- c("P-value","R2")
 
 ##write out csv
-write.csv(dist_edge_woNB_df, "Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\dist_edge_woNB_df.csv")
+write.csv(dist_edge_allrich_woNB_df, "genetic_analyses_results\\dist_edge_allrich_woNB_df.csv")
 
 
