@@ -1,0 +1,129 @@
+When using this dataset please use the following citation and pay attention to the rights documented in rights.txt:
+Barajas Morales J, Comisión nacional para el conocimiento y uso de la biodiversidad C (2020). Base de datos para la xiloteca del Instituto de Biología de la UNAM. Comisión nacional para el conocimiento y uso de la biodiversidad. Occurrence dataset https://doi.org/10.15468/czst1g accessed via GBIF.org on 2021-04-26.
+Salgueiro González F J (2020). Herbario de la Universidad de Sevilla, SEV-Historico. Dep. of Plant Biology and Ecology, Univ. Seville. Occurrence dataset https://doi.org/10.15468/ywbi5k accessed via GBIF.org on 2021-04-26.
+Kathryn Kalmbach Herbarium (Denver Botanic Gardens) (2021). Kathryn Kalmbach Herbarium. Occurrence dataset https://doi.org/10.15468/axrelr accessed via GBIF.org on 2021-04-26.
+Norton B, Lincoln C (2020). NCSM Herbarium Collection. Version 1.1. North Carolina State Museum of Natural Sciences. Occurrence dataset https://doi.org/10.36102/dwc.12 accessed via GBIF.org on 2021-04-26.
+Infante Sánchez M, Heras Pérez P (2020). VIT Herbarium - Vascular Plants (The Natural History Museum of Alava). Version 1.9. Natural History Museum of Alava (Museo de Ciencias Naturales de Álava). Occurrence dataset https://doi.org/10.15468/tqcbr0 accessed via GBIF.org on 2021-04-26.
+Nkundabagenzi F, Noe N (2017). Royal Museum of Central Africa - Metafro-Infosys - Xylarium. Version 1.2. Belgian Biodiversity Platform. Occurrence dataset https://doi.org/10.15468/f71d5m accessed via GBIF.org on 2021-04-26.
+The Norwegian Biodiversity Information Centre ., Hoem S (2021). Norwegian Species Observation Service. Version 1.126. The Norwegian Biodiversity Information Centre (NBIC). Occurrence dataset https://doi.org/10.15468/zjbzel accessed via GBIF.org on 2021-04-26.
+Adams J (2018). Ville de Trois-Rivières - Bioblitz 2012. Ville de Trois-Rivières. Occurrence dataset https://doi.org/10.5886/cdoo1t accessed via GBIF.org on 2021-04-26.
+Senator S, Saksonov S, Vasjukov V (2018). Flora of the Volga River basin. Version 1.2. Institute of Ecology of the Volga river basin of Russian Academie of Sciences. Occurrence dataset https://doi.org/10.15468/zwfsle accessed via GBIF.org on 2021-04-26.
+Senckenberg. Digitization of plant specimens from Rhoen and Vogelsberg (FULD). Occurrence dataset https://doi.org/10.15468/o73rkv accessed via GBIF.org on 2021-04-26.
+University of California Riverside (2021). UCR - University of California, Riverside Herbarium - Vascular Plants. Occurrence dataset https://doi.org/10.15468/ai1kou accessed via GBIF.org on 2021-04-26.
+Chen C (2020). Herbarium of Taiwan Forestry Research Institute. Version 1.7. Taiwan Forestry Research Institute. Occurrence dataset https://doi.org/10.15468/vo3d2x accessed via GBIF.org on 2021-04-26.
+Santa Barbara Botanic Garden (2021). SBBG - Clifton Smith Herbarium, Santa Barbara Botanic Garden. Occurrence dataset https://doi.org/10.15468/adb2bb accessed via GBIF.org on 2021-04-26.
+Ceccantini G (2021). SPFw - Xiloteca do Instituto de Biociências da Universidade de São Paulo. Version 1.73. Universidade de São Paulo. Occurrence dataset https://doi.org/10.15468/sihvr7 accessed via GBIF.org on 2021-04-26.
+Bennett B (2020). Bruce Bennett Herbarium (BABY). Version 2.1. Consortium of Pacific Northwest Herbaria. Occurrence dataset https://doi.org/10.5886/cp1vgz accessed via GBIF.org on 2021-04-26.
+Regina Marcati C (2021). BOTUw - Xiloteca "Profa. Dra. Maria Aparecida Mourão Brasil". Version 1.72. Universidade Estadual Paulista - IBB. Occurrence dataset https://doi.org/10.15468/yd42ud accessed via GBIF.org on 2021-04-26.
+Wheeler E (2020). Royal BC Museum - Herbarium (V). Version 2.1. Royal British Columbia Museum. Occurrence dataset https://doi.org/10.5886/yxupar accessed via GBIF.org on 2021-04-26.
+Biological Collections, California State University Northridge (2021). SFV - California State University, Northridge. Occurrence dataset https://doi.org/10.15468/nrcdx7 accessed via GBIF.org on 2021-04-26.
+Tasmanian Museum and Art Gallery (2021). HO AVH data. Occurrence dataset https://doi.org/10.15468/8wmoeb accessed via GBIF.org on 2021-04-26.
+Peel J (2018). Manchester Museum, University of Manchester, Botany Collection. Manchester Museum, The University of Manchester. Occurrence dataset https://doi.org/10.15468/0aqglb accessed via GBIF.org on 2021-04-26.
+Slieker F J, Beuk P (2014). Natural History Museum Maastricht (NL) - Herbarium. Natural History Museum Maastricht. Occurrence dataset https://doi.org/10.15468/npk1o5 accessed via GBIF.org on 2021-04-26.
+Gonzatti F (2021). HUCS - Herbário da Universidade de Caxias do Sul. Version 1.74. Universidade de Caxias do Sul. Occurrence dataset https://doi.org/10.15468/nfw0hr accessed via GBIF.org on 2021-04-26.
+Kerbs B, Schulenberg J (2016). H.A. Stephens Herbarium. Version 29.1. Emporia State University. Occurrence dataset https://doi.org/10.15468/k3m1qc accessed via GBIF.org on 2021-04-26.
+Kim T, Lee S (2019). flora&fauna(NIBR)2019. Version 1.4. National Institute of Biological Resources. Occurrence dataset https://doi.org/10.15468/6vdxnc accessed via GBIF.org on 2021-04-26.
+Lampinen R (2020). Finnish Floristic Database (Small Collections). Version 1.11. Finnish Biodiversity Information Facility. Occurrence dataset https://doi.org/10.15468/1wruh4 accessed via GBIF.org on 2021-04-26.
+Staatliche Naturwissenschaftliche Sammlungen Bayerns. Occurrence Data of Vascular Plants collected or compiled for the Flora of Bavaria. Occurrence dataset https://doi.org/10.15468/osi63h accessed via GBIF.org on 2021-04-26.
+Museum für Naturkunde Berlin. MfN - Fossil plants (Cenophytic). Occurrence dataset https://doi.org/10.15468/nu14br accessed via GBIF.org on 2021-04-26.
+Utah State University (2021). Intermountain Herbarium (Vascular plants & algae). Occurrence dataset https://doi.org/10.15468/t43wjj accessed via GBIF.org on 2021-04-26.
+Appalachian State University (2020). Appalachian State University, I. W. Carpenter, Jr. Herbarium. Occurrence dataset https://doi.org/10.15468/ivsxey accessed via GBIF.org on 2021-04-26.
+Fairchild Tropical Botanic Garden. Fairchild Tropical Botanic Garden Virtual Herbarium Darwin Core format. Occurrence dataset https://doi.org/10.15468/hdpruf accessed via GBIF.org on 2021-04-26.
+CSIC-Real Jardín Botánico (2021). CSIC-Real Jardín Botánico-Colección de Plantas Vasculares (MA). CSIC-Real Jardín Botánico. Occurrence dataset https://doi.org/10.15468/mug7kr accessed via GBIF.org on 2021-04-26.
+Cameron E, Auckland Museum A M (2021). Auckland Museum Botany Collection. Version 1.59. Auckland War Memorial Museum. Occurrence dataset https://doi.org/10.15468/mnjkvv accessed via GBIF.org on 2021-04-26.
+Gall L (2021). Paleobotany Division, Yale Peabody Museum. Yale University Peabody Museum. Occurrence dataset https://doi.org/10.15468/hpasyo accessed via GBIF.org on 2021-04-26.
+San Diego Natural History Museum (2021). SD - SD Herbarium, San Diego Natural History Museum. Occurrence dataset https://doi.org/10.15468/lneqwn accessed via GBIF.org on 2021-04-26.
+University of New Mexico Herbarium (UNM) (2021). University of New Mexico Herbarium. Occurrence dataset https://doi.org/10.15468/dlvoyt accessed via GBIF.org on 2021-04-26.
+Royal Botanic Gardens, Kew (2021). Royal Botanic Gardens, Kew - Herbarium Specimens. Occurrence dataset https://doi.org/10.15468/ly60bx accessed via GBIF.org on 2021-04-26.
+Staatliches Museum für Naturkunde Stuttgart. SMNS Palaeontological collection - Fossil plants. Occurrence dataset https://doi.org/10.15468/bth85t accessed via GBIF.org on 2021-04-26.
+Cândida Henrique Mamede M (2021). SP - Herbário do Estado "Maria Eneyda P. Kaufmann Fidalgo" - Coleção de Fanerógamas. Version 1.75. Instituto de Botânica, São Paulo. Occurrence dataset https://doi.org/10.15468/axlcjr accessed via GBIF.org on 2021-04-26.
+Mayfield-Meyer T, Zhuang V (2021). UTEP Plants (Arctos). Version 5.50. University of Texas at El Paso Biodiversity Collections. Occurrence dataset https://doi.org/10.15468/yhb6ky accessed via GBIF.org on 2021-04-26.
+University of Alberta Museums, La France D, Becker-Burns A (2021). University of Alberta Vascular Plant Herbarium (ALTA-VP). Version 10.53. University of Alberta Museums. Occurrence dataset https://doi.org/10.18165/qssyvr accessed via GBIF.org on 2021-04-26.
+Leandro Brotto M (2021). MBM - Herbário do Museu Botânico Municipal. Version 1.76. Museu Botânico Municipal. Occurrence dataset https://doi.org/10.15468/g6ppmt accessed via GBIF.org on 2021-04-26.
+Telenius A, Rühling Å (2017). Oskarshamn herbarium (OHN). GBIF-Sweden. Occurrence dataset https://doi.org/10.15468/u5wjib accessed via GBIF.org on 2021-04-26.
+Paquet J, Bronne L, Reyserhove L, Desmet P (2020). Observations.be - Non-native species occurrences in Wallonia, Belgium. Version 1.4. Natagora. Occurrence dataset https://doi.org/10.15468/p58ip1 accessed via GBIF.org on 2021-04-26.
+naturgucker.de. naturgucker. Occurrence dataset https://doi.org/10.15468/uc1apo accessed via GBIF.org on 2021-04-26.
+Mishima M, Tadauchi O (2020). Plant Specimens collections of the Kyushu University Museum. National Museum of Nature and Science, Japan. Occurrence dataset https://doi.org/10.15468/f31qvn accessed via GBIF.org on 2021-04-26.
+Kenneth S. Norris Center for Natural History (2021). UCSC - Kenneth S. Norris Center for Natural History, University of California Santa Cruz, Herbarium. Occurrence dataset https://doi.org/10.15468/uavt0t accessed via GBIF.org on 2021-04-26.
+Vanreusel W, Barendse R, Steeman R, Gielen K, Swinnen K, Desmet P, Herremans M (2021). Waarnemingen.be - Non-native plant occurrences in Flanders and the Brussels Capital Region, Belgium. Version 1.27. Natuurpunt. Occurrence dataset https://doi.org/10.15468/smdvdo accessed via GBIF.org on 2021-04-26.
+Bioversity International. EURISCO, The European Genetic Resources Search Catalogue. Occurrence dataset https://doi.org/10.15468/a3lnmd accessed via GBIF.org on 2021-04-26.
+Barstow S (2021). Images and observations of mostly edible plants in Stephen Barstow’s Edible Garden in Norway, taken between 2005 and 2014. Version 1.2. GBIF.no. Occurrence dataset https://doi.org/10.15468/dkhtjv accessed via GBIF.org on 2021-04-26.
+Novelo Gutiérrez R, Comisión nacional para el conocimiento y uso de la biodiversidad C (2020). Digitalización y sistematización de las colecciones biológicas del INECOL (Herbario). Version 1.1. Comisión nacional para el conocimiento y uso de la biodiversidad. Occurrence dataset https://doi.org/10.15468/w933ra accessed via GBIF.org on 2021-04-26.
+Chico State Herbarium (2021). CHSC - CSU Chico, Chico State Herbarium - Vascular Plants. Occurrence dataset https://doi.org/10.15468/ckxw7v accessed via GBIF.org on 2021-04-26.
+Seregin A, Stepanova N (2021). MHA Herbarium: collections of vascular plants. Version 1.80. Tsitsin Main Botanical Garden Russian Academy of Sciences. Occurrence dataset https://doi.org/10.15468/827lk2 accessed via GBIF.org on 2021-04-26.
+California Department of Food and Agriculture (CDA) (2021). CDA - California Department of Food and Agriculture. Occurrence dataset https://doi.org/10.15468/phc373 accessed via GBIF.org on 2021-04-26.
+California State University, Long Beach (2021). LOB - California State University, Long Beach Herbarium. Occurrence dataset https://doi.org/10.15468/3y25yl accessed via GBIF.org on 2021-04-26.
+Rob Cubey (2018). Royal Botanic Garden Edinburgh Herbarium (E). Royal Botanic Garden Edinburgh. Occurrence dataset https://doi.org/10.15468/ypoair accessed via GBIF.org on 2021-04-26.
+Northern Arizona University (2021). Deaver Herbarium (Northern Arizona University). Occurrence dataset https://doi.org/10.15468/b7tfpa accessed via GBIF.org on 2021-04-26.
+Soudzilovskaia N A, Vaessen S, Barcelo M, He J, Rahimlou S, Abarenkov K, Brundrett M C, Gomes S, Merckx V, Martinez-Suz L, Tedersoo L. Taxon occurrence data for the FungalRoot database. PlutoF. Occurrence dataset https://doi.org/10.15468/a7ujmj accessed via GBIF.org on 2021-04-26.
+University of Washington Burke Museum. Vascular Plant Collection - University of Washington Herbarium (WTU). Occurrence dataset https://doi.org/10.15468/plngb6 accessed via GBIF.org on 2021-04-26.
+Shepherd K, Torgersen J (2021). Canadian Museum of Nature Palaeobotany Collection. Version 1.7. Canadian Museum of Nature. Occurrence dataset https://doi.org/10.15468/sa2y6d accessed via GBIF.org on 2021-04-26.
+Rancho Santa Ana Botanic Garden (2021). RSA - California Botanic Garden Herbarium. Occurrence dataset https://doi.org/10.15468/0yosx9 accessed via GBIF.org on 2021-04-26.
+Telenius A, Shah M (2018). Botany (UPS). GBIF-Sweden. Occurrence dataset https://doi.org/10.15468/ufmslw accessed via GBIF.org on 2021-04-26.
+Shepherd K, Torgersen J (2021). Canadian Museum of Nature Palynology Collection. Version 1.6. Canadian Museum of Nature. Occurrence dataset https://doi.org/10.15468/wwlmir accessed via GBIF.org on 2021-04-26.
+Vellak K. University of Tartu Natural History Museum and Botanical Garden Botanical Collections. University of Tartu, Natural History Museum and Botanical Garden. Occurrence dataset https://doi.org/10.15468/5hqb2z accessed via GBIF.org on 2021-04-26.
+Ragupathy S (2016). OAC-BIO Herbarium. Version 2.1. University of Guelph. Occurrence dataset https://doi.org/10.5886/66f3rsta accessed via GBIF.org on 2021-04-26.
+University of South Carolina (2020). University of South Carolina, A. C. Moore Herbarium. Occurrence dataset https://doi.org/10.15468/fmj4at accessed via GBIF.org on 2021-04-26.
+The International Barcode of Life Consortium (2016). International Barcode of Life project (iBOL). Occurrence dataset https://doi.org/10.15468/inygc6 accessed via GBIF.org on 2021-04-26.
+Ehrlich L. Estonian Museum of Natural History Department of Botany. Estonian Museum of Natural History. Occurrence dataset https://doi.org/10.15468/bquqpv accessed via GBIF.org on 2021-04-26.
+Botanic Garden and Botanical Museum Berlin (2017). Herbarium Berolinense, Berlin (B). Occurrence dataset https://doi.org/10.15468/dlwwhz accessed via GBIF.org on 2021-04-26.
+Arizona State University Biocollections (2021). Arizona State University Vascular Plant Herbarium. Occurrence dataset https://doi.org/10.15468/a2o8vy accessed via GBIF.org on 2021-04-26.
+Wittzell H, Shah M (2021). Lund Botanical Museum (LD). Lund Botanical Museum (LD). Occurrence dataset https://doi.org/10.15468/c4w4co accessed via GBIF.org on 2021-04-26.
+Haus der Natur Salzburg, Museum für Natur und Technik. Biodiversitätsdatenbank Salzburg. Occurrence dataset https://doi.org/10.15468/3pf855 accessed via GBIF.org on 2021-04-26.
+Telenius A, Shah M (2020). Phanerogamic Botanical Collections (S). GBIF-Sweden. Occurrence dataset https://doi.org/10.15468/yo3mmu accessed via GBIF.org on 2021-04-26.
+Charles University - Herbarium collections & Department of Botany. Charles University Prague - Herbarium PRC. Occurrence dataset https://doi.org/10.15468/8xrt7r accessed via GBIF.org on 2021-04-26.
+University of Alabama Biodiversity and Systematics. Herbarium (UNA). Occurrence dataset https://doi.org/10.15468/qy6hkl accessed via GBIF.org on 2021-04-26.
+Seregin A (2021). Moscow University Herbarium (MW). Version 1.177. Lomonosov Moscow State University. Occurrence dataset https://doi.org/10.15468/cpnhcc accessed via GBIF.org on 2021-04-26.
+Estonian Naturalists’ Society. Estonian Naturalists’ Society. Occurrence dataset https://doi.org/10.15468/bmk3ab accessed via GBIF.org on 2021-04-26.
+Evarte-Bundere G, Evarts-Bunders P, Krasnopolska D, Svilane I. Herbarium Universitatis Daugavpiliensis. Daugavpils University. Occurrence dataset https://doi.org/10.15468/owig1t accessed via GBIF.org on 2021-04-26.
+Baskauf S (2014). Bioimages. Vanderbilt University. Occurrence dataset https://doi.org/10.15468/jib4rt accessed via GBIF.org on 2021-04-26.
+AFFOUARD A, JOLY A, LOMBARDO J, CHAMP J, GOEAU H, BONNET P (2020). Pl@ntNet observations. Version 1.2. Pl@ntNet. Occurrence dataset https://doi.org/10.15468/gtebaa accessed via GBIF.org on 2021-04-26.
+University of Colorado Museum of Natural History (2021). University of Colorado Museum of Natural History Herbarium Vascular Plant Collection. Occurrence dataset https://doi.org/10.15468/wyofjv accessed via GBIF.org on 2021-04-26.
+Ralph L. Thompson Herbarium (Berea) (2020). Berea College, Ralph L. Thompson Herbarium. Occurrence dataset https://doi.org/10.15468/hcwetj accessed via GBIF.org on 2021-04-26.
+Bentley A, Morse C (2021). R. L. McGregor Herbarium Vascular Plants Collection. University of Kansas Biodiversity Institute. Occurrence dataset https://doi.org/10.15468/htptzr accessed via GBIF.org on 2021-04-26.
+UiO Natural History Museum (2021). Vascular Plant Herbarium, Oslo (O) UiO. Version 1.1473. Occurrence dataset https://doi.org/10.15468/wtlymk accessed via GBIF.org on 2021-04-26.
+Franck A R, Bornhorst K (2021). University of South Florida Herbarium (USF). Version 7.285. USF Water Institute. Occurrence dataset https://doi.org/10.15468/mdnmzb accessed via GBIF.org on 2021-04-26.
+Pajur M. Tallinn Botanic Garden. Tallinn Botanic Garden. Occurrence dataset https://doi.org/10.15468/hfs8d4 accessed via GBIF.org on 2021-04-26.
+Meise Botanic Garden (2021). Meise Botanic Garden Herbarium (BR). Version 1.19. Meise Botanic Garden. Occurrence dataset https://doi.org/10.15468/wrthhx accessed via GBIF.org on 2021-04-26.
+Lampinen R, Laiho E (2021). Finnish Floristic Database (Finnish Museum of Natural History Collections). Version 1.41. Finnish Biodiversity Information Facility. Occurrence dataset https://doi.org/10.15468/kasmwk accessed via GBIF.org on 2021-04-26.
+University of Minnesota Bell Museum (2019). Olga Lakela Herbarium, University of Minnesota Duluth. Occurrence dataset https://doi.org/10.15468/wbizww accessed via GBIF.org on 2021-04-26.
+Perkins K D (2021). University of Florida Herbarium (FLAS). Version 11.1329. Florida Museum of Natural History. Occurrence dataset https://doi.org/10.15468/v5wjn7 accessed via GBIF.org on 2021-04-26.
+Canadian Biodiversity Information Facility. Royal Botanical Gardens Herbarium. Occurrence dataset https://doi.org/10.15468/wh6pj6 accessed via GBIF.org on 2021-04-26.
+European Nucleotide Archive (EMBL-EBI) (2019). Geographically tagged INSDC sequences. Occurrence dataset https://doi.org/10.15468/cndomv accessed via GBIF.org on 2021-04-26.
+Grant S, Niezgoda C (2020). Field Museum of Natural History (Botany)  Seed Plant Collection. Version 11.12. Field Museum. Occurrence dataset https://doi.org/10.15468/nxnqzf accessed via GBIF.org on 2021-04-26.
+Australia's Virtual Herbarium (2021). MEL AVH data. Occurrence dataset https://doi.org/10.15468/rhzrxw accessed via GBIF.org on 2021-04-26.
+Dolan R W, Moore M (2021). Butler University Friesner Herbarium (BUT). Version 11.289. USF Water Institute. Occurrence dataset https://doi.org/10.15468/9phobx accessed via GBIF.org on 2021-04-26.
+Central Michigan University Herbarium (2020). Central Michigan University. Occurrence dataset https://doi.org/10.15468/iykbez accessed via GBIF.org on 2021-04-26.
+Royal Botanic Gardens, Kew (2019). Royal Botanic Gardens, Kew - Economic Botany Collection Specimens. Occurrence dataset https://doi.org/10.15468/c3dx8a accessed via GBIF.org on 2021-04-26.
+Langle P (2018). Buffalo Society of Natural Sciences Clinton Herbarium. Buffalo Society of Nature Science. Occurrence dataset https://doi.org/10.15468/ptawck accessed via GBIF.org on 2021-04-26.
+Western Carolina University Herbarium (2021). Western Carolina University Herbarium. Occurrence dataset https://doi.org/10.15468/sk26v2 accessed via GBIF.org on 2021-04-26.
+Kukk T. Estonian University of Life Sciences Institute of Agricultural and Environmental Sciences Vascular Plant Herbarium. Estonian University of Life Sciences. Occurrence dataset https://doi.org/10.15468/m3x9uu accessed via GBIF.org on 2021-04-26.
+Evans R, Richard J (2019). E. C. Smith Herbarium (ACAD). Version 7.5. Acadia University. Occurrence dataset https://doi.org/10.15468/zc4csq accessed via GBIF.org on 2021-04-26.
+North Carolina State University Vascular Plant Herbarium (NCSC) (2020). North Carolina State University Vascular Plant Herbarium. Occurrence dataset https://doi.org/10.15468/9ufthy accessed via GBIF.org on 2021-04-26.
+Doubt J, Torgersen J (2021). Canadian Museum of Nature Herbarium. Version 1.171. Canadian Museum of Nature. Occurrence dataset https://doi.org/10.15468/kowta4 accessed via GBIF.org on 2021-04-26.
+University of North Carolina at Chapel Hill Herbarium (NCU) (2020). University of North Carolina at Chapel Hill Herbarium. Occurrence dataset https://doi.org/10.15468/63vxjd accessed via GBIF.org on 2021-04-26.
+Gall L (2021). Botany Division, Yale Peabody Museum. Yale University Peabody Museum. Occurrence dataset https://doi.org/10.15468/hrztgn accessed via GBIF.org on 2021-04-26.
+Prather L A, Chansler M T (2020). Michigan State University Herbarium Vascular Plants. Version 6.3. Michigan State University Herbarium. Occurrence dataset https://doi.org/10.15468/iv6y8m accessed via GBIF.org on 2021-04-26.
+Capers R (2014). CONN. University of Connecticut. Occurrence dataset https://doi.org/10.15468/w35jmd accessed via GBIF.org on 2021-04-26.
+Eastern Kentucky University, Ronald L. Jones Herbarium (EKY) (2020). Eastern Kentucky University, Ronald L. Jones Herbarium. Occurrence dataset https://doi.org/10.15468/fy8dsi accessed via GBIF.org on 2021-04-26.
+Damboise K (2020). Herbier Louis-Marie (QFA) - Collection de plantes vasculaires. Version 10.6. Université Laval. Occurrence dataset https://doi.org/10.5886/3p8ltbg7 accessed via GBIF.org on 2021-04-26.
+Waterway M, Martins K, Larocque G (2018). McGill University Herbarium Database. Version 2.1. McGill University. Occurrence dataset https://doi.org/10.5886/srzbj7 accessed via GBIF.org on 2021-04-26.
+Brouillet L, Sinou C (2021). Marie-Victorin Herbarium (MT) - Plantes vasculaires. Version 14.10. Université de Montréal Biodiversity Centre. Occurrence dataset https://doi.org/10.5886/rzav8bu2 accessed via GBIF.org on 2021-04-26.
+Michaud A (2019). Herbier du Québec (QUE) - Collection de plantes vasculaires. Version 2.8. Gouvernement du Québec. Occurrence dataset https://doi.org/10.5886/jd11sg3p accessed via GBIF.org on 2021-04-26.
+UM Herbarium Data Group, IPT Admin L (2021). University of Michigan Herbarium. Version 1.24. University of Michigan Herbarium. Occurrence dataset https://doi.org/10.15468/nl8bvi accessed via GBIF.org on 2021-04-26.
+The University of Vermont Pringle Herbarium (2020). University of Vermont, Pringle Herbarium. Occurrence dataset https://doi.org/10.15468/zsgiog accessed via GBIF.org on 2021-04-26.
+Tyrrell C (2020). MPM Milwaukee Public Museum Herbarium. Milwaukee Public Museum. Occurrence dataset https://doi.org/10.15468/sclgzd accessed via GBIF.org on 2021-04-26.
+MNHN, Chagnoux S (2021). The vascular plants collection (P) at the Herbarium of the Muséum national d'Histoire Naturelle (MNHN - Paris). Version 69.206. MNHN - Museum national d'Histoire naturelle. Occurrence dataset https://doi.org/10.15468/nc6rxy accessed via GBIF.org on 2021-04-26.
+University of Tennessee Herbarium (2021). University of Tennessee Vascular Herbarium. Occurrence dataset https://doi.org/10.15468/ok8qvz accessed via GBIF.org on 2021-04-26.
+US National Plant Germplasm System. United States National Plant Germplasm System Collection. Occurrence dataset https://doi.org/10.15468/ce7fox accessed via GBIF.org on 2021-04-26.
+Shah M, Coulson S (2021). Artportalen (Swedish Species Observation System). Version 92.232. SLU Artdatabanken. Occurrence dataset https://doi.org/10.15468/kllkyl accessed via GBIF.org on 2021-04-26.
+University of Minnesota Bell Museum (2021). Bell Museum plants. Occurrence dataset https://doi.org/10.15468/bihrxd accessed via GBIF.org on 2021-04-26.
+Bijmoer R, Scherrenberg M, Creuwels J (2021). Naturalis Biodiversity Center (NL) - Botany. Naturalis Biodiversity Center. Occurrence dataset https://doi.org/10.15468/ib5ypt accessed via GBIF.org on 2021-04-26.
+Solomon J, Stimmel H (2021). Tropicos Specimen Data. Missouri Botanical Garden. Occurrence dataset https://doi.org/10.15468/hja69f accessed via GBIF.org on 2021-04-26.
+Orrell T, Informatics Office (2021). NMNH Extant Specimen Records. Version 1.42. National Museum of Natural History, Smithsonian Institution. Occurrence dataset https://doi.org/10.15468/hnhrg3 accessed via GBIF.org on 2021-04-26.
+Carnegie Museums (2021). Carnegie Museum of Natural History Herbarium. Occurrence dataset https://doi.org/10.15468/d51v1f accessed via GBIF.org on 2021-04-26.
+Ramirez J, Tulig M, Watson K, Thiers B (2021). The New York Botanical Garden Herbarium (NY). Version 1.32. The New York Botanical Garden. Occurrence dataset https://doi.org/10.15468/6e8nje accessed via GBIF.org on 2021-04-26.
+Crop Wild Relatives Occurrence data consortia (2018). A global database for the distributions of crop wild relatives. Version 1.12. Centro Internacional de Agricultura Tropical - CIAT. Occurrence dataset https://doi.org/10.15468/jyrthk accessed via GBIF.org on 2021-04-26.
+Kennedy J (2021). Harvard University Herbaria: All Records. Harvard University Herbaria. Occurrence dataset https://doi.org/10.15468/o3pvnh accessed via GBIF.org on 2021-04-26.
+Kutner L (2019). NatureServe Network Species Occurrence Data. Version 8.4. NatureServe. Occurrence dataset https://doi.org/10.15468/lysaex accessed via GBIF.org on 2021-04-26.
+Ueda K (2021). iNaturalist Research-grade Observations. iNaturalist.org. Occurrence dataset https://doi.org/10.15468/ab3s5x accessed via GBIF.org on 2021-04-26.
