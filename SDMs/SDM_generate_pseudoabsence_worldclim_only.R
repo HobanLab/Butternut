@@ -4,31 +4,21 @@
 ########################### Libraries ################################
 ######################################################################
 
-library(raster)
 library(sp)
-library(sf)
-library(rworldmap)
-library(rgdal)
-library(spdep)
-library(rgeos)
-library(dismo)
-library(gbm)
-library(AUC)
-library(ggplot2)
-library(plyr)
-library(HH)
-library(ltm)
-library(geosphere)
+library(raster)
 
 #####################################
 ############ Load Files #############
 #####################################
-##load data points
-worldclim_only <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\SDMs\\worldclim_only"
-setwd(paste0(worldclim_only, "\\InputFiles"))
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 
-##Load in data file without autocorrelation
-butternut_pres <- read.csv("occurrence_noauto_noproj.csv")
+##set wd
+setwd(butternut_drive)
+
+######load in presence records
+butternut_pres <- read.csv("SDMs\\InputFiles\\occurrence_records\\occurrence_records_all_red.csv")
+
+##remove extra column before longitudes and latitudes
 butternut_pres <- butternut_pres[,-1]
 
 ##calculate crop limits
@@ -45,28 +35,14 @@ proj4string(butternut_pres) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
 
 ##project presence points
-butternut_pres <- spTransform(butternut_pres,projection)
+butternut_pres <- spTransform(butternut_pres, projection)
 
 ##write in extent raster
-extent_project <- raster("extent_project.tif")
+extent_project <- raster("SDMs\\InputFiles\\extent_project.tif")
 
 ######################################################################
 ################## Generate Pseudo-Absence Points ####################
 ######################################################################
-##validating aligning projection -- make sure all points are within study area
-pres_ext <- extract(extent_project, butternut_pres)
-pres_ext_df <- data.frame(pres_ext)
-pres_points_df <- data.frame(butternut_pres)
-
-##limit by individuals that are within geographic extent 
-pres_df <- cbind(pres_points_df, pres_ext_df)
-pres_df <- na.omit(pres_df) ### remove 2 individuals -- limited to 3051 individuals 
-
-##clean up data frame 
-pres_df <- pres_df[,-c(1,2,5,6)]
-
-##write out presence clean 
-write.csv(pres_df, "pres_clean_df.csv")
 
 ##presence clean spatial
 coordinates(pres_df) <- c('Longitude', 'Latitude')
