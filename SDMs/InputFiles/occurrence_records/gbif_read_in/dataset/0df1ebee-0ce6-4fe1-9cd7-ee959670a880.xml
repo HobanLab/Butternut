@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://rs.gbif.org/schema/eml-gbif-profile/1.1/eml.xsd"
+        packageId="0df1ebee-0ce6-4fe1-9cd7-ee959670a880"  system="http://gbif.org" scope="system"
+  xml:lang="en">
+
+<dataset>
+      <alternateIdentifier>10.15468/wbizww</alternateIdentifier>
+        <alternateIdentifier>https://bellatlas.umn.edu:443/collections/misc/collprofiles.php?collid=15</alternateIdentifier>
+    <title>Olga Lakela Herbarium, University of Minnesota Duluth</title>
+    <creator>
+<organizationName>Bell Atlas</organizationName><electronicMailAddress>_</electronicMailAddress><onlineUrl>https://bellatlas.umn.edu:443/index.php</onlineUrl>    </creator>
+    <metadataProvider>
+<organizationName>Bell Atlas</organizationName><electronicMailAddress>_</electronicMailAddress><onlineUrl>https://bellatlas.umn.edu:443/index.php</onlineUrl>    </metadataProvider>
+      <pubDate>
+      2019-07-08
+      </pubDate>
+    <language>ENGLISH</language>
+    <abstract>
+        <para></para>
+    </abstract>
+      <intellectualRights>
+        <para>To the extent possible under law, the publisher has waived all rights to these data and has dedicated them to the <ulink url="http://creativecommons.org/publicdomain/zero/1.0/legalcode"><citetitle>Public Domain (CC0 1.0)</citetitle></ulink>. Users may copy, modify, distribute and use the work, including for commercial purposes, without restriction.</para>
+      </intellectualRights>
+      <contact>
+<organizationName>Olga Lakela Herbarium, University of Minnesota Duluth</organizationName><onlineUrl>https://scse.d.umn.edu/olga-lakela-herbarium</onlineUrl>      </contact>
+
+</dataset>
+
+<additionalMetadata>
+    <metadata>
+      <gbif>
+        <dateStamp>2021-04-26T19:05:56Z</dateStamp>
+      <citation>University of Minnesota Bell Museum (2019). Olga Lakela Herbarium, University of Minnesota Duluth. Occurrence dataset https://doi.org/10.15468/wbizww accessed via GBIF.org on 2021-04-26.</citation>
+        </gbif>
+    </metadata>
+</additionalMetadata>
+
+</eml:eml>
