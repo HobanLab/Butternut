@@ -2,11 +2,7 @@
 ######## Libraries #######
 ##########################
 
-library(rgeos)
-library(raster)
-library(rgdal)
-library(sp)
-library(PopGenReport)
+
 
 #####################################
 ############ Directories ############
