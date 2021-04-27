@@ -26,7 +26,7 @@ butternut_var <- read.csv("SDMs\\InputFiles\\butternut_var.csv")
 butternut_var <- butternut_var[,-1]
 
 ##load in elevation crop
-elevation_crop <- raster("SDMs\\InputFiles\\elevation_extent.tif")
+elevation_extent <- raster("SDMs\\InputFiles\\elevation_extent.tif")
 
 ##load in extent projection 
 extent_project <- raster("SDMs\\InputFiles\\extent_project.tif")
@@ -193,103 +193,32 @@ coordinates(butternut_abs) <- c('Longitude', 'Latitude')
 proj4string(butternut_abs) <- CRS(projection)
 
 ##now look at plots
-pdf("hsm.pdf", width = 6, height = 6)
+pdf("SDMs\\OutputFiles\\hsm.pdf", width = 6, height = 6)
 plot(butternut_prediction_map, main = "Habitat Suitability Model")
 dev.off()
 
-pdf("hsm_p.pdf", width = 6, height = 6)
+pdf("SDMs\\OutputFiles\\hsm_p.pdf", width = 6, height = 6)
 plot(butternut_prediction_map, main = "HSM Presence")
 points(butternut_pres, col = "dodgerblue", pch = 16)
 dev.off()
 
-pdf("hsm_a.pdf", width = 6, height = 6)
+pdf("SDMs\\OutputFiles\\hsm_a.pdf", width = 6, height = 6)
 plot(butternut_prediction_map, main = "HSM Absence")
 points(butternut_abs, col = "dodgerblue4", pch = 16)
 dev.off()
 
-pdf("hsm_pa.pdf", width = 6, height = 6)
+pdf("SDMs\\OutputFiles\\hsm_pa.pdf", width = 6, height = 6)
 plot(butternut_prediction_map, main = "HSM Presence and Absence")
 points(butternut_abs, col = "dodgerblue4", pch = 16)
 points(butternut_pres, col = "dodgerblue", pch = 16)
 legend('topright', legend = c("Presence", "Absence"), pch = 16, col = c("dodgerblue", "dodgerblue4"))
 dev.off()
 
-##now extract
-hsm_p <- extract(butternut_prediction_map, butternut_pres)
-hsm_a <- extract(butternut_prediction_map, butternut_abs)
-
-##convert to data frames
-hsm_p_df <- data.frame(hsm_p)
-hsm_a_df <- data.frame(hsm_a)
-
-colnames(hsm_p_df) <- c("HSM_per")
-colnames(hsm_a_df) <- c("HSM_per")
-
-hsm_p_df$PA <- "1"
-hsm_a_df$PA <- "0"
-
-##combine into one table
-hsm_performance_pa <- rbind(hsm_p_df, hsm_a_df)
-
-hsm_performance_pa <- na.omit(hsm_performance_pa)
-
-##now create a plot to compare 
-
-pdf("hsm_performance.pdf", width = 6, height = 6)
-boxplot(hsm_performance_pa[hsm_performance_pa$PA == 1,][,1], hsm_performance_pa[hsm_performance_pa$PA == 0,][,1], names = c("Presence", "Absence"), main = "Presence and Absence Range of Habitat Suitability", ylab = "Percent Habitat Suitability", xlab = "Type of Point", ylim = c(0,1))
-dev.off()
-
-##do a t test
-wilcox.test(hsm_performance_pa[hsm_performance_pa$PA == 1,][,1], hsm_performance_pa[hsm_performance_pa$PA == 0,][,1])
-
-####Calculate range
-
-##remove points where no value is found
-hsm_p_df <- na.omit(hsm_p_df)
-
-##now calculate total length
-total_pres <- length(hsm_p_df$HSM_per)
-
-###threshold
-((length(hsm_p_df[(hsm_p_df$HSM_per >= 0.6) == TRUE,][,1]))/total_pres)*100
-
-##calculate values for presence
-pres_greater_than_half <- ((length(hsm_p_df[(hsm_p_df$HSM_per >= 0.5) == TRUE,][,1]))/total_pres)*100
-pres_greater_than_75 <- ((length(hsm_p_df[(hsm_p_df$HSM_per >= 0.75) == TRUE,][,1]))/total_pres)*100
-pres_greater_equal_95 <- ((length(hsm_p_df[(hsm_p_df$HSM_per >= 0.95) == TRUE,][,1]))/total_pres)*100
-
-##Calculate full length
-hsm_a_df <- na.omit(hsm_a_df)
-
-##Calculate total absences 
-total_abs <- length(hsm_a_df$HSM_per)
-
-##Create absence prediction percentages
-abs_greater_than_half <- ((length(hsm_a_df[(hsm_a_df$HSM_per >= 0.5) == TRUE,][,1]))/total_abs)*100
-abs_greater_than_75 <- ((length(hsm_a_df[(hsm_a_df$HSM_per >= 0.75) == TRUE,][,1]))/total_abs)*100
-abs_great_equal_95 <- ((length(hsm_a_df[(hsm_a_df$HSM_per >= 0.95) == TRUE,][,1]))/total_abs)*100
-
-##Create df for performance
-performance_matrix <- matrix(nrow = 3, ncol = 2)
-colnames(performance_matrix) <- c("Percent_Presence", "Percent_Pseudoabsence")
-rownames(performance_matrix) <- c("Greater than or equal to 50% Suitability",
-                                  "Greater than or equal to 75% Suitability",
-                                  "Greater than or equal to 95% Suitability")
-
-##Load in performance numbers
-performance_matrix[,1] <- c(pres_greater_than_half, pres_greater_than_75, pres_greater_equal_95)
-performance_matrix[,2] <- c(abs_greater_than_half, abs_greater_than_75, abs_great_equal_95)
-performance_matrix <- round(performance_matrix, digits = 1)
-
-##now write out table
-write.csv(performance_matrix,"performance_matrix.csv")
-
 ######################################################################
 ############################# Hindcast SDMs ##########################
 ######################################################################
-##write out raster
 ##Load in layers 
-setwd(paste0(worldclim_only,"\\InputFiles\\Paleo_Files"))
+setwd("SDMs\\InputFiles\\Paleo_Files")
 
 ##time periods list
 time_periods <- list.files(pattern = "_v1_2_5m")
@@ -323,10 +252,10 @@ for(j in 1:length(time_periods)){
   paleo_stack[[j]] <- stack(paleo_raster[[j]])
   
   ##crop them
-  paleo_crop[[j]] <- crop(paleo_stack[[j]], elevation_extent)
+   paleo_crop[[j]] <- crop(paleo_stack[[j]], elevation_extent)
   
   ##project the crop
-  paleo_project[[j]] <- projectRaster(paleo_crop[[j]], crs = projection)
+   paleo_project[[j]] <- projectRaster(paleo_crop[[j]], crs = projection)
   
   }
   ##name the variables 
@@ -335,7 +264,7 @@ for(j in 1:length(time_periods)){
 
 
 ###Create predicted suitable habitat models for all time periods
-setwd(paste0(worldclim_only,"\\OutputFiles"))
+setwd(paste0(butternut_drive,"\\SDMs\\OutputFiles\\PaleoClim_HSMs"))
 
 ##create names for time period 
 time_period_names <- gsub("_.*","",time_periods)
