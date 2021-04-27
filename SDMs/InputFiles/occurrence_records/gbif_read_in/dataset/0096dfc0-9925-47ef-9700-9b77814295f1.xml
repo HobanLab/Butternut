@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://rs.gbif.org/schema/eml-gbif-profile/1.1/eml.xsd"
+        packageId="0096dfc0-9925-47ef-9700-9b77814295f1"  system="http://gbif.org" scope="system"
+  xml:lang="en">
+
+<dataset>
+      <alternateIdentifier>10.15468/jib4rt</alternateIdentifier>
+        <alternateIdentifier>0096dfc0-9925-47ef-9700-9b77814295f1</alternateIdentifier>
+    <title>Bioimages</title>
+    <creator>
+    <individualName>
+<givenName>Steve</givenName>          <surName>Baskauf</surName>
+    </individualName>
+    <address>
+<deliveryPoint>PMB 351634</deliveryPoint><city>Nashville</city><administrativeArea>Tennessee</administrativeArea><postalCode>37235</postalCode><country>UNITED_STATES</country>    </address>
+<phone>6153434582</phone><electronicMailAddress>steve.baskauf@vanderbilt.edu</electronicMailAddress><onlineUrl>http://bioimages.vanderbilt.edu/contact/baskauf.htm</onlineUrl>    </creator>
+    <metadataProvider>
+    <individualName>
+<givenName>Steve</givenName>          <surName>Baskauf</surName>
+    </individualName>
+    <address>
+<deliveryPoint>PMB 351634</deliveryPoint><city>Nashville</city><administrativeArea>Tennessee</administrativeArea><postalCode>37235</postalCode><country>UNITED_STATES</country>    </address>
+<phone>6153434582</phone><electronicMailAddress>steve.baskauf@vanderbilt.edu</electronicMailAddress><onlineUrl>http://bioimages.vanderbilt.edu/contact/baskauf.htm</onlineUrl>    </metadataProvider>
+      <pubDate>
+      2014-07-14
+      </pubDate>
+    <language>ENGLISH</language>
+    <abstract>
+        <para>Bioimages (http://bioimages.vanderbilt.edu/) is a collection of high quality images of living organisms, a set of tools for learning about plants and ecoregions, a biodiversity database, and a demonstration of biodiversity informatics best-practices.</para>
+    </abstract>
+        <keywordSet>
+              <keyword>Plant</keyword>
+              <keyword>Images</keyword>
+        </keywordSet>
+      <intellectualRights>
+        <para>To the extent possible under law, the publisher has waived all rights to these data and has dedicated them to the <ulink url="http://creativecommons.org/publicdomain/zero/1.0/legalcode"><citetitle>Public Domain (CC0 1.0)</citetitle></ulink>. Users may copy, modify, distribute and use the work, including for commercial purposes, without restriction.</para>
+      </intellectualRights>
+      <distribution scope="document">
+          <online>
+              <url function="information">http://bioimages.vanderbilt.edu/</url>
+          </online>
+      </distribution>
+      <coverage>
+            <geographicCoverage>
+                  <geographicDescription>Bounding Box 1</geographicDescription>
+                  <boundingCoordinates>
+                      <westBoundingCoordinate>-1.564</westBoundingCoordinate>
+                      <eastBoundingCoordinate>0.703</eastBoundingCoordinate>
+                      <northBoundingCoordinate>23.975</northBoundingCoordinate>
+                      <southBoundingCoordinate>-22.745</southBoundingCoordinate>
+                  </boundingCoordinates>
+            </geographicCoverage>
+            <geographicCoverage>
+                  <geographicDescription>Bounding Box 2</geographicDescription>
+                  <boundingCoordinates>
+                      <westBoundingCoordinate>-156</westBoundingCoordinate>
+                      <eastBoundingCoordinate>-75.9</eastBoundingCoordinate>
+                      <northBoundingCoordinate>63.45</northBoundingCoordinate>
+                      <southBoundingCoordinate>19.43</southBoundingCoordinate>
+                  </boundingCoordinates>
+            </geographicCoverage>
+          <temporalCoverage>
+            <rangeOfDates>
+              <beginDate>
+                <calendarDate>      1885-01-01
+</calendarDate>
+              </beginDate>
+              <endDate>
+                <calendarDate>      2013-12-11
+</calendarDate>
+              </endDate>
+            </rangeOfDates>
+          </temporalCoverage>
+              <taxonomicCoverage>
+                    <generalTaxonomicCoverage>This is a general taxon coverage with only the scientific name</generalTaxonomicCoverage>
+                    <taxonomicClassification>
+                        <taxonRankValue>Plantae</taxonRankValue>
+                    </taxonomicClassification>
+                    <taxonomicClassification>
+                        <taxonRankValue>Animalia</taxonRankValue>
+                    </taxonomicClassification>
+              </taxonomicCoverage>
+      </coverage>
+      <purpose>
+          <para>Provide images and data for educational and scientific uses.</para>
+      </purpose>
+      <contact>
+    <individualName>
+<givenName>Steve</givenName>          <surName>Baskauf</surName>
+    </individualName>
+    <address>
+<deliveryPoint>PMB 351634</deliveryPoint><city>Nashville</city><administrativeArea>Tennessee</administrativeArea><postalCode>37235</postalCode><country>UNITED_STATES</country>    </address>
+<phone>6153434582</phone><electronicMailAddress>steve.baskauf@vanderbilt.edu</electronicMailAddress><onlineUrl>http://bioimages.vanderbilt.edu/contact/baskauf.htm</onlineUrl>      </contact>
+      <methods>
+            <methodStep>
+                <description>
+                    <para>Photography</para>
+                </description>
+            </methodStep>
+            <sampling>
+                <studyExtent>
+                    <description>
+                        <para>Live organism photography</para>
+                    </description>
+                </studyExtent>
+                <samplingDescription>
+                    <para>Locate and photograph living organisms.</para>
+                </samplingDescription>
+            </sampling>
+            <qualityControl>
+                <description>
+                    <para>Visual inspection</para>
+                </description>
+            </qualityControl>
+      </methods>
+
+      <project >
+          <title>Bioimages</title>
+          <personnel>
+    <individualName>
+          <surName>Baskauf</surName>
+    </individualName>
+    <role>ADMINISTRATIVE_POINT_OF_CONTACT</role>
+          </personnel>
+          <abstract>
+              <para></para>
+          </abstract>
+          <funding>
+              <para>N/A</para>
+          </funding>
+            <studyAreaDescription>
+                <descriptor name="generic" citableClassificationSystem="false">
+                    <descriptorValue>North America</descriptorValue>
+                </descriptor>
+            </studyAreaDescription>
+      </project>
+</dataset>
+
+<additionalMetadata>
+    <metadata>
+      <gbif>
+        <dateStamp>2021-04-26T19:05:55Z</dateStamp>
+      <citation>Baskauf S (2014). Bioimages. Vanderbilt University. Occurrence dataset https://doi.org/10.15468/jib4rt accessed via GBIF.org on 2021-04-26.</citation>
+              <resourceLogoUrl>http://bioimages.vanderbilt.edu/logo.jpg</resourceLogoUrl>
+              <collection>
+                <parentCollectionIdentifier></parentCollectionIdentifier>
+                <collectionIdentifier>http://biocol.org/urn:lsid:biocol.org:col:35115</collectionIdentifier>
+                <collectionName>Bioimages</collectionName>
+              </collection>
+              <formationPeriod>2002 to 2014</formationPeriod>
+                  <jgtiCuratorialUnit>
+                      <jgtiUnitType>images</jgtiUnitType>
+                      <jgtiUnitRange>
+                          <beginRange>13,369</beginRange>
+                          <endRange>13,369</endRange>
+                      </jgtiUnitRange>
+                  </jgtiCuratorialUnit>
+        </gbif>
+    </metadata>
+</additionalMetadata>
+
+</eml:eml>
