@@ -4,29 +4,15 @@
 ########################### Libraries ################################
 ######################################################################
 
-library(raster)
-library(sp)
-library(sf)
-library(rworldmap)
-library(rgdal)
-library(spdep)
-library(rgeos)
-library(dismo)
-library(gbm)
-library(AUC)
-library(ggplot2)
-library(plyr)
-library(HH)
-library(ltm)
-library(geosphere)
+
 
 #####################################
 ############ Load Files #############
 #####################################
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 
-##load data points
-worldclim_only <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\SDMs\\worldclim_only"
-setwd(paste0(worldclim_only, "\\InputFiles"))
+##set wd
+setwd(butternut_drive)
 
 ##read in occurrence records
 butternut_presence <- read.csv("butternut_presence.csv")
