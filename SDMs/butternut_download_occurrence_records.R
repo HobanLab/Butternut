@@ -1,5 +1,6 @@
 ### DESCRIPTION:
-###############This is based on code provide by Emily Beckman, RA at the Morton Arboretum (Github repository: https://github.com/esbeckman/IMLS_Beckman)
+###############This is based on code provide by Emily Beckman, RA at the Morton Arboretum 
+#(Github repository: https://github.com/esbeckman/IMLS_Beckman)
 # This script provides instructions and code chunks for downloading wild
 #   occurrence points from:
 # GLOBAL DATABASES (though all likely have U.S. bias?)
@@ -37,14 +38,16 @@ library(data.table)
 library(BIEN)
 library(ridigbio)
 library(batchtools)
-library(googledrive)
+library(bit64)
+library(sp)
 
 ################################################################################
 # A) Read in target taxa list
 ################################################################################
-
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence")
-
+##set working directory
+#setwd("C:\\Users\\eschumacher\\Documents\\GitHub\\butternut\\SDMs")
+my_dir <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut\\SDMs\\InputFiles\\occurrence_records"
+setwd(my_dir)
 
 # list of target taxon names
 taxon_names <- c("Juglans cinerea")
@@ -70,8 +73,8 @@ keys <- sapply(taxon_names,function(x) name_backbone(name=x)$speciesKey,
 
 # remove duplicate and NULL keys
 keys_nodup <- keys[!duplicated(keys) & keys != "NULL"]
-# create data frame of keys and matching taxon_name
 
+# create data frame of keys and matching taxon_name
 gbif_codes <- map_df(keys_nodup,~as.data.frame(.x),.id="taxon_name")
 names(gbif_codes)[2] <- "speciesKey"
 # create vector of keys as input into gbif download
@@ -89,6 +92,7 @@ gbif_download <- occ_download(
   format = "DWCA", #"SIMPLE_CSV"
   user=user,pwd=pwd,
   email=email)
+
 # load gbif data just downloaded
 # create new folder for data and set as working directory
 dir.create(file.path(getwd(),"gbif_read_in"))
@@ -100,8 +104,8 @@ setwd(file.path(getwd(),"gbif_read_in"))
 
 # download and unzip before reading in
 gbif_download # !!! PASTE "Download key" as first argument in next two lines !!!
-occ_download_get(key="0039229-200221144449610", overwrite=TRUE)
-unzip("0039229-200221144449610.zip")
+occ_download_get(key="0261226-200613084148143", overwrite=TRUE)
+unzip("0261226-200613084148143.zip")
 # read in data
 gbif_raw <- fread("occurrence.txt",quote="")
 nrow(gbif_raw) #2399719
@@ -109,17 +113,9 @@ nrow(gbif_raw) #2399719
 setwd("./..")
 write.csv(gbif_raw, "gbif_raw.csv")
 
-##gbif 
-
-gbif_raw <- read.csv("gbif_raw2.csv")
-
 ################################################################################
 # C) Integrated Digitized Biocollections (iDigBio) download
 ################################################################################
-
-# I'm not sure the R interface actually gets all fields available; use manual
-#    way down below (starts line 144) if you want to be sure
-
 # download iDigBio data for target taxa
 # we have to go taxon by taxon; function can only return 100,000
 #   records at once and Quercus has more than that so can't download by genera
@@ -130,21 +126,16 @@ for(i in 1:length(taxon_names)){
   idigbio_raw <- rbind(idigbio_raw,output_new)
   print(paste(round(i/length(taxon_names)*100,digits=1),"% complete",sep=""))
 }
-nrow(idigbio_raw) #153467
+nrow(idigbio_raw) #2114
 # remove rows that are lists
 idigbio_raw <- idigbio_raw %>% select(everything(),-commonnames,-flags,
                                       -mediarecords,-recordids)
 # write file
 write.csv(idigbio_raw, "idigbio_raw.csv")
 
-##
-idigbio_raw <- read.csv("idigbio_raw.csv")
-
-
 ################################################################################
 # D) U.S. Herbaria Consortia (SERNEC, SEINet, etc.) download
 ################################################################################
-
 # First, download raw data
 # Go to http://sernecportal.org/portal/collections/harvestparams.php
 # Type your target genus name into the "scientific name" box and click
@@ -166,17 +157,12 @@ idigbio_raw <- read.csv("idigbio_raw.csv")
 #   "sernec_read_in" folder -- obviously "keep both" if prompted
 
 # read in raw occurrence points
-
-sernec_raw <- read.csv("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence/sernec_read_in/occurrences.csv")
-
-sernec_raw <- read.csv("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence/sernec_read_in/occurrences.csv")
-
+sernec_raw <- read.csv(paste0("sernec_read_in\\","occurrences.csv"))
 
 ################################################################################
 # E) Botanical Information and Ecology Network (BIEN) download
 ################################################################################
-
-# information about functions in package
+#information about functions in package
 #vignette("BIEN")
 
 # download BIEN occurrence data for target genera
@@ -184,15 +170,13 @@ bien_raw <- BIEN_occurrence_species(species_names,all.taxonomy=T,native.status=T
                                   natives.only=F,observation.type=T,collection.info=T,political.boundaries=T,
                                   cultivated=T)
 nrow(bien_raw) #2326
+
 # write file
 write.csv(bien_raw, "bien_raw.csv")
-
-bien_raw <- read.csv("bien_raw.csv")
 
 ################################################################################
 # F) USDA Forest Service, Forest Inventory and Analysis (FIA) download
 ################################################################################
-
 # First, download raw data
 # Go to https://apps.fs.usda.gov/fia/datamart/CSV/datamart_csv.html
 # Either download the "TREE" file (e.g., "AL_TREE.csv") for each state
@@ -206,7 +190,7 @@ bien_raw <- read.csv("bien_raw.csv")
 #   and place in your working directory
 
 # read in FIA species codes
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence/fia_read_in")
+setwd("fia_read_in")
 fia_code <- 0601
 # join taxa list to FIA species codes
 species_code <- 0601
@@ -214,7 +198,6 @@ species_code <- 0601
 # I have to read in each state file separately and pull info for our target
 #   taxa then remove the file before loading the next state because memory
 #   gets exhaused otherwise
-
 
 
 # function to extract target species data from each state CSV
@@ -238,8 +221,7 @@ extract_tree_data <- function(file_name){
 # make a new data frame to gather data for target taxa
 fia_raw <- data.frame()
 # create list of state files
-file_list <- list.files(path = "G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence/fia_read_in/FIA_states",
-                        pattern = ".csv",full.names = T)
+file_list <- list.files(pattern = ".csv",full.names = T)
 # loop through states and pull data using the function defined above
 fia_outputs <- lapply(file_list, extract_tree_data)
 
@@ -251,56 +233,9 @@ for(file in seq_along(fia_outputs)){
 # write file
 write.csv(fia_raw,"fia_raw.csv")
 
-
-### DESCRIPTION:
-# This script provides instructions and code chunks for downloading wild
-#   occurrence points from:
-# GLOBAL DATABASES (though all likely have U.S. bias?)
-# Global Biodiversity Information Facility (GBIF)
-# Integrated Digitized Biocollections (iDigBio)
-# U.S. Herbarium Consortia (SERNEC, SEINet, etc.)
-# Botanical Information and Ecology Network (BIEN)
-# NATIONAL DATABASES
-# Forest Inventory and Analysis (FIA) Program of the USDA Forest Service
-
-### INPUT:
-# target_taxa_with_syn.csv (list of target taxa)
-# columns:
-# 1. "taxon_name" (genus, species, infra rank, and infra name, all
-#    separated by one space each; hybrid symbol should be " x ", rather
-#    than "_" or "???", and go between genus and species)
-# 2. (optional) "taxon_name_acc" (accepted taxon name you have chosen)
-# 3+ (optional) other data you want to keep with taxa info
-
-### OUTPUTS:
-# gbif_raw.csv
-# idigbio_raw.csv
-# herbaria_raw.csv
-# bien_raw.csv
-# fia_raw.csv
-
-#################
-### LIBRARIES ###
-#################
-
-library(plyr)
-library(tidyverse) #ggplot2,dplyr,tidyr,readr,purrr,tibble,stringr,forcats
-library(data.table)
-library(batchtools)
-library(textclean)
-
-
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence")
-
-bien_raw <- read.csv("bien_raw.csv")
-idigbio_raw <- read.csv("idigbio_raw.csv")
-fia_raw <- read.csv("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence/fia_read_in/fia_raw.csv")
-gbif_raw <- read.csv("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence/gbif_read_in/gbif_raw.csv")
-sernec_raw <- read.csv("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence/sernec_read_in/occurrences.csv")
-
-#################
-### FUNCTIONS ###
-#################
+#######################################
+### Write function to remove NAs ######
+#######################################
 
 # searches for data frame columns with only NAs and removes them
 remove.empty.col <- function(df){
@@ -317,10 +252,6 @@ remove.empty.col <- function(df){
   return(df)
 }
 
-fia_raw <- remove.empty.col(fia_raw)
-
-write.csv(fia_raw, "fia_raw.csv")
-
 # calculates percent of each data frame column that is not NA
 percent.filled <- function(df){
   for(i in 1:ncol(df)){
@@ -333,10 +264,9 @@ percent.filled <- function(df){
 # 1. Read in target taxa list and raw occurrence data
 ################################################################################
 
-setwd("./../..")
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence")
+setwd(my_dir)
 
-gbif_raw <- read.csv("gbif_read_in/gbif_raw.csv",header=T,
+gbif_raw <- read.csv("gbif_raw.csv",header=T,
                      na.strings=c("","NA"),stringsAsFactors=F)
 gbif_raw <- remove.empty.col(gbif_raw) #; percent.filled(gbif_raw)
 idigbio_raw <- read.csv("idigbio_raw.csv",header=T,
@@ -394,18 +324,15 @@ colnames(bien_df) <- c("ID", "TaxonName","DataSet","Longitude","Latitude")
 #  - list of species tracked and their codes
 #  - state and county codes and names
 #  - plot level data (has lat-long)
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence/fia_read_in/FIA_states")
-
 fia_codes <- 0601
 county_codes <- read.csv("US_state_county_FIPS_codes.csv", header = T,
                          na.strings=c("","NA"), colClasses="character")
-#county_codes <- read.csv("US_state_county_FIPS_codes.csv")
 fia_plots <- read.csv("PLOT.csv")
 # remove unnecessary columns from plot data
 fia_plots <- fia_plots[,c("INVYR","STATECD","UNITCD","COUNTYCD","PLOT",
                           "LAT","LON")]
-# join FIA data to supplemental tables
 
+# join FIA data to supplemental tables
 fia_raw2 <- join(fia_raw,fia_plots)
 fia_raw2$taxon_name <- "Juglans cinerea"
 fia_raw2$dataset <- "FIA"
@@ -414,90 +341,30 @@ fia_df <- data.frame(cbind(fia_raw2$CN, fia_raw2$taxon_name, fia_raw2$dataset, f
 
 colnames(fia_df) <- c("ID","TaxonName","DataSet","Longitude","Latitude")
 
-##
-
-all_occurrences_butternut <- rbind(bien_df, fia_df, gbif_df, idigbio_df, sernec_df)
+##join together all raw data 
+occurrence_records_butternut <- rbind(bien_df, fia_df, gbif_df, idigbio_df, sernec_df)
 
 ##cleanup 
+butternut_complete_occurrence <- occurrence_records_butternut[complete.cases(occurrence_records_butternut), ]
+write.csv(butternut_complete_occurrence, "butternut_complete_occurrence.csv")
 
-butternut_complete_occurrence <- all_occurrences_butternut[complete.cases(all_occurrences_butternut), ]
-write.csv(butternut_complete_occurrence, "butternut_occurrence.csv")
+###############################
+##### Remove duplicates #######
+###############################
 
-##plot
+occ_df <- data.frame(cbind(as.numeric(butternut_complete_occurrence$Longitude),as.numeric(butternut_complete_occurrence$Latitude)))
 
-newmap <- getMap(resolution = "low")
-plot(newmap)
-plot(newmap, xlim = c(max(as.character(butternut_complete_occurrence$Longitude)),min(as.character(butternut_complete_occurrence$Longitude)), ylim = c(max(as.character(butternut_complete_occurrence$Latitude)),min(as.character(butternut_complete_occurrence$Latitude)))
-points(as.character(butternut_complete_occurrence$Longitude), as.character(butternut_complete_occurrence$Latitude), col = "dodgerblue", cex = 0.8, pch = 16)
+colnames(occ_df) <- c("Longitude","Latitude")
 
+coordinates(occ_df) <- c("Longitude","Latitude")
+proj4string(occ_df) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 
-##setwd
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence")
+occ_red_df <- remove.duplicates(occ_df)
 
-##plot occurrence records
+occ_red_df <- data.frame(occ_red_df) 
 
-butternut_oc_matrix <- as.matrix(butternut_complete_occurrence[,4:5])
+##write out data frame
+write.csv(occ_red_df, "occ_red_df.csv")
 
-
-colnames(butternut_oc_matrix) <- c("Longitude", "Latitude")
-
-worldmap <- getMap(resolution = "low")
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/Occurrence")
-pdf("butternut_occurrence.pdf", width = 10, height = 8)
-plot(newmap, xlim = c(-109.55523,9.566805), ylim = c(-37,73.966667))
-
-points(as.character(butternut_complete_occurrence[,4]),as.character(butternut_complete_occurrence[,5]), pch =  16, col = "dodgerblue")
-dev.off()
-
-##
-plot(newmap, xlim = c(min(butternut_latlon$Longitude),max(butternut_latlon$Longitude)), ylim = c(min(butternut_latlon$Latitude),max(butternut_latlon$Latitude)))
-
-
-
-
-setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI/DataFiles/44Populations")
-
-##then calculate mean latitude for each population
-butternut_latlon <- read.csv("Butternut_44pops_latlon.csv") 
-butternut_mean_lon <- matrix()
-butternut_mean_lat <- matrix()
-
-##identifying mean latitudes for each population
-
-for(pop in butternut_44pop_names){
-  
-  butternut_mean_lon[pop] <- mean(butternut_latlon[butternut_latlon$Pop == pop,][,3])
-  
-  
-}
-
-for(pop in butternut_44pop_names){
-  
-  butternut_mean_lat[pop] <- mean(butternut_latlon[butternut_latlon$Pop == pop,][,4])
-  
-  
-}
-
-##convert to matrix
-butternut_mean_lon <- matrix(butternut_mean_lon)
-butternut_mean_lat <- matrix(butternut_mean_lat)
-
-##document cleanup
-butternut_mean_lon <- butternut_mean_lon[-1]
-butternut_mean_lat <- butternut_mean_lat[-1]
-
-#combine into one document for mean long and lat for each pop
-butternut_coords <- matrix(ncol = 2, nrow = 44)
-butternut_coords[,1] <- butternut_mean_lon
-butternut_coords[,2] <- butternut_mean_lat
-rownames(butternut_coords) <- butternut_44pop_names
-colnames(butternut_coords) <- c("Mean Lon", "Mean Lat")
-
-##plot
-
-pdf("butternut_occurrence_zoom.pdf", width = 10, height = 8)
-butternutmap <- getMap(resolution = "low")
-plot(butternutmap, xlim = c(min(butternut_coords[,1]), max(butternut_coords[,1])), ylim = c(min(butternut_coords[,2]),max(butternut_coords[,2])))
-points(butternut_oc_matrix[,1],butternut_oc_matrix[,2],pch = 16, col = "dodgerblue")
-dev.off()
+##data are written out to be loaded in ArcGIS and cleaned for duplicates and extent 
 
