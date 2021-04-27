@@ -78,6 +78,10 @@ worldclim_stack <- stack(worldclim_project_list[[1]], worldclim_project_list[[2]
                          worldclim_project_list[[17]], worldclim_project_list[[18]],
                          worldclim_project_list[[19]])
 
+##save stack in input files 
+setwd(paste0(butternut_drive, "\\SDMs\\OutputFiles"))
+save(worldclim_stack, file = "worldclim_stack.RData")
+
 ##now extract values
 worldclim_extract <- extract(worldclim_stack, butternut_pa[,1:2])
 worldclim_df <- data.frame(worldclim_extract)
