@@ -4,7 +4,9 @@
 ########################### Libraries ################################
 ######################################################################
 
-
+library(sp)
+library(raster)
+library(rgeos)
 
 #####################################
 ############ Load Files #############
@@ -15,7 +17,9 @@ butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 setwd(butternut_drive)
 
 ##read in occurrence records
-butternut_presence <- read.csv("butternut_presence.csv")
+butternut_presence <- read.csv("SDMs\\InputFiles\\occurrence_records\\occurrence_records_all_red.csv")
+
+##remove extra oc column
 butternut_presence <- butternut_presence[,-1]
 
 ##set extent 
@@ -32,7 +36,7 @@ proj4string(butternut_presence) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84"
 projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
 
 ##Load raster extent
-extent_raster <- raster("elevation_extent.tif")
+extent_raster <- raster("SDMs\\InputFiles\\elevation_extent.tif")
 
 ##project Raster
 extent_project <- projectRaster(extent_raster, crs = projection)
@@ -43,7 +47,6 @@ writeRaster(extent_project, "extent_project.tif")
 ######################################################################
 ######## Project and Remove Spatial Autocorrelation ##################
 ######################################################################
-
 ##Project to Albers Equal Area Conic 
 butternut_presence_2 <- spTransform(butternut_presence, CRS(paste0(projection)))
 
@@ -51,6 +54,7 @@ butternut_presence_2 <- spTransform(butternut_presence, CRS(paste0(projection)))
 butternut_presence_2 <- remove.duplicates(butternut_presence_2)
 
 ##Reduce spatial autocorrelation, identifying points within certain distances
+#This code will throw warnings but it is working 
 
 #####100 meters
 points_matrix <- gWithinDistance(butternut_presence, dist = .00086206895, byid = TRUE)
@@ -76,15 +80,12 @@ occurrence_wo_auto <- butternut_presence[auto_cols,]
 occurrence_no_auto <- data.frame(occurrence_wo_auto) ##reduced to 3053 individuals 
 
 ##occurrence no autocorrelation write out 
-write.csv(occurrence_no_auto, "occurrence_noauto_noproj.csv")
-
-##read in elevation extent document
-extent_raster <- raster("elevation_extent.tif")
+write.csv(occurrence_no_auto, "SDMs\\InputFiles\\occurrence_noauto_noproj.csv")
 
 ##Check to make sure extents align
-setwd(paste0(worldclim_only, "\\OutputFiles"))
+setwd("SDMs\\OutputFiles")
 pdf("extent_pointsnoauto.pdf")
 plot(extent_raster)
-points(butternut_presence, pch = 16, col = "dodgerblue")
+points(occurrence_wo_auto, pch = 16, col = "dodgerblue")
 dev.off()
 
