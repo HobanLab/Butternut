@@ -6,6 +6,8 @@
 
 library(sp)
 library(raster)
+library(dismo)
+library(rgeos)
 
 #####################################
 ############ Load Files #############
@@ -16,7 +18,7 @@ butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 setwd(butternut_drive)
 
 ######load in presence records
-butternut_pres <- read.csv("SDMs\\InputFiles\\occurrence_records\\occurrence_records_all_red.csv")
+butternut_pres <- read.csv("SDMs\\InputFiles\\occurrence_noauto_noproj.csv")
 
 ##remove extra column before longitudes and latitudes
 butternut_pres <- butternut_pres[,-1]
@@ -43,17 +45,14 @@ extent_project <- raster("SDMs\\InputFiles\\extent_project.tif")
 ######################################################################
 ################## Generate Pseudo-Absence Points ####################
 ######################################################################
+##create data frame of lon/lat
+butternut_pres_df <- data.frame(butternut_pres)
 
-##presence clean spatial
-coordinates(pres_df) <- c('Longitude', 'Latitude')
-proj4string(pres_df) <- CRS(projection)
-
-##visualize
-plot(extent_project)
-points(pres_df)
+##create a document for points = presence records 
+pres_length <- length(butternut_pres_df[,1])
 
 ##Now start generating background points
-background_points <- randomPoints(extent_project, 3051)
+background_points <- randomPoints(extent_project, pres_length)
 
 ##now continue to sample
 set.seed(25)
@@ -62,17 +61,13 @@ bg_proj <- SpatialPoints(background_2, proj4string=CRS(projection))
 
 ##now set occurrence records to a spatial gridded object
 set.seed(8)
-extent_sample <- gridSample(pres_df, extent_project, n=1) 
+extent_sample <- gridSample(butternut_pres, extent_project, n=1) 
 
 ##turn into a spatial points object
 occurrence_grid_spatial <-SpatialPoints(extent_sample, CRS(projection))
 
 ##determine the difference between absence and presence to make sure they aren't in the same place 
 butternut_abs <- gDifference(bg_proj, occurrence_grid_spatial)
-
-##plot to determine if anything is outside our bounds
-plot(extent_project)
-points(butternut_abs)
 
 ##extract to points to make sure data is clean
 abs_ext <- extract(extent_project, butternut_abs)
@@ -85,10 +80,10 @@ butternut_abs_df <- data.frame(butternut_abs)
 colnames(butternut_abs_df) <- c("Absence_points")
 
 ##write out absence 
-write.csv(butternut_abs_df, paste0("butternut_abs.csv"))
+write.csv(butternut_abs_df, "SDMs\\InputFiles\\butternut_abs.csv")
 
 ##Now rename columns and set up data frame
-col_names <- colnames(pres_points_df)
+col_names <- colnames(butternut_pres_df)
 
 colnames(butternut_abs_df) <- col_names
 
@@ -96,21 +91,17 @@ colnames(butternut_abs_df) <- col_names
 ##Absence column added 
 butternut_abs_df$PA <- "0"
 
-##clean up presence points df 
-pres_points_df <- pres_points_df[,-c(1,2,5)]
-
-
 ##Add presence column to presence points
-pres_points_df$PA <- "1"
+butternut_pres_df$PA <- "1"
 
 ##combine into one data frame
-butternut_pa <- rbind(pres_points_df, butternut_abs_df)
+butternut_pa <- rbind(butternut_pres_df, butternut_abs_df)
 
 ##Write out files 
-write.csv(butternut_pa, "butternut_pa.csv")
+write.csv(butternut_pa, "SDMs\\InputFiles\\butternut_pa.csv")
 
 ##Visualize results 
-pdf("pres_abs_points.pdf", width = 6, height = 6)
+pdf("SDMs\\OutputFiles\\pres_abs_points.pdf", width = 6, height = 6)
 plot(extent_project)
 points(butternut_abs, pch = 16, col = "dodgerblue4")
 points(butternut_pres, pch = 16, col = "dodgerblue")
