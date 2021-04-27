@@ -4,35 +4,35 @@
 ########################### Libraries ################################
 ######################################################################
 
-library(raster)
 library(sp)
-library(sf)
-library(rworldmap)
-library(rgdal)
-library(spdep)
-library(rgeos)
-library(dismo)
+library(raster)
 library(gbm)
 library(AUC)
+library(dismo)
 library(ggplot2)
-library(plyr)
-library(HH)
-library(ltm)
-library(geosphere)
 
 #####################################
 ############ Load Files #############
 #####################################
-##load data points
-worldclim_only <- "G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\SDMs\\worldclim_only"
-setwd(paste0(worldclim_only, "\\InputFiles"))
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
+
+##set wd
+setwd(butternut_drive)
 
 ##load in variable data frame
-butternut_var <- read.csv("butternut_variables.csv")
+butternut_var <- read.csv("SDMs\\InputFiles\\butternut_var.csv")
+
+##Remove extra column
 butternut_var <- butternut_var[,-1]
 
 ##load in elevation crop
-elevation_crop <- raster("elevation_extent.tif")
+elevation_crop <- raster("SDMs\\InputFiles\\elevation_extent.tif")
+
+##load in extent projection 
+extent_project <- raster("SDMs\\InputFiles\\extent_project.tif")
+
+##load in raster stack
+load("SDMs\\OutputFiles\\worldclim_stack.RData")
 
 #####Projection
 projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
@@ -40,7 +40,6 @@ projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=
 ######################################################################
 ####################### Running the Model ############################
 ######################################################################
-
 ##now limit to important variables
 butternut_list_variables <- c("PwetM", "MDR","MTDQ", "MTwetQ", "precip_season")
 
@@ -91,7 +90,7 @@ for (i in 1:length(lr)){
         pred.train = predict.gbm(butternut_model, traindata, n.trees = butternut_model$gbm.call$best.trees, type = "response") 
         train=calc.deviance(traindata$PA, pred.train)
         
-        ##Model external metrics , calculated over an evaluation datasetevaluation.df”      
+        ##Model external metrics , calculated over an evaluation datasetevaluation
         pred_test = predict.gbm(butternut_model, testdata, n.trees = butternut_model$gbm.call$best.trees, type = "response") 
         d <- cbind(testdata$PA, pred_test) 
         pres <- d[d[,1]==1, 2]
@@ -126,26 +125,29 @@ summary(butternut_model)
 
 ###create list of variables in order with % contribution of each variable
 butternut_predictors <- c("Seasonal Precipitation (mm)", "Mean Temperature of the Driest Quarter (C)",
-                        "Mean Temperature of the Wettest Quarter (C)", "Precipitation of the Wettest Month (mm)", "Mean Diurnal Range")
+                        "Mean Temperature of the Wettest Quarter (C)", "Precipitation of the Wettest Month (mm)", 
+                        "Mean Diurnal Range")
 ##create factors
-butternut_predictors <- factor(butternut_predictors, levels= c("Seasonal Precipitation (mm)", "Mean Temperature of the Driest Quarter (C)",
-                                                            "Mean Temperature of the Wettest Quarter (C)", "Precipitation of the Wettest Month (mm)",
-                                                            "Mean Diurnal Range"))
+butternut_predictors <- factor(butternut_predictors, levels= c("Seasonal Precipitation (mm)", 
+                                                               "Mean Temperature of the Driest Quarter (C)",
+                                                              "Mean Temperature of the Wettest Quarter (C)", 
+                                                              "Precipitation of the Wettest Month (mm)",
+                                                              "Mean Diurnal Range"))
 
 ##data frame combination with the % contribution and the factors
-butternut_influences <- data.frame(butternut_predictors,percentages=c(29.5, 25.0, 23.7, 11.7, 10.2))
+butternut_influences <- data.frame(butternut_predictors,percentages=c(28.9, 28.6, 20.6, 11.5, 10.4))
 
 ##create barplot with % contribution of each variable
 butternut_contribution_bp <- ggplot(data=butternut_influences, aes(x=butternut_predictors, y=percentages)) +
   geom_bar(stat="identity", color="black", fill="dodgerblue",width=.4)+
   geom_text(aes(y=percentages, label=paste0(percentages, '%')), vjust=.5, hjust=-.1,size=3)+
-  theme_minimal()+ggtitle("Relative Influence of Predictors (CV AUC = 0.882)")+theme_light(base_size=14)+theme(plot.margin = unit(c(1,1,1,1), "cm"))+ylim(0,100)+
+  theme_minimal()+ggtitle("Relative Influence of Predictors (CV AUC = 0.824)")+theme_light(base_size=14)+theme(plot.margin = unit(c(1,1,1,1), "cm"))+ylim(0,100)+
   xlab("Predictors") + ylab("Percent Contribution to the Model")
 
 ##flip it to be horizontal
 butternut_contribution_bp2 <- butternut_contribution_bp + coord_flip()
 
-setwd(paste0(worldclim_only, "\\OutputFiles"))
+setwd(paste0(butternut_drive,"\\SDMs\\OutputFiles"))
 ##write out file 
 pdf("contribution_bp_allvar.pdf", width = 10, height = 8)
 butternut_contribution_bp2
@@ -154,66 +156,13 @@ dev.off()
 ################################
 ######## Prediction map ########
 ################################
-##load in elevation extent
-setwd(paste0(worldclim_only, "\\InputFiles"))
-elevation_extent <- raster("elevation_extent.tif")
-extent_project <- raster("extent_project.tif")
-
-##set wd for the worldclim variables 
-setwd("bio_2-5m_bil")
-
-##create multiple lists
-worldclim_list = list.files(pattern = ".bil$")
-worldclim_raster_list <- list()
-worldclim_crop_list <- list()
-worldclim_project_list <- list()
-
-##loop through soil docs to crop and project every layer 
-for(j in 1:length(worldclim_list)) {
-  #convert to rasters
-  worldclim_raster_list[[j]] = raster(worldclim_list[[j]])
-  
-  worldclim_crop_list[[j]] <- crop(worldclim_raster_list[[j]], elevation_extent)
-  
-  worldclim_project_list[[j]] <- projectRaster(worldclim_crop_list[[j]], crs = projection)
-  
-}
-
-##Rename layers
-worldclim_names <- c("mat", "mtwarq", "mtcq", "map", "pwetm", "pdm", "precip_season",
-                     "pwetq", "pdq", "pwarq", "pcq", "mdr","iso","temp_season", 
-                     "mtwm","mtcm", "temp_range", "mtwetq", "mtdq")
-
-##now add to worldclim list
-for(p in 1:length(worldclim_names)) {
-  
-  names(worldclim_project_list[[p]]) <- worldclim_names[[p]]
-  
-}
-
-
-##stack worldclim variables 
-worldclim_stack <- stack(worldclim_project_list[[1]], worldclim_project_list[[2]],
-                         worldclim_project_list[[3]], worldclim_project_list[[4]],
-                         worldclim_project_list[[5]], worldclim_project_list[[6]],
-                         worldclim_project_list[[7]], worldclim_project_list[[8]],
-                         worldclim_project_list[[9]], worldclim_project_list[[10]],
-                         worldclim_project_list[[11]], worldclim_project_list[[12]],
-                         worldclim_project_list[[13]], worldclim_project_list[[14]],
-                         worldclim_project_list[[15]], worldclim_project_list[[16]],
-                         worldclim_project_list[[17]], worldclim_project_list[[18]],
-                         worldclim_project_list[[19]])
-
-
-
-
 ########Now begin to stack variables that contribute most to the model
 ##to get list of names for ordering stack 
 var_list <- butternut_model$var.names
 
 ##now stack
-butternut_model_stack <- stack(worldclim_stack$pwetm, worldclim_stack$mdr,
-                               worldclim_stack$mtdq, worldclim_stack$mtwetq,
+butternut_model_stack <- stack(worldclim_stack$PwetM, worldclim_stack$MDR,
+                               worldclim_stack$MTDQ, worldclim_stack$MTwetQ,
                                worldclim_stack$precip_season)
   
   
@@ -224,13 +173,13 @@ names(butternut_model_stack) <- butternut_model$var.names
 butternut_prediction_map <- predict(butternut_model_stack, butternut_model,n.trees=tree_number, type='response')
 
 ##write out Raster
-writeRaster(butternut_prediction_map, paste0(worldclim_only, "\\OutputFiles\\hsm_worldclim_only_raster.tif"),
+writeRaster(butternut_prediction_map, paste0(butternut_drive, "\\SDMs\\OutputFiles\\hsm_worldclim_only_raster.tif"),
             overwrite=TRUE)
 
 #############################
 ######## Plot maps ##########
 #############################
-setwd(paste0(worldclim_only, "\\OutputFiles"))
+setwd(butternut_drive)
 
 ##Load in presence and absence points 
 butternut_pres <- butternut_sel_df[butternut_sel_df$PA == 1,]
