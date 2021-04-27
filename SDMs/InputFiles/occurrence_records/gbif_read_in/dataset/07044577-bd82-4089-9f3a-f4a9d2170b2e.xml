@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://rs.gbif.org/schema/eml-gbif-profile/1.1/eml.xsd"
+        packageId="07044577-bd82-4089-9f3a-f4a9d2170b2e"  system="http://gbif.org" scope="system"
+  xml:lang="en">
+
+<dataset>
+      <alternateIdentifier>10.15468/jyrthk</alternateIdentifier>
+        <alternateIdentifier>https://data.gbif.no/ipt/resource?r=cwr</alternateIdentifier>
+        <alternateIdentifier>07044577-bd82-4089-9f3a-f4a9d2170b2e</alternateIdentifier>
+        <alternateIdentifier>http://data.gbif.no/ipt/resource?r=cwr</alternateIdentifier>
+    <title>A global database for the distributions of crop wild relatives</title>
+    <creator>
+    <individualName>
+          <surName>Crop Wild Relatives Occurrence data consortia</surName>
+    </individualName>
+<organizationName>International Center for Tropical Agriculture (CIAT)</organizationName>    <address>
+<country>COLOMBIA</country>    </address>
+<electronicMailAddress>cropwildrelatives@croptrust.org</electronicMailAddress><onlineUrl>http://www.cwrdiversity.org/</onlineUrl>    </creator>
+    <metadataProvider>
+<organizationName>GBIF Norway</organizationName>    <address>
+<country>NORWAY</country>    </address>
+<electronicMailAddress>helpdesk@gbif.no</electronicMailAddress><onlineUrl>http://www.gbif.no</onlineUrl>    </metadataProvider>
+    <associatedParty>
+    <individualName>
+<givenName>Christian</givenName>          <surName>Svindseth</surName>
+    </individualName>
+<organizationName>GBIF Norway</organizationName><positionName>GBIF Norway Helpdesk</positionName>    <address>
+<country>NORWAY</country>    </address>
+<electronicMailAddress>christian.svindseth@nhm.uio.no</electronicMailAddress><onlineUrl>http://www.gbif.no</onlineUrl>    <role>USER</role>
+    </associatedParty>
+    <associatedParty>
+    <individualName>
+<givenName>Nora Patricia</givenName>          <surName>Castañeda-Alvarez</surName>
+    </individualName>
+<organizationName>International Center for Tropical Agriculture (CIAT)</organizationName><positionName>Researcher</positionName>    <address>
+<country>COLOMBIA</country>    </address>
+<electronicMailAddress>n.p.castaneda@cgiar.org</electronicMailAddress><onlineUrl>http://www.cwrdiversity.org/</onlineUrl>      <userId directory="http://orcid.org/">0000-0003-1827-4782</userId>
+    <role>CONTENT_PROVIDER</role>
+    </associatedParty>
+    <associatedParty>
+    <individualName>
+<givenName>Humberto</givenName>          <surName>Sotelo</surName>
+    </individualName>
+<organizationName>International Center for Tropical Agriculture (CIAT)</organizationName><positionName>Researcher</positionName>    <address>
+<country>COLOMBIA</country>    </address>
+<electronicMailAddress>h.soteloCiat@cgiar.org</electronicMailAddress><onlineUrl>http://www.cwrdiversity.org/</onlineUrl>      <userId directory="http://orcid.org/">0000-0002-9621-1456</userId>
+    <role>CONTENT_PROVIDER</role>
+    </associatedParty>
+    <associatedParty>
+    <individualName>
+<givenName>Colin</givenName>          <surName>Khoury</surName>
+    </individualName>
+<organizationName>International Center for Tropical Agriculture (CIAT)</organizationName><positionName>Researcher</positionName>    <address>
+<country>COLOMBIA</country>    </address>
+<electronicMailAddress>c.khoury@cgiar.org</electronicMailAddress><onlineUrl>http://www.cwrdiversity.org/</onlineUrl>      <userId directory="http://orcid.org/">0000-0001-7893-5744</userId>
+    <role>CONTENT_PROVIDER</role>
+    </associatedParty>
+    <associatedParty>
+    <individualName>
+<givenName>Dag</givenName>          <surName>Endresen</surName>
+    </individualName>
+<organizationName>GBIF Norway</organizationName><positionName>GBIF Node Manager</positionName>    <address>
+<city>Oslo</city><country>NORWAY</country>    </address>
+<electronicMailAddress>dag.endresen@nhm.uio.no</electronicMailAddress><onlineUrl>http://www.gbif.no</onlineUrl>      <userId directory="http://orcid.org/">0000-0002-2352-5497</userId>
+    <role>EDITOR</role>
+    </associatedParty>
+      <pubDate>
+      2018-07-25
+      </pubDate>
+    <language>ENGLISH</language>
+    <abstract>
+        <para>This dataset originally held 5 647 442 total records, where 34% of the records corresponded to germplasm accessions and 66% to herbarium samples. A total of 3 231 286 records had cross-checked coordinates (see Figure 2). 322 735 records were newly georeferenced using The Google Geocoding API and 15 713 new records were obtained after digitizing the information contained in herbaria specimens. Data was gathered from more than 100 data providers, including GBIF (a comprehensive list of institutions and individuals is available here: http://www.cwrdiversity.org/data-sources/ ).
+The geographic coverage of the dataset includes 96% of the world countries and also includes records of cultivated plants (1/3 of the dataset). Records of the crop wild relatives of 80 crop gene pools can be queried and visualized in this interactive map: http://www.cwrdiversity.org/distribution-map/
+This dataset was assembled as part of the project ‘Adapting Agriculture to Climate Change: Collecting, Protecting and Preparing Crop Wild Relatives’, which is supported by the Government of Norway. The project is managed by the Global Crop Diversity Trust and the Millennium Seed Bank of the Royal Botanic Gardens, Kew, and implemented in partnership with national and international genebanks and plant breeding institutes around the world. For further information, please refer to the project website: http://www.cwrdiversity.org/
+For publication to GBIF, all records originally gathered from GBIF have been removed to avoid data duplication.
+Citation: Crop Wild Relatives Occurrence data consortia ([year]). A global database for the distributions of crop wild relatives. Centro Internacional de Agricultura Tropical (CIAT). Occurrence dataset https://doi.org/10.15468/jyrthk accessed via GBIF.org on [date].</para>
+    </abstract>
+        <keywordSet>
+              <keyword>Occurrence</keyword>
+              <keywordThesaurus>GBIF Dataset Type Vocabulary: http://rs.gbif.org/vocabulary/gbif/dataset_type.xml</keywordThesaurus>
+        </keywordSet>
+        <keywordSet>
+              <keyword>crop wild relatives</keyword>
+              <keywordThesaurus>n/a</keywordThesaurus>
+        </keywordSet>
+        <keywordSet>
+              <keyword>http://dbpedia.org/page/Crop_wild_relative</keyword>
+              <keywordThesaurus>DBpedia</keywordThesaurus>
+        </keywordSet>
+        <keywordSet>
+              <keyword>https://g.co/kg/m/04jcxvp</keyword>
+              <keywordThesaurus>FreeBase</keywordThesaurus>
+        </keywordSet>
+        <keywordSet>
+              <keyword>https://www.wikidata.org/wiki/Q1141015</keyword>
+              <keywordThesaurus>WikiData</keywordThesaurus>
+        </keywordSet>
+      <intellectualRights>
+        <para>This work is licensed under a <ulink url="http://creativecommons.org/licenses/by/4.0/legalcode"><citetitle>Creative Commons Attribution (CC-BY) 4.0 License</citetitle></ulink>.</para>
+      </intellectualRights>
+      <distribution scope="document">
+          <online>
+              <url function="information">http://www.cwrdiversity.org/</url>
+          </online>
+      </distribution>
+      <coverage>
+            <geographicCoverage>
+                  <geographicDescription>This dataset contains information of crop wild relatives from the whole world except Antarctica.</geographicDescription>
+                  <boundingCoordinates>
+                      <westBoundingCoordinate>-180</westBoundingCoordinate>
+                      <eastBoundingCoordinate>180</eastBoundingCoordinate>
+                      <northBoundingCoordinate>90</northBoundingCoordinate>
+                      <southBoundingCoordinate>-90</southBoundingCoordinate>
+                  </boundingCoordinates>
+            </geographicCoverage>
+              <taxonomicCoverage>
+                    <generalTaxonomicCoverage>Crop wild relatives</generalTaxonomicCoverage>
+                    <taxonomicClassification>
+                          <taxonRankName>Kingdom</taxonRankName>
+                        <taxonRankValue>Plantae</taxonRankValue>
+                    </taxonomicClassification>
+              </taxonomicCoverage>
+      </coverage>
+      <maintenance>
+          <description>
+              <para></para>
+          </description>
+          <maintenanceUpdateFrequency>asNeeded</maintenanceUpdateFrequency>
+      </maintenance>
+      <contact>
+    <individualName>
+<givenName>Nora Patricia</givenName>          <surName>Castañeda-Alvarez</surName>
+    </individualName>
+<organizationName>International Center for Tropical Agriculture (CIAT)</organizationName><positionName>Researcher</positionName>    <address>
+<country>COLOMBIA</country>    </address>
+<electronicMailAddress>cropwildrelatives@croptrust.org</electronicMailAddress><onlineUrl>http://www.cwrdiversity.org/</onlineUrl>      <userId directory="http://orcid.org/">0000-0003-1827-4782</userId>
+      </contact>
+
+</dataset>
+
+<additionalMetadata>
+    <metadata>
+      <gbif>
+        <dateStamp>2021-04-26T19:05:59Z</dateStamp>
+      <citation>Crop Wild Relatives Occurrence data consortia (2018). A global database for the distributions of crop wild relatives. Version 1.12. Centro Internacional de Agricultura Tropical - CIAT. Occurrence dataset https://doi.org/10.15468/jyrthk accessed via GBIF.org on 2021-04-26.</citation>
+              <resourceLogoUrl>https://data.gbif.no/ipt/logo.do?r=cwr</resourceLogoUrl>
+        </gbif>
+    </metadata>
+</additionalMetadata>
+
+</eml:eml>
