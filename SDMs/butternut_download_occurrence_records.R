@@ -1,6 +1,6 @@
 ### DESCRIPTION:
 ###############This is based on code provide by Emily Beckman, RA at the Morton Arboretum 
-#(Github repository: https://github.com/esbeckman/IMLS_Beckman)
+#(Github repository: https://github.com/MortonArb-ForestEcology/IMLS_CollectionsValue)
 # This script provides instructions and code chunks for downloading wild
 #   occurrence points from:
 # GLOBAL DATABASES (though all likely have U.S. bias?)
