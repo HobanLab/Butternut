@@ -1,3 +1,7 @@
+#This code is used to generate PCoAs for the analysis
+#This file uses the reduced individual document from the 
+#relatedness removal document 
+
 ##########################
 ######## Libraries #######
 ##########################
@@ -17,16 +21,14 @@ butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 setwd(butternut_drive)
 
 ##load current reorganized and reduced genepop with reduced by relatedness  
-butternutgen_red <- arp2gen("data_files\\after_reorg\\butternutgen_relatedness_reduced.arp")
+#only use if not converted 
+#butternutgen_red <- arp2gen("data_files\\after_reorg\\butternutgen_relatedness_reduced.arp")
 
 ##load genind file 
 butternutgen_relate <- read.genepop("data_files\\after_reorg\\butternutgen_relatedness_reduced.gen", ncode = 3)
 
 ##load relatedness data frame 
 reorg_relatedness_df <- read.csv("data_files\\after_reorg\\reorg_relatedness_reduced.csv")
-
-##rename individuals in genind file 
-rownames(butternutgen_relate@tab) <- reorg_relatedness_df$Ind
 
 ##create pop name code 
 butternut_24pop_names <- unique(reorg_relatedness_df$Pop)
