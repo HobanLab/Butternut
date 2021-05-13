@@ -95,7 +95,7 @@ pdf("genetic_analyses_results\\all_rich_lat_linear.pdf", width = 8, height = 6)
 
 ##create plot
 plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], pch = 17, 
-     main = "Number of Alleles Compared to Mean Latitude", ylab = "Number of Alleles", 
+     main = "Allelic Richness Compared to Mean Latitude", ylab = "Allelic Richness", 
      xlab = "Mean Latitude", cex = (butternut_poppr[1:24,2]/50), ylim = c(5,10))
 ##write text
 text(all_rich_lat_df[,2]~all_rich_lat_df[,1], labels = butternut_24pop_names, cex = 0.8, pos = 1)
