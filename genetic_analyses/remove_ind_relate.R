@@ -1,3 +1,14 @@
+#This code removes individuals based on missing data and relatedness. 
+#Any individual with more than 25% missing data were removed 
+#This data file starts with the 1,721 individuals following geographic 
+#reorganization into 24 populations. 
+#Then, individuals were removed based on relatedness. 
+#Relatedness between individuals can over-represent genotypes in clustering
+#analysis and bias these analyses away from finding all the groupings. 
+#Therefore we were able to use this code to remove individuals based on 
+#greater than 25% similar genotypes using the Loiselle statistic
+#before running PCoA and structure analysis.
+
 ##########################
 ######## Libraries #######
 ##########################
