@@ -1,3 +1,12 @@
+#Code below was the first pass at genetic analyses with the increased 
+#sampling from butternut's northern population range. 
+#First, we tested linkage disequilibrium, null alleles, 
+#and Hardy Weinberg equilibrium.
+#Next, a data frame including expected heterozygosity, allelic richness,
+#number of alleles, mean longtiude and latitude by population, and 
+#individual numbers. This table is included in full in the supplemental text 
+#of this manuscript.
+
 ######################################
 ########### Load Libraries ###########
 ######################################
@@ -36,35 +45,6 @@ rownames(butternutgen_reorg@tab) <- butternut_reorg_lonlat$Ind
 ##name populations in genind doc 
 levels(butternutgen_reorg@pop) <- butternut_24pop_names
 
-######################################
-############# basic stats ############
-######################################
-##reorg data file 
-bn_sumstats <- summary(butternutgen_reorg)
-
-##create poppr file 
-BN_poppr <- poppr(butternutgen_reorg)
-
-##expected heterozygosity 
-BN_hexp <- BN_poppr[1:24, 10]
-##allele numbers by pop 
-BN_nall <- bn_sumstats$pop.n.all
-##individual numbers
-BN_ind <- BN_poppr[1:24, 2:3]
-##allelic richness code 
-BN_alleles <-bn_sumstats$pop.n.all/length(butternutgen_reorg@loc.n.all)
-BN_all_rich <- colSums(allelic.richness(butternutgen_reorg)$Ar)/length(butternutgen_reorg@loc.n.all)	
-
-##create data frame 
-butternut_stat_df <- signif(cbind(butternut_mean_lon_lat[,2:3], BN_ind, BN_nall, BN_all_rich, BN_hexp),3)
-
-##name columns and rows 
-rownames(butternut_stat_df) <- butternut_24pop_names
-colnames(butternut_stat_df) <- c("Mean Longitude", "Mean Latitude", "Number of Individuals", "MLG","Number of Alleles", "Allelic Richness", "Expected Heterozygosity")
-
-##write out csv 
-write.csv(butternut_stat_df, "genetic_analyses_results\\butternut_stat_df.csv")
-
 ############################################################################
 ####### Run Genetic Diversity Checks like LD, HWE, Null Alleles  ###########
 ############################################################################
@@ -97,3 +77,33 @@ write.csv(bn_hwe, "genetic_analyses_results\\bn_hwe.csv")
 write.csv(bn_hwe_reorg, "genetic_analyses_results\\bn_hwe_reorg.csv")
 write.csv(ld_comp_df, "genetic_analyses_results\\ld_loci.csv")
 
+
+
+######################################
+############# basic stats ############
+######################################
+##reorg data file 
+bn_sumstats <- summary(butternutgen_reorg)
+
+##create poppr file 
+BN_poppr <- poppr(butternutgen_reorg)
+
+##expected heterozygosity 
+BN_hexp <- BN_poppr[1:24, 10]
+##allele numbers by pop 
+BN_nall <- bn_sumstats$pop.n.all
+##individual numbers
+BN_ind <- BN_poppr[1:24, 2:3]
+##allelic richness code 
+BN_alleles <-bn_sumstats$pop.n.all/length(butternutgen_reorg@loc.n.all)
+BN_all_rich <- colSums(allelic.richness(butternutgen_reorg)$Ar)/length(butternutgen_reorg@loc.n.all)	
+
+##create data frame 
+butternut_stat_df <- signif(cbind(butternut_mean_lon_lat[,2:3], BN_ind, BN_nall, BN_all_rich, BN_hexp),3)
+
+##name columns and rows 
+rownames(butternut_stat_df) <- butternut_24pop_names
+colnames(butternut_stat_df) <- c("Mean Longitude", "Mean Latitude", "Number of Individuals", "MLG","Number of Alleles", "Allelic Richness", "Expected Heterozygosity")
+
+##write out csv 
+write.csv(butternut_stat_df, "genetic_analyses_results\\butternut_stat_df.csv")
