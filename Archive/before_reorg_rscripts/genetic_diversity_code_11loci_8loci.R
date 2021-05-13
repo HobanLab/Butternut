@@ -27,7 +27,7 @@ setwd("G:/My Drive/Hoban_Lab_Docs/Projects/Butternut_JUCI")
 ######### Load Loci Documents - Genepop 11 loci ############
 ############################################################
 ##load in documents
-butternutgen_11loci <- read.genepop("DataFiles/24Populations/11loci/butternut_24pops.gen", ncode = 3)
+butternutgen_11loci <- read.genepop("DataFiles/24Populations/11loci/butternut_24pops_11loci.gen", ncode = 3)
 
 ##reduce based on missing data 
 butternutgen_nomd <- missingno(butternutgen_11loci, type = "geno", cutoff = 0.25, quiet = FALSE, freq = FALSE)
