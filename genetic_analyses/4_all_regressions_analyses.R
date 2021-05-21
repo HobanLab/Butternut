@@ -228,29 +228,23 @@ for (j in 1:4){
 	           title = title_legend[i])
 	    legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec","United States"), 
 	           pch = 17, col = c("firebrick1", "firebrick4","lightsalmon","dodgerblue"))
+	    
+	      if(j==4){dev.off()}
         }
     
       }
-     
+      
     }
+    dev.off()
 
 	}
 
 
+
 dev.off()
 dev.off()
 dev.off()
-dev.off()
-dev.off()
-dev.off()
-dev.off()
-dev.off()
-dev.off()
-dev.off()
-dev.off()
-dev.off()
-dev.off()
-dev.off()
+
 
 ##write out tables of r2 and p values 
 ##name rows and columns 
