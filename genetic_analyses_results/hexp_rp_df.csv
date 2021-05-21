@@ -1,0 +1,9 @@
+"","R2 Linear","p-value Linear","R2 Quadratic","p-value Quadratic"
+"Lat_AllPops",-0.00058,0.33,-0.026,0.53
+"Lat_woWI",-0.023,0.47,0.23,0.017
+"Lat_WithWI_woNB",0.009,0.3,0.06,0.2
+"Lat_woWI_woNB",-0.077,0.95,0.26,0.023
+"Dist_Edge_AllPops",-0.019,0.46,NA,NA
+"Dist_Edge_woWI",0.3,0.0058,NA,NA
+"Dist_Edge_WithWI_woNB",-0.021,0.43,NA,NA
+"Dist_Edge_woWI_woNB",0.3,0.021,NA,NA
