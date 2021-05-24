@@ -40,15 +40,15 @@ levels(butternutgen_reorg@pop) <- butternut_24pop_names
 ##create butternut poppr
 butternut_poppr <- poppr(butternutgen_reorg)
 
-##########################################################
-##
-##	 Linear Modeling on Allelic_Richness and Expected Heterozygosity
-##
-##########################################################
+###################################################################################
+#### Linear Modeling on Allelic_Richness and Expected Heterozygosity ##############
+###################################################################################
 
 #We have a nested loop below.  The outer loop goes over the statistics, alleles and heterozygosity
 #The inner loop goes over the four subsets of population groupings
 #These are the subsets: all pops, all minus WI, all minus NB, all minus (NB+WI)
+#Also includes regression type - quadratic vs. linear
+#And models distance to range edge to these two statistics
 which_pops<-list(1:24,c(1:15,17:21,24),7:24,c(7:15,17:21,24),
                  1:24,c(1:15,17:21,24),7:24,c(7:15,17:21,24),
                  1:24,c(1:15,17:21,24),7:24,c(7:15,17:21,24))
@@ -56,16 +56,20 @@ which_pops<-list(1:24,c(1:15,17:21,24),7:24,c(7:15,17:21,24),
 line_colors<-c("dodgerblue4","darkorchid4","dodgerblue4","darkorchid4",
                "darkslategray3", "darkseagreen4", "darkslategray3", "darkseagreen4")
 loc_legend<-c("topleft","bottomleft","topleft","bottomleft", 
+              "topleft","bottomleft","topleft","bottomleft",
               "topleft","bottomleft","topleft","bottomleft")
 title_legend<-c("With WI Populations", "Without WI Populations","With WI Populations", "Without WI Populations",
                 "With WI Populations", "Without WI Populations","With WI Populations", "Without WI Populations")
 
-reorg_allrich <- colSums(allelic.richness(butternutgen_reorg)$Ar)/length(butternutgen_reorg@loc.n.all)
+##calculate allelic richness
+reorg_allrich <- colMeans(allelic.richness(butternutgen_reorg)$Ar)
+
 ##create df with allelic richness and latitude
 all_rich_lat_df <- data.frame(butternut_mean_lonlat[,3], reorg_allrich)
+##create data frame with heterozygosity and latitude
 hexp_lat_df <- read.csv("genetic_analyses_results\\hexp_lat_df.csv")[,c(2,4)]
 
-##load in distance to edge df 
+##distance to edge data frames with genetic diversity stats
 all_rich_dist_edge_df <- read.csv("genetic_analyses_results\\allrich_dist_edge_df.csv")[,c(2:4)]
 hexp_dist_edge_df <- read.csv("genetic_analyses_results\\hexp_dist_edge_df.csv")[,c(2:4)]
 
@@ -76,7 +80,7 @@ allrich_rp <- matrix(nrow = 8, ncol = 4)
 hexp_rp <- matrix(nrow = 8, ncol = 4)
 
 #The loop will go over the two statistics, 1 = alleles, 2 = heterozygosity; 1 and 2 are compared to latitude
-##3 and 4 are compared to distance to edge 
+##3 and 4 are compared to distance to edge
 for (j in 1:4){
 
     #This will set y limits and axis titles to match the statistic
@@ -85,7 +89,7 @@ for (j in 1:4){
     if (j==3) {stat_dist_df<-all_rich_dist_edge_df; y_low<-5; y_high<-10; stat_name<-"Allelic Richness"}
     if (j==4) {stat_dist_df<-hexp_dist_edge_df; y_low<-0.74; y_high<-0.86; stat_name<-"Expected Heterozygosity"}
   
-  
+    ##creates color column and names rows and columns
     colnames(stat_lat_df) <- c("Mean_Lat", stat_name)
     rownames(stat_lat_df) <- butternut_24pop_names
     stat_lat_df$Color <- NA
@@ -95,9 +99,10 @@ for (j in 1:4){
     stat_lat_df[12:24,3] <- "dodgerblue"
 
     #This loop will go over the eight possibilities (the list which_pops), with and without NB and Wisconsin
-    #And linear vs. quadratic equations 
-    #On loops 1 and 3 it will create the PDF, e.g. with and without NB 
-    #On loops and 4 it prints the without Wisconsin on top of the existing plot
+    #1 and 3 are linear models with latitude
+    #5 and 7 are quadratic models with latitude and genetic diversity stats
+    #On loops 2, 4, 6, 8 it prints without Wisconsin regression on top of the existing plot
+    
     for (i in 1:8){
 	    #linear regressions 
       if (i==1&j==1) pdf("genetic_analyses_results\\all_rich_lat_linear.pdf", width = 8, height = 6)
@@ -229,18 +234,28 @@ for (j in 1:4){
 	    legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec","United States"), 
 	           pch = 17, col = c("firebrick1", "firebrick4","lightsalmon","dodgerblue"))
 	    
-	      if(j==4){dev.off()}
+	        }
         }
     
       }
       
     }
-    dev.off()
-
-	}
+   
 
 
 
+
+
+dev.off()
+dev.off()
+dev.off()
+dev.off()
+dev.off()
+dev.off()
+dev.off()
+dev.off()
+dev.off()
+dev.off()
 dev.off()
 dev.off()
 dev.off()
