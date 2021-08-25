@@ -41,6 +41,7 @@ projection <- c("+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=
 ####################### Running the Model ############################
 ######################################################################
 ##now limit to important variables
+#butternut_list_variables <- c("PwetM", "MDR","MTDQ", "MTwetQ", "precip_season")
 butternut_list_variables <- c("PwetM", "MDR","MTDQ", "MTwetQ", "precip_season")
 
 ##now load variables for model running
@@ -60,7 +61,7 @@ traindata <- na.omit(butternut_sel_df[-butternut_samp,])
 ####are either in the Elith tutorial or were related to finding range contraction and 
 ####expansion. 
 bf=c(.7)
-lr=c(0.07)
+lr=c(0.007)
 tc=c(2)
 ss=c(25)
 #Initiate the loop to identify the best number of trees. Call your model whatever you want- the "gbm.x = 4:7" are the columns of your climate variables and the "gbm.y=3" is the column on your csv file that has 0's and 1's for presence/absence 
@@ -90,7 +91,7 @@ for (i in 1:length(lr)){
         pred.train = predict.gbm(butternut_model, traindata, n.trees = butternut_model$gbm.call$best.trees, type = "response") 
         train=calc.deviance(traindata$PA, pred.train)
         
-        ##Model external metrics , calculated over an evaluation datasetevaluation
+        ##Model external metrics , calculated over an evaluation dataset evaluation
         pred_test = predict.gbm(butternut_model, testdata, n.trees = butternut_model$gbm.call$best.trees, type = "response") 
         d <- cbind(testdata$PA, pred_test) 
         pres <- d[d[,1]==1, 2]
@@ -99,17 +100,16 @@ for (i in 1:length(lr)){
         ext.AUC <- eval@auc
         
         #estimating the threshold to convert suitability values into binary maps (0/1)
-        th<-eval@t[which.max(eval@TPR + eval@TNR)]
+        th<-eval@t[which.max(eval@TPR+eval@TNR)]
         
-        independent=calc.deviance(testdata$PA, pred_test)  
+        #independent=calc.deviance(testdata$PA, pred_test)  
         #residual deviance was calculated between observed presence/absence data (v 1) and predicted probability of presence (v 2 ),
         ext.residual.deviance = calc.deviance(testdata$PA, pred_test, calc.mean=T)
         ext.null.deviance = calc.deviance(testdata$PA,rep(mean(testdata$PA),nrow(testdata)), calc.mean=T) 
         #Calculating deviance explained in the evaluation dataset. Portion of data withheld during model building
         ext.dev=(ext.null.deviance - ext.residual.deviance)/ext.null.deviance
         
-        
-        df<-rbind(df, data.frame(butternut_model_name,tc[k],lr[i],bf[j],ss[l],butternut_model$gbm.call$best.trees,cv.AUC,ext.AUC,int.dev,ext.dev,train,independent,ext.residual.deviance))
+        param_df <- rbind(data.frame(butternut_model_name,tc[k],lr[i],bf[j],ss[l],butternut_model$gbm.call$best.trees,cv.AUC,ext.AUC,int.dev,ext.dev,train,independent,ext.residual.deviance))
         
       }
     }
@@ -118,7 +118,7 @@ for (i in 1:length(lr)){
 th
 
 ##tree number save -- look at red printed text
-tree_number <- 550 
+tree_number <- 3900 
 
 ##summarize model - percent contribution of each variable
 summary(butternut_model)
@@ -280,11 +280,11 @@ for(i in 1:length(paleo_project)){
   hsm_list[[i]] <- predict(paleo_project[[i]],butternut_model,n.trees=tree_number,type='response')
 
   ##write Rasters out
-  writeRaster(hsm_list[[i]], paste0(time_period_names[[i]], "_hsm.tif"), overwrite = TRUE)
+  #writeRaster(hsm_list[[i]], paste0(time_period_names[[i]], "_hsm.tif"), overwrite = TRUE)
   
-  pdf(paste0(time_period_names[[i]], "_(", ybp[[i]], ")_hsm.pdf"))
-  plot(hsm_list[[i]], main = ybp[[i]])
-  dev.off()
+  #pdf(paste0(time_period_names[[i]], "_(", ybp[[i]], ")_hsm.pdf"))
+  #plot(hsm_list[[i]], main = ybp[[i]])
+  #dev.off()
   
 }
 
