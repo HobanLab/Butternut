@@ -1,4 +1,4 @@
-<b><p>Project Description</b></p>
+<b><p><h1 style="color:red;font-size:20px;"> Project Description</b></p></h1>
 This project file contains R Scripts created for a project on <i>Juglans cinerea</i>, also known as butternut. We are interested in determining how butternut's range has shifted in response to modern and past climate changes. Hoban et al. (2010) determined that butternut's genetic patterns were most inluenced by post-glacial migration northward, so this study added individuals sampled by the Jeanne Romero-Severson and Martin William's labs to identify if these results are consistent when adding more comprehensive sampling in this species' northern range. We also wanted to more specifically examine past sources of data to identify the range shifts of this taxon. Therefore the main focuses on this project are listed here: 
 
 ![Alt text](Images/worflow_github.jpg?raw=true "description of the multi-faceted approach to this project, using genetic analyses, hindcast species distribution models, and fossil pollen records to determine how butternut's past range shifts influenced current genetic diversity.") 
