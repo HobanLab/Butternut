@@ -29,8 +29,7 @@ data_files: Data files generated throughout the process of some of the analyses 
 
 genetic_analyses_results: All of the outputs from genetic analyses that were used in the final publication, including figures and data frames, are stored here. 
  
-References: 
-
+<b><p><h1 style="color:red;font-size:20px;">References</b></p></h1>
 Brown, J. L., Hill, D. J., Dolan, A. M., Carnaval, A. C., & Haywood, A. M. (2018). PaleoClim, high spatial resolution paleoclimate surfaces for global land areas. Scientific data, 5(1), 1-9
 
 Elith, J., Leathwick, J. R., & Hastie, T. (2008). A working guide to boosted regression trees. Journal of Animal Ecology, 77(4), 802-813.
