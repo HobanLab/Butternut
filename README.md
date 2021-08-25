@@ -5,7 +5,7 @@ This project file contains R Scripts created for a project on <i>Juglans cinerea
 
 The code written for performing two of the steps are in this Github; code for downloading, projecting, and creating pollen and glacier maps were created by Alissa Brown (https://github.com/alissab/juglans). This repository is split into multiple folders: Archive, Images, SDMs, and Genetic_Analyses.
 
-<b><p>Folder Descriptions</b></p>
+<b><p><h1 style="color:red;font-size:20px;">Folder Descriptions</b></p></h1>
 
 <b>Archive:</b> This is a folder for code that was used in initial steps of this analysis but did not end up in the final manuscript. Most of this code was performed on more individuals than ended up in the final results (were removed due to isolation or genetic relatedness) or for loci that differed based on scoring year. 
 
