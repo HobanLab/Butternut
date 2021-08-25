@@ -1,17 +1,17 @@
-<b><p> Project Description</b></p>
+<b><p>Project Description</b></p>
 This project file contains R Scripts created for a project on <i>Juglans cinerea</i>, also known as butternut. We are interested in determining how butternut's range has shifted in response to modern and past climate changes. Hoban et al. (2010) determined that butternut's genetic patterns were most inluenced by post-glacial migration northward, so this study added individuals sampled by the Jeanne Romero-Severson and Martin William's labs to identify if these results are consistent when adding more comprehensive sampling in this species' northern range. We also wanted to more specifically examine past sources of data to identify the range shifts of this taxon. Therefore the main focuses on this project are listed here: 
 
 ![Alt text](Images/worflow_github.jpg?raw=true "description of the multi-faceted approach to this project, using genetic analyses, hindcast species distribution models, and fossil pollen records to determine how butternut's past range shifts influenced current genetic diversity.") 
 
 The code written for performing two of the steps are in this Github; code for downloading, projecting, and creating pollen and glacier maps were created by Alissa Brown (https://github.com/alissab/juglans). This repository is split into multiple folders: Archive, Images, SDMs, and Genetic_Analyses.
 
-Here are descriptions of what's in each folder: 
+<b><p>Folder Descriptions</b></p>
 
-Archive: This is a folder for code that was used in initial steps of this analysis but did not end up in the final manuscript. Most of this code was performed on more individuals than ended up in the final results (were removed due to isolation or genetic relatedness) or for loci that differed based on scoring year. 
+<b>Archive:</b> This is a folder for code that was used in initial steps of this analysis but did not end up in the final manuscript. Most of this code was performed on more individuals than ended up in the final results (were removed due to isolation or genetic relatedness) or for loci that differed based on scoring year. 
 
-Images: This folder contains images generated for organizing the Github or population maps. 
+<b>Images:</b> This folder contains images generated for organizing the Github or population maps. 
 
-SDMs: This folder is for the code to run "species distribution models," specifically with boosted regression tree models as described in Elith et al. (2008). The code published here is based on code from Peter Breslin (ASU) and Fabio Suzart de Albuquerque. Part of this project was interested in identifying butternut's ecological preferences using species distribution modeling and then modeling habitat requirements into the past. This folder contains the code for performing all of these analyses. Here is a conceptual diagram of the steps and files names: 
+<b>SDMs:</b> This folder is for the code to run "species distribution models," specifically with boosted regression tree models as described in Elith et al. (2008). The code published here is based on code from Peter Breslin (ASU) and Fabio Suzart de Albuquerque. Part of this project was interested in identifying butternut's ecological preferences using species distribution modeling and then modeling habitat requirements into the past. This folder contains the code for performing all of these analyses. Here is a conceptual diagram of the steps and files names: 
 
 ![Alt text](Images/SDM_flowchat.jpg?raw=true "Flowchart for species distribution models, further described in text below") 
 
