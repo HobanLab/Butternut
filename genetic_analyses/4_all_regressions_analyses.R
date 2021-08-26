@@ -1,3 +1,6 @@
+#This code runs all of the regression analyses on geographic 
+#location with butternut population's genetic diversity 
+
 ##########################
 ######## Libraries #######
 ##########################
@@ -9,7 +12,7 @@ library(hierfstat)
 #####################################
 ############ Directories ############
 #####################################
-butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\Butternut"
 
 #####################################
 ############# Load Files ############
@@ -17,16 +20,16 @@ butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 setwd(butternut_drive)
 
 ##load current working reorganized genepop file 
-butternutgen_reorg <- read.genepop("data_files\\after_reorg\\reorg_gen_24pop.gen", ncode = 3)
+butternutgen_reorg <- read.genepop("Genetic_Analyses\\data_files\\after_reorg\\reorg_gen_24pop.gen", ncode = 3)
 
 ##load relatedness document to name individuals 
-reorg_relatedness <- read.csv("data_files\\after_reorg\\reorg_relatedness.csv")
+reorg_relatedness <- read.csv("Genetic_Analyses\\data_files\\after_reorg\\reorg_relatedness.csv")
 
 ##name individuals in the genind file  
 rownames(butternutgen_reorg@tab) <- reorg_relatedness$Ind
 
 ##load in mean longitude and latitude by population 
-butternut_mean_lonlat <- read.csv("data_files\\geographic_files\\butternut_coord_df.csv")
+butternut_mean_lonlat <- read.csv("Genetic_Analyses\\data_files\\geographic_files\\butternut_coord_df.csv")
 
 ##get pop names 
 butternut_24pop_names <- unique(reorg_relatedness$Pop)
@@ -67,11 +70,11 @@ reorg_allrich <- colMeans(allelic.richness(butternutgen_reorg)$Ar)
 ##create df with allelic richness and latitude
 all_rich_lat_df <- data.frame(butternut_mean_lonlat[,3], reorg_allrich)
 ##create data frame with heterozygosity and latitude
-hexp_lat_df <- read.csv("genetic_analyses_results\\hexp_lat_df.csv")[,c(2,4)]
+hexp_lat_df <- read.csv("Genetic_Analyses\\genetic_analyses_results\\hexp_lat_df.csv")[,c(2,4)]
 
 ##distance to edge data frames with genetic diversity stats
-all_rich_dist_edge_df <- read.csv("genetic_analyses_results\\allrich_dist_edge_df.csv")[,c(2:4)]
-hexp_dist_edge_df <- read.csv("genetic_analyses_results\\hexp_dist_edge_df.csv")[,c(2:4)]
+all_rich_dist_edge_df <- read.csv("Genetic_Analyses\\genetic_analyses_results\\allrich_dist_edge_df.csv")[,c(2:4)]
+hexp_dist_edge_df <- read.csv("Genetic_Analyses\\genetic_analyses_results\\hexp_dist_edge_df.csv")[,c(2:4)]
 
 ##data frames to save all rp values 
 allrich_rp <- matrix(nrow = 8, ncol = 4)
@@ -105,20 +108,20 @@ for (j in 1:4){
     
     for (i in 1:8){
 	    #linear regressions 
-      if (i==1&j==1) pdf("genetic_analyses_results\\all_rich_lat_linear.pdf", width = 8, height = 6)
-	    if (i==1&j==2) pdf("genetic_analyses_results\\hexp_lat_linear.pdf", width = 8, height = 6)
-	    if (i==3&j==1) pdf("genetic_analyses_results\\all_rich_lat_linear_Wo_NB.pdf", width = 8, height = 6)
-	    if (i==3&j==2) pdf("genetic_analyses_results\\hexp_lat_linear_Wo_NB.pdf", width = 8, height = 6)
+      if (i==1&j==1) pdf("Genetic_Analyses\\genetic_analyses_results\\all_rich_lat_linear.pdf", width = 8, height = 6)
+	    if (i==1&j==2) pdf("Genetic_Analyses\\genetic_analyses_results\\hexp_lat_linear.pdf", width = 8, height = 6)
+	    if (i==3&j==1) pdf("Genetic_Analyses\\genetic_analyses_results\\all_rich_lat_linear_Wo_NB.pdf", width = 8, height = 6)
+	    if (i==3&j==2) pdf("Genetic_Analyses\\genetic_analyses_results\\hexp_lat_linear_Wo_NB.pdf", width = 8, height = 6)
       ##quadratic regressions 
-      if (i==5&j==1) pdf("genetic_analyses_results\\all_rich_lat_quad.pdf", width = 8, height = 6)
-      if (i==5&j==2) pdf("genetic_analyses_results\\hexp_lat_quad.pdf", width = 8, height = 6)
-      if (i==7&j==1) pdf("genetic_analyses_results\\all_rich_lat_quad_Wo_NB.pdf", width = 8, height = 6)
-      if (i==7&j==2) pdf("genetic_analyses_results\\hexp_lat_quad_Wo_NB.pdf", width = 8, height = 6)
+      if (i==5&j==1) pdf("Genetic_Analyses\\genetic_analyses_results\\all_rich_lat_quad.pdf", width = 8, height = 6)
+      if (i==5&j==2) pdf("Genetic_Analyses\\genetic_analyses_results\\hexp_lat_quad.pdf", width = 8, height = 6)
+      if (i==7&j==1) pdf("Genetic_Analyses\\genetic_analyses_results\\all_rich_lat_quad_Wo_NB.pdf", width = 8, height = 6)
+      if (i==7&j==2) pdf("Genetic_Analyses\\genetic_analyses_results\\hexp_lat_quad_Wo_NB.pdf", width = 8, height = 6)
       ##distance to range edge linear regressions
-      if (i==1&j==3) pdf("genetic_analyses_results\\all_rich_dist_edge_linear.pdf", width = 8, height = 6)
-      if (i==1&j==4) pdf("genetic_analyses_results\\hexp_edge_linear.pdf", width = 8, height = 6)
-      if (i==3&j==3) pdf("genetic_analyses_results\\all_rich_dist_edge_linear_Wo_NB.pdf", width = 8, height = 6)
-      if (i==3&j==4) pdf("genetic_analyses_results\\hexp_edge_linear_Wo_NB.pdf", width = 8, height = 6)
+      if (i==1&j==3) pdf("Genetic_Analyses\\genetic_analyses_results\\all_rich_dist_edge_linear.pdf", width = 8, height = 6)
+      if (i==1&j==4) pdf("Genetic_Analyses\\genetic_analyses_results\\hexp_edge_linear.pdf", width = 8, height = 6)
+      if (i==3&j==3) pdf("Genetic_Analyses\\genetic_analyses_results\\all_rich_dist_edge_linear_Wo_NB.pdf", width = 8, height = 6)
+      if (i==3&j==4) pdf("Genetic_Analyses\\genetic_analyses_results\\hexp_edge_linear_Wo_NB.pdf", width = 8, height = 6)
 
   if(j==1|j==2){
 	##create plot
@@ -276,6 +279,6 @@ colnames(hexp_rp) <- c("R2 Linear", "p-value Linear", "R2 Quadratic", "p-value Q
 allrich_rp <- signif(allrich_rp,2)
 hexp_rp <- signif(hexp_rp,2)
 ##write out csv
-write.csv(allrich_rp, "genetic_analyses_results\\allrich_rp_df.csv")
-write.csv(hexp_rp, "genetic_analyses_results\\hexp_rp_df.csv")
+write.csv(allrich_rp, "Genetic_Analyses\\genetic_analyses_results\\allrich_rp_df.csv")
+write.csv(hexp_rp, "Genetic_Analyses\\genetic_analyses_results\\hexp_rp_df.csv")
 
