@@ -22,24 +22,24 @@ library(pegas)
 ############# Set directories ############
 ##########################################
 ##set directory to all butternut files 
-butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\Butternut"
 
 ##########################################
 ############ Load in files ###############
 ##########################################
 setwd(butternut_drive)
 
-##load genind 
-butternutgen_nomd <- arp2gen("data_files\\after_reorg\\butternutgen_nomd.arp")
+##convert
+#butternutgen_nomd <- arp2gen("Genetic_Analyses\\data_files\\after_reorg\\butternutgen_nomd.arp")
 
 ##remove missing data 
-butternutgen_reorg <- read.genepop("data_files\\after_reorg\\butternutgen_nomd.gen", ncode = 3)
+butternutgen_reorg <- read.genepop("Genetic_Analyses\\data_files\\after_reorg\\butternutgen_nomd.gen", ncode = 3)
 
 ##load lat lon doc for individual names and population names 
-butternut_reorg_lonlat <- read.csv("data_files\\after_reorg\\reorg_lon_lat.csv")
+butternut_reorg_lonlat <- read.csv("Genetic_Analyses\\data_files\\after_reorg\\reorg_lon_lat.csv")
 
 ##load in mean lon and lat document 
-butternut_mean_lon_lat <- read.csv("data_files\\geographic_files\\butternut_coord_df.csv")
+butternut_mean_lon_lat <- read.csv("Genetic_Analyses\\data_files\\geographic_files\\butternut_coord_df.csv")
 
 ##create population name doc
 butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
@@ -78,9 +78,9 @@ ld_comp <- pair.ia(butternutgen_reorg, sample = 1000)
 ld_comp_df <- data.frame(round(ld_comp,digits = 2))
 
 ##write out data files 
-write.csv(bn_hwe, "genetic_analyses_results\\bn_hwe_overall.csv")
-write.csv(bn_hwe_bypops, "genetic_analyses_results\\bn_hwe_bypop.csv")
-write.csv(ld_comp_df, "genetic_analyses_results\\ld_loci.csv")
+write.csv(bn_hwe, "Genetic_Analyses\\genetic_analyses_results\\bn_hwe_overall.csv")
+write.csv(bn_hwe_bypops, "Genetic_Analyses\\genetic_analyses_results\\bn_hwe_bypop.csv")
+write.csv(ld_comp_df, "Genetic_Analyses\\genetic_analyses_results\\ld_loci.csv")
 
 ######################################
 ############# basic stats ############
@@ -109,4 +109,4 @@ rownames(butternut_stat_df) <- butternut_24pop_names
 colnames(butternut_stat_df) <- c("Mean Longitude", "Mean Latitude", "Number of Individuals", "MLG","Number of Alleles", "Allelic Richness", "Expected Heterozygosity")
 
 ##write out csv 
-write.csv(butternut_stat_df, "genetic_analyses_results\\butternut_stat_df.csv")
+write.csv(butternut_stat_df, "Genetic_Analyses\\genetic_analyses_results\\butternut_stat_df.csv")
