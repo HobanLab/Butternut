@@ -13,7 +13,7 @@ library(diveRsity)
 ############ Directories ############
 #####################################
 ##set directory to all butternut files 
-butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\Butternut"
 
 #####################################
 ############# Load Files ############
@@ -25,10 +25,10 @@ setwd(butternut_drive)
 #butternutgen_red <- arp2gen("data_files\\after_reorg\\butternutgen_relatedness_reduced.arp")
 
 ##load genind file 
-butternutgen_relate <- read.genepop("data_files\\after_reorg\\butternutgen_relatedness_reduced.gen", ncode = 3)
+butternutgen_relate <- read.genepop("Genetic_Analyses\\data_files\\after_reorg\\butternutgen_relatedness_reduced.gen", ncode = 3)
 
 ##load relatedness data frame 
-reorg_relatedness_df <- read.csv("data_files\\after_reorg\\reorg_relatedness_reduced.csv")
+reorg_relatedness_df <- read.csv("Genetic_Analyses\\data_files\\after_reorg\\reorg_relatedness_reduced.csv")
 
 ##create pop name code 
 butternut_24pop_names <- unique(reorg_relatedness_df$Pop)
@@ -56,7 +56,7 @@ pc1 <- (butternut_reorg_pco$eig[[1]]/sum_eig)*100
 pc2 <- (butternut_reorg_pco$eig[[2]]/sum_eig)*100
 
 ##PCOA of the reorg
-pdf("genetic_analyses_results\\PCoA.pdf", width = 8, height = 6)
+pdf("Genetic_Analyses\\genetic_analyses_results\\PCoA.pdf", width = 8, height = 6)
 ##plot New Brunswick populations
 plot(butternut_pco_nb$A1, butternut_pco_nb$A2, pch = 17, 
      xlab = paste0("PC1", sep = " ", "(",round(pc1, digits = 1), "%", ")"), 
