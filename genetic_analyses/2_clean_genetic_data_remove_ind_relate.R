@@ -20,7 +20,7 @@ library(poppr)
 #####################################
 ############ Directories ############
 #####################################
-butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\Butternut"
 
 #####################################
 ############# Load Files ############
@@ -28,13 +28,13 @@ butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 setwd(butternut_drive)
 
 ##load current working reorganized genepop file 
-butternutgen_reorg <- read.genepop("data_files\\after_reorg\\postgeo_rebin_24pop.gen", ncode = 3)
+butternutgen_reorg <- read.genepop("Genetic_Analyses\\data_files\\after_reorg\\postgeo_rebin_24pop.gen", ncode = 3)
 
 ##reduce genind file for individuals with greater than 25% missing data 
 butternutgen_nomd <- missingno(butternutgen_reorg, type = "geno", cutoff = 0.25, quiet = FALSE, freq = FALSE)
 
 ##load relatedness file 
-reorg_relatedness <- read.csv("data_files\\after_reorg\\reorg_relatedness.csv")
+reorg_relatedness <- read.csv("Genetic_Analyses\\data_files\\after_reorg\\reorg_relatedness.csv")
 
 ###################################################################
 ############# Reduced Individuals based on Relatedness ############
@@ -72,10 +72,11 @@ reorg_relatedness_reduced <- reorg_relatedness[!reorg_relatedness$Ind %in% relat
 levels(butternutgen_relatedness_reduced@pop) <- butternut_24pop_names
  
 ##write out genind file in genalex format
-setwd("data_files\\after_reorg")
+setwd("Genetic_Analyses\\data_files\\after_reorg")
 butternutgen_relatedness_reduced <- genind2genalex(butternutgen_relatedness_reduced, 
                                                    filename = "butternutgen_relatedness_reduced.csv")
 write.csv(reorg_relatedness_reduced, "reorg_relatedness_reduced.csv")
 
 ##write out no missing data genind file and then convert to genind in genalex
 butternutgen_nomd <- genind2genalex(butternutgen_nomd, filename = "butternutgen_nomd.csv")
+
