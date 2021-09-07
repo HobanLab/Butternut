@@ -34,6 +34,18 @@ data_files: Data files generated throughout the process of some of the analyses 
 
 genetic_analyses_results: All of the outputs from genetic analyses that were used in the final publication, including figures and data frames, are stored here. 
  
+<b><p><h1 style="color:red;font-size:20px;">R Information</b></p></h1>
+
+R version 4.0.5 (2021-03-31)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19041)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] poppr_2.9.2      Demerelate_0.9-3 adegenet_2.1.3   ade4_1.7-17    diveRsity_1.9.90    rgdal_1.5-23 sp_1.4-5 pegas_1.0-1        ape_5.5            PopGenReport_3.0.4 hierfstat_0.5-7 poppr_2.9.2     
+
 <b><p><h1 style="color:red;font-size:20px;">References</b></p></h1>
 Brown, J. L., Hill, D. J., Dolan, A. M., Carnaval, A. C., & Haywood, A. M. (2018). PaleoClim, high spatial resolution paleoclimate surfaces for global land areas. Scientific data, 5(1), 1-9
 
