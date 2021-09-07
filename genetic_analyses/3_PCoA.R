@@ -80,3 +80,6 @@ legend('topleft', pch = 17, col = c("firebrick1","firebrick4", "lightsalmon", "d
 abline(h = 0)
 abline(v = 0)
 dev.off()
+
+##run session info 
+sessionInfo()

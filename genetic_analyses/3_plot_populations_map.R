@@ -1,3 +1,5 @@
+####This code will run the 24 butternut populations and plot them on a 
+###map of North America
 ##########################
 ######## Libraries #######
 ##########################
@@ -142,3 +144,6 @@ butternut_coord_df <- cbind(as.numeric(butternut_mean_lon), as.numeric(butternut
 rownames(butternut_coord_df) <- butternut_24pop_names
 colnames(butternut_coord_df) <- c("Mean_Lon","Mean_Lat","col")
 write.csv(butternut_coord_df, "butternut_coord_df.csv")
+
+##run sessionInfo
+sessionInfo()

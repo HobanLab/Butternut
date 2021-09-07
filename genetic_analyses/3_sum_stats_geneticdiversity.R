@@ -110,3 +110,6 @@ colnames(butternut_stat_df) <- c("Mean Longitude", "Mean Latitude", "Number of I
 
 ##write out csv 
 write.csv(butternut_stat_df, "Genetic_Analyses\\genetic_analyses_results\\butternut_stat_df.csv")
+
+##run sessionInfo
+sessionInfo()

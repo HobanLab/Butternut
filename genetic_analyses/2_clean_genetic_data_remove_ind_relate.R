@@ -80,3 +80,4 @@ write.csv(reorg_relatedness_reduced, "reorg_relatedness_reduced.csv")
 ##write out no missing data genind file and then convert to genind in genalex
 butternutgen_nomd <- genind2genalex(butternutgen_nomd, filename = "butternutgen_nomd.csv")
 
+sessionInfo()

@@ -35,3 +35,5 @@ for(a in loci){
 }
 
 dev.off()
+
+sessionInfo()

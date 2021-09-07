@@ -282,3 +282,5 @@ hexp_rp <- signif(hexp_rp,2)
 write.csv(allrich_rp, "Genetic_Analyses\\genetic_analyses_results\\allrich_rp_df.csv")
 write.csv(hexp_rp, "Genetic_Analyses\\genetic_analyses_results\\hexp_rp_df.csv")
 
+##run sessionInfo
+sessionInfo()
