@@ -95,10 +95,11 @@ pdf("genetic_analyses_results\\all_rich_lat_linear.pdf", width = 8, height = 6)
 
 ##create plot
 plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], pch = 17, 
-     main = "Allelic Richness Compared to Mean Latitude", ylab = "Allelic Richness", 
+     ylab = "Allelic Richness", 
      xlab = "Mean Latitude", cex = (butternut_poppr[1:24,2]/50), ylim = c(5,10))
-##write text
-text(all_rich_lat_df[,2]~all_rich_lat_df[,1], labels = butternut_24pop_names, cex = 0.8, pos = 1)
+
+##label Wisconsin populations
+
 ##write a linear model
 abline(allrich_lm, col = "dodgerblue4")
 abline(allrich_red_lm, col = "darkorchid4")
@@ -164,29 +165,28 @@ allrich_quad_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                                list(MYOTHERVALUE = format(allrich_quad_red_pvalue, digits = 2)))[2]
 
 ##Now Plot 
-pdf("G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\all_rich_lat_quad.pdf", 
-    width = 8, height = 6)
+pdf("Genetic_Analyses\\genetic_analyses_results\\allrich_lat_quad.pdf", width = 8, height = 6)
 
 ##start plot 
 plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], 
      pch = 17, ylab = "Allelic Richness", 
      xlab = "Mean Latitude", 
-     cex = (butternut_poppr[1:24,2]/50), ylim = c(5,10))
+     cex = (butternut_poppr[1:24,2]/30), ylim = c(5,10))
 ##label text
-text(all_rich_lat_df[16,2]~all_rich_lat_df[16,1], labels = "W3", cex = 0.8, pos = 1)
-text(all_rich_lat_df[22,2]~all_rich_lat_df[22,1], labels = "W1", cex = 0.8, pos = 1)
-text(all_rich_lat_df[23,2]~all_rich_lat_df[23,1], labels = "W2", cex = 0.8, pos = 1)
+text(all_rich_lat_df[16,2]~all_rich_lat_df[16,1], labels = "WI3", pos = 1)
+text(all_rich_lat_df[22,2]~all_rich_lat_df[22,1], labels = "WI1", pos = 1)
+text(all_rich_lat_df[23,2]~all_rich_lat_df[23,1], labels = "WI2", pos = 1)
 ##draw quadratic lines
 lines(points_values, points_counts, col = "darkslategray3", lwd = 3)
 lines(points_values_21, points_counts_21, col = "darkseagreen4", lwd = 3)
 ##draw legends
 legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec", "United States"), pch = 17, 
-       col = c("firebrick1", "firebrick4", "lightsalmon","dodgerblue"))
+       col = c("firebrick1", "firebrick4", "lightsalmon","dodgerblue"), cex = 1.2)
 legend('topleft', legend = allrich_quad_rp, bty = 'n', border = "black", 
-       pt.cex = 1, cex = 0.8, pch = 17, col = "darkslategray3",
+       pt.cex = 1, cex = 1.2, pch = 17, col = "darkslategray3",
        title = "With WI Populations")
 legend('bottomleft', legend = allrich_quad_red_rp, bty = 'n', border = "black", 
-       pt.cex = 1, cex = 0.8, pch = 17, col = "darkseagreen4",
+       pt.cex = 1, cex = 1.2, pch = 17, col = "darkseagreen4",
        title = "Without WI Populations")
 dev.off()
 

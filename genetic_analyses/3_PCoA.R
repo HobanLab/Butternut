@@ -61,14 +61,21 @@ pdf("Genetic_Analyses\\genetic_analyses_results\\PCoA.pdf", width = 8, height = 
 plot(butternut_pco_nb$A1, butternut_pco_nb$A2, pch = 17, 
      xlab = paste0("PC1", sep = " ", "(",round(pc1, digits = 1), "%", ")"), 
      ylab = paste0("PC2", sep = " ", "(",round(pc2, digits = 1), "%",")"), 
-     main = "PCoA 24 Populations Reorg", col = "firebrick1", xlim = c(-0.3, 0.3), ylim = c(-0.3, 0.3))
+     col = "firebrick1", xlim = c(-0.2, 0.2), ylim = c(-0.3, 0.3))
+##plot Ontario populations
+points(butternut_pco_ot$A1, butternut_pco_ot$A2, pch = 17, col = "firebrick4")
+##plot Quebec populations 
+points(butternut_pco_qu$A1, butternut_pco_qu$A2, pch = 17, col = "lightsalmon")
 ##plot US populations 
 points(butternut_reorg_pco[12:24,]$li$A1, butternut_reorg_pco[12:24,]$li$A2, col = "dodgerblue", pch = 17)
-text(butternut_reorg_pco[12:24,]$li$A1, butternut_reorg_pco[12:24,]$li$A2, 
-     label = rownames(butternut_reorg_pco[12:24,]$li), pos = 4, cex = 0.8)
+##label Wisconsin populations 
+text(butternut_reorg_pco$li$A1[22], butternut_reorg_pco$li$A2[22], labels = "WI1", pos = 1, cex = 1.2)
+text(butternut_reorg_pco$li$A1[23], butternut_reorg_pco$li$A2[23], labels = "WI2", pos = 1, cex = 1.2)
+text(butternut_reorg_pco$li$A1[16], butternut_reorg_pco$li$A2[16], labels = "WI3", pos = 1, cex = 1.2)
+
 ##create legend 
 legend('topleft', pch = 17, col = c("firebrick1","firebrick4", "lightsalmon", "dodgerblue"), 
-       legend = c("New Brunswick", "Ontario", "Quebec", "United States"))
+       legend = c("New Brunswick", "Ontario", "Quebec", "United States"), cex = 1.2)
 abline(h = 0)
 abline(v = 0)
 dev.off()
