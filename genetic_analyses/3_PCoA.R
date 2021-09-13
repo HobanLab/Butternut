@@ -62,14 +62,6 @@ plot(butternut_pco_nb$A1, butternut_pco_nb$A2, pch = 17,
      xlab = paste0("PC1", sep = " ", "(",round(pc1, digits = 1), "%", ")"), 
      ylab = paste0("PC2", sep = " ", "(",round(pc2, digits = 1), "%",")"), 
      main = "PCoA 24 Populations Reorg", col = "firebrick1", xlim = c(-0.3, 0.3), ylim = c(-0.3, 0.3))
-##name with populations 
-text(butternut_pco_nb$A1, butternut_pco_nb$A2, label = rownames(butternut_pco_nb), pos = 2, cex = 0.8)
-##plot Ontario populations
-points(butternut_pco_ot$A1, butternut_pco_ot$A2,pch = 17, col = "firebrick4")
-text(butternut_pco_ot$A1, butternut_pco_ot$A2, label = rownames(butternut_pco_ot), pos = 3, cex = 0.8)
-##plot Quebec populations 
-points(butternut_pco_qu$A1, butternut_pco_qu$A2,pch = 17, col = "lightsalmon")
-text(butternut_pco_qu$A1, butternut_pco_qu$A2, label = rownames(butternut_pco_qu), pos = 3, cex = 0.8)
 ##plot US populations 
 points(butternut_reorg_pco[12:24,]$li$A1, butternut_reorg_pco[12:24,]$li$A2, col = "dodgerblue", pch = 17)
 text(butternut_reorg_pco[12:24,]$li$A1, butternut_reorg_pco[12:24,]$li$A2, 

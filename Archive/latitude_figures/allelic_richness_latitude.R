@@ -9,7 +9,7 @@ library(hierfstat)
 #####################################
 ############ Directories ############
 #####################################
-butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
+butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\Butternut"
 
 #####################################
 ############# Load Files ############
@@ -17,16 +17,16 @@ butternut_drive <- "C:\\Users\\eschumacher\\Documents\\GitHub\\butternut"
 setwd(butternut_drive)
 
 ##load current working reorganized genepop file 
-butternutgen_reorg <- read.genepop("data_files\\after_reorg\\reorg_gen_24pop.gen", ncode = 3)
+butternutgen_reorg <- read.genepop("Genetic_Analyses\\data_files\\after_reorg\\reorg_gen_24pop.gen", ncode = 3)
 
 ##load relatedness document to name individuals 
-reorg_relatedness <- read.csv("data_files\\after_reorg\\reorg_relatedness.csv")
+reorg_relatedness <- read.csv("Genetic_Analyses\\data_files\\after_reorg\\reorg_relatedness.csv")
 
 ##name individuals in the genind file  
 rownames(butternutgen_reorg@tab) <- reorg_relatedness$Ind
 
 ##load in mean longitude and latitude by population 
-butternut_mean_lonlat <- read.csv("data_files\\geographic_files\\butternut_coord_df.csv")
+butternut_mean_lonlat <- read.csv("Genetic_Analyses\\data_files\\geographic_files\\butternut_coord_df.csv")
 
 ##get pop names 
 butternut_24pop_names <- unique(reorg_relatedness$Pop)
@@ -41,7 +41,7 @@ levels(butternutgen_reorg@pop) <- butternut_24pop_names
 butternut_poppr <- poppr(butternutgen_reorg)
 
 ##load min and maximum latitude and longitude document 
-butternut_lonlat_max_min_df <- read.csv("data_files\\geographic_files\\max_min_lonlat_df.csv")
+butternut_lonlat_max_min_df <- read.csv("Genetic_Analyses\\data_files\\geographic_files\\max_min_lonlat_df.csv")
 
 ##########################################################
 ################### Linear Modeling ######################
@@ -164,15 +164,18 @@ allrich_quad_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                                list(MYOTHERVALUE = format(allrich_quad_red_pvalue, digits = 2)))[2]
 
 ##Now Plot 
-pdf("genetic_analyses_results\\all_rich_lat_quad.pdf", width = 8, height = 6)
+pdf("G:\\My Drive\\Hoban_Lab_Docs\\Projects\\Butternut_JUCI\\Graphical_Stat_Results\\PostIndRemoval\\24pop\\Reorg_Results\\GeneticDiversity\\all_rich_lat_quad.pdf", 
+    width = 8, height = 6)
 
 ##start plot 
 plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], 
-     pch = 17, main = "Allelic Richness Compared to Mean Latitude", ylab = "Allelic Richness", 
+     pch = 17, ylab = "Allelic Richness", 
      xlab = "Mean Latitude", 
      cex = (butternut_poppr[1:24,2]/50), ylim = c(5,10))
 ##label text
-text(all_rich_lat_df[,2]~all_rich_lat_df[,1], labels = butternut_24pop_names, cex = 0.8, pos = 1)
+text(all_rich_lat_df[16,2]~all_rich_lat_df[16,1], labels = "W3", cex = 0.8, pos = 1)
+text(all_rich_lat_df[22,2]~all_rich_lat_df[22,1], labels = "W1", cex = 0.8, pos = 1)
+text(all_rich_lat_df[23,2]~all_rich_lat_df[23,1], labels = "W2", cex = 0.8, pos = 1)
 ##draw quadratic lines
 lines(points_values, points_counts, col = "darkslategray3", lwd = 3)
 lines(points_values_21, points_counts_21, col = "darkseagreen4", lwd = 3)
