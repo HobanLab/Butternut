@@ -117,8 +117,8 @@ for (i in 1:length(lr)){
 }
 th
 
-##tree number save -- look at red printed text
-tree_number <- 3900 
+##check red text for tree number 
+tree_number <- 3900
 
 ##summarize model - percent contribution of each variable
 summary(butternut_model)
