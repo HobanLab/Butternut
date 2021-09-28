@@ -136,14 +136,16 @@ butternut_dist <- dist2Line(butternut_coords_df, butternut_buffer_trans)
 
 ##add regional names 
 butternut_regions <- c("New Brunswick","New Brunswick", "New Brunswick", "New Brunswick", "New Brunswick",
-                       "New Brunswick","New Brunswick", "Ontario","Quebec","Ontario","Ontario","Quebec",
+                       "New Brunswick", "Ontario", "Quebec","Ontario","Ontario","Quebec",
                        "United States", "United States", "United States", "United States", "United States",
                        "United States", "United States", "United States", "United States", "United States", 
-                       "United States", "United States")
+                       "United States", "United States", "United States")
 
 ##create data frame 
-butternut_stat_df <- cbind(butternut_regions, signif(cbind(butternut_coords_df[,c(1:2)], (butternut_dist[,1]/1000), 
-                                        BN_ind, BN_nall, BN_all_rich, BN_hexp),3))
+butternut_stat_df <- cbind(butternut_coords_df[,c(1:2)], (butternut_dist[,1]/1000), 
+                                        BN_ind, BN_nall, BN_all_rich, BN_hexp)
+
+butternut_stat_df <- cbind(butternut_regions, butternut_stat_df)
 
 ##name columns and rows 
 rownames(butternut_stat_df) <- c(1:24)

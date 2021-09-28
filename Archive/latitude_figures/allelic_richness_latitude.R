@@ -128,7 +128,7 @@ quadratic_model_lm <-lm(all_rich_lat_df[,2] ~
 quadratic_model_lm_sum <- summary(quadratic_model_lm)
 
 #calculate model out of points 
-points_values <- seq(butternut_lonlat_max_min_df[1,3], butternut_lonlat_max_min_df[2,3], 0.5)
+points_values <- seq(min(all_rich_lat_df[,1]), max(all_rich_lat_df[,1]), 0.5)
 points_counts <- predict(quadratic_model_lm, list(points=points_values, points2=points_values^2))
 
 ###pointsance without wisconsin populations
@@ -141,7 +141,7 @@ quadratic_21pops_model_lm <-lm(allrich_lat_red_df[,2] ~
 quadratic_21pops_model_lm_sum <- summary(quadratic_21pops_model_lm)
 
 ##values and pointsance
-points_values_21 <- seq(butternut_lonlat_max_min_df[1,3], butternut_lonlat_max_min_df[2,3], 0.5)
+points_values_21 <- seq(min(allrich_lat_red_df[,1]), max(allrich_lat_red_df[,1]), 0.5)
 points_counts_21 <- predict(quadratic_21pops_model_lm,list(points_21=points_values_21, points2_21=points_values_21^2))
 
 ##create r2 and p values

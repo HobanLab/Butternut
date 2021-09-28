@@ -43,6 +43,9 @@ levels(butternutgen_reorg@pop) <- butternut_24pop_names
 ##create butternut poppr
 butternut_poppr <- poppr(butternutgen_reorg)
 
+##load in genetic diversity stats
+butternut_gendiv_stats <- read.csv("Genetic_Analyses\\genetic_analyses_results\\butternut_stat_df.csv")
+
 ###################################################################################
 #### Linear Modeling on Allelic_Richness and Expected Heterozygosity ##############
 ###################################################################################
@@ -64,17 +67,14 @@ loc_legend<-c("topleft","bottomleft","topleft","bottomleft",
 title_legend<-c("With WI Populations", "Without WI Populations","With WI Populations", "Without WI Populations",
                 "With WI Populations", "Without WI Populations","With WI Populations", "Without WI Populations")
 
-##calculate allelic richness
-reorg_allrich <- colMeans(allelic.richness(butternutgen_reorg)$Ar)
-
 ##create df with allelic richness and latitude
-all_rich_lat_df <- data.frame(butternut_mean_lonlat[,3], reorg_allrich)
+all_rich_lat_df <- data.frame(cbind(butternut_gendiv_stats[,4], butternut_gendiv_stats[,9]))
 ##create data frame with heterozygosity and latitude
-hexp_lat_df <- read.csv("Genetic_Analyses\\genetic_analyses_results\\hexp_lat_df.csv")[,c(2,4)]
+hexp_lat_df <- data.frame(cbind(butternut_gendiv_stats[,4], butternut_gendiv_stats[,10]))
 
 ##distance to edge data frames with genetic diversity stats
-all_rich_dist_edge_df <- read.csv("Genetic_Analyses\\genetic_analyses_results\\allrich_dist_edge_df.csv")[,c(2:4)]
-hexp_dist_edge_df <- read.csv("Genetic_Analyses\\genetic_analyses_results\\hexp_dist_edge_df.csv")[,c(2:4)]
+all_rich_dist_edge_df <- data.frame(cbind(butternut_gendiv_stats[,5], butternut_gendiv_stats[,9]))
+hexp_dist_edge_df <- data.frame(cbind(butternut_gendiv_stats[,5], butternut_gendiv_stats[,10]))
 
 ##data frames to save all rp values 
 allrich_rp <- matrix(nrow = 8, ncol = 4)

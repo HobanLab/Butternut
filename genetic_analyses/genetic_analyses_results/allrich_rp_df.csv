@@ -3,7 +3,7 @@
 "Lat_woWI",0.26,0.011,0.61,6e-04
 "Lat_WithWI_woNB",0.12,0.085,0.19,0.16
 "Lat_woWI_woNB",0.023,0.27,0.4,0.011
-"Dist_Edge_AllPops",0.052,0.15,NA,NA
-"Dist_Edge_woWI",0.48,0.00031,NA,NA
-"Dist_Edge_WithWI_woNB",-0.015,0.4,NA,NA
-"Dist_Edge_woWI_woNB",0.3,0.02,NA,NA
+"Dist_Edge_AllPops",0.15,0.037,NA,NA
+"Dist_Edge_woWI",0.59,2.9e-05,NA,NA
+"Dist_Edge_WithWI_woNB",0.079,0.14,NA,NA
+"Dist_Edge_woWI_woNB",0.37,0.0097,NA,NA
