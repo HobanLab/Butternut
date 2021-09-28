@@ -109,7 +109,10 @@ coord_df_proj <- spTransform(coord_df, proj_out)
 setwd(butternut_drive)
 butternut_buffer <- readOGR(dsn = paste0(butternut_drive,"\\Genetic_Analyses\\data_files\\geographic_files") , 
                             layer = "butternut_buffer")
-butternut_buffer_trans <- sp::spTransform(na_shp, proj_out)
+butternut_buffer_trans <- sp::spTransform(butternut_buffer, "+proj=longlat +ellps=WGS84 +datum=WGS84")
+
+##calculate dist2line
+butternut_dist <- dist2Line(coord_df, butternut_buffer_trans)
 
 ##list of 24 colors for populations 
 butternut_col <- c("darkmagenta", "darkorchid3", "deeppink3", "darkviolet", "deeppink","lightpink",

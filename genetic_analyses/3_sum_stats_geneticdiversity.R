@@ -4,7 +4,7 @@
 #First, we tested linkage disequilibrium, null alleles, 
 #and Hardy Weinberg equilibrium.
 #Next, a data frame including expected heterozygosity, allelic richness,
-#number of alleles, mean longtiude and latitude by population, and 
+#number of alleles, mean longtiude and latitude by population, distance to range edge, and 
 #individual numbers. This table is included in full in the supplemental text 
 #of this manuscript.
 
@@ -17,6 +17,9 @@ library(poppr)
 library(hierfstat)
 library(PopGenReport)
 library(pegas)
+library(geosphere)
+library(sp)
+library(rgdal)
 
 ##########################################
 ############# Set directories ############
@@ -41,14 +44,18 @@ butternut_reorg_lonlat <- read.csv("Genetic_Analyses\\data_files\\after_reorg\\r
 ##load in mean lon and lat document 
 butternut_mean_lon_lat <- read.csv("Genetic_Analyses\\data_files\\geographic_files\\butternut_coord_df.csv")
 
-##create population name doc
-butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
-
 ##name individuals in genind doc 
 rownames(butternutgen_reorg@tab) <- butternut_reorg_lonlat$Ind
 
-##name populations in genind doc 
+##population names document 
+butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
+
+##name populations in genind 
 levels(butternutgen_reorg@pop) <- butternut_24pop_names
+
+##load range buffer for butternut
+butternut_buffer <- readOGR(dsn = paste0(butternut_drive,"\\Genetic_Analyses\\data_files\\geographic_files") , 
+                            layer = "butternut_buffer")
 
 ############################################################################
 ####### Run Genetic Diversity Checks like LD, HWE, Null Alleles  ###########
@@ -101,12 +108,48 @@ BN_ind <- BN_poppr[1:24, 2:3]
 BN_alleles <-bn_sumstats$pop.n.all/length(butternutgen_reorg@loc.n.all)
 BN_all_rich <- colMeans(allelic.richness(butternutgen_reorg)$Ar)	
 
+####Geographic analyses for each population
+##calculate mean longitude and latitude for each population
+butternut_mean_lon <- matrix()
+butternut_mean_lat <- matrix()
+
+##loops for mean lat/lon
+for(pop in butternut_24pop_names){
+  
+  butternut_mean_lon[pop] <- mean(butternut_reorg_lonlat[butternut_reorg_lonlat$Pop == pop,][,3])  
+  
+}
+
+for(pop in butternut_24pop_names){
+  
+  butternut_mean_lat[pop] <- mean(butternut_reorg_lonlat[butternut_reorg_lonlat$Pop == pop,][,4])  
+  
+}
+##now combine into dataframes 
+butternut_coords_df <- cbind(butternut_mean_lon, butternut_mean_lat)[-1,]
+
+#project range extent buffer to the same extent as population lon/lat
+butternut_buffer_trans <- sp::spTransform(butternut_buffer, "+proj=longlat +ellps=WGS84 +datum=WGS84")
+
+##now calculate distance to butternut range edge 
+butternut_dist <- dist2Line(butternut_coords_df, butternut_buffer_trans)
+
+##add regional names 
+butternut_regions <- c("New Brunswick","New Brunswick", "New Brunswick", "New Brunswick", "New Brunswick",
+                       "New Brunswick","New Brunswick", "Ontario","Quebec","Ontario","Ontario","Quebec",
+                       "United States", "United States", "United States", "United States", "United States",
+                       "United States", "United States", "United States", "United States", "United States", 
+                       "United States", "United States")
+
 ##create data frame 
-butternut_stat_df <- signif(cbind(butternut_mean_lon_lat[,2:3], BN_ind, BN_nall, BN_all_rich, BN_hexp),3)
+butternut_stat_df <- cbind(butternut_regions, signif(cbind(butternut_coords_df[,c(1:2)], (butternut_dist[,1]/1000), 
+                                        BN_ind, BN_nall, BN_all_rich, BN_hexp),3))
 
 ##name columns and rows 
-rownames(butternut_stat_df) <- butternut_24pop_names
-colnames(butternut_stat_df) <- c("Mean Longitude", "Mean Latitude", "Number of Individuals", "MLG","Number of Alleles", "Allelic Richness", "Expected Heterozygosity")
+rownames(butternut_stat_df) <- c(1:24)
+colnames(butternut_stat_df) <- c("Region","Mean Longitude", "Mean Latitude", "Distance to Range Edge (km)", 
+                                 "Number of Individuals", 
+                                 "MLG","Number of Alleles", "Allelic Richness", "Expected Heterozygosity")
 
 ##write out csv 
 write.csv(butternut_stat_df, "Genetic_Analyses\\genetic_analyses_results\\butternut_stat_df.csv")

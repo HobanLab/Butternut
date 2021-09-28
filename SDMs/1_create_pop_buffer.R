@@ -32,6 +32,15 @@ max_lat <- max(butternut_range$Latitude)
 coordinates(butternut_range2) <- c('Longitude', 'Latitude')
 proj4string(butternut_range2) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
 
+##set working directory
+setwd(butternut_drive)
+
+##Lon lat files 
+butternut_reorg_lonlat <- read.csv("Genetic_Analyses\\data_files\\after_reorg\\reorg_lon_lat.csv")
+
+##population names document 
+butternut_24pop_names <- unique(butternut_reorg_lonlat$Pop)
+
 #########################################
 ########## Calculate Buffer #############
 #########################################
@@ -64,3 +73,5 @@ butternut_buff <- gBuffer(crop, width = 100000)
 
 ##write out buffer file 
 shapefile(butternut_buff,"butternut_buffer")
+
+
