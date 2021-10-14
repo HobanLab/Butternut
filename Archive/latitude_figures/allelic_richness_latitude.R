@@ -47,16 +47,15 @@ butternut_lonlat_max_min_df <- read.csv("Genetic_Analyses\\data_files\\geographi
 ################### Linear Modeling ######################
 ##########################################################
 ##Calculate Allelic Richness
-reorg_allrich <- colSums(allelic.richness(butternutgen_reorg)$Ar)/length(butternutgen_reorg@loc.n.all)
+reorg_allrich <- colMeans(allelic.richness(butternutgen_reorg)$Ar)
 
 ##create df with allelic richness and latitude
-all_rich_lat_df <- data.frame(butternut_mean_lonlat[,3], reorg_allrich)
+all_rich_lat_df <- data.frame(butternut_mean_lonlat$Mean_Lat, reorg_allrich)
 colnames(all_rich_lat_df) <- c("Mean_Lat", "Allelic_Richness")
-rownames(all_rich_lat_df) <- butternut_24pop_names
+rownames(all_rich_lat_df) <- butternut_pop_names
 all_rich_lat_df$Color <- NA
 all_rich_lat_df[1:6,3] <- "firebrick1"
-all_rich_lat_df[c(8,11),3] <- "lightsalmon"
-all_rich_lat_df[c(7,9:10),3] <- "firebrick4"
+all_rich_lat_df[c(7:11),3] <- "firebrick4"
 all_rich_lat_df[12:24,3] <- "dodgerblue"
 
 ##Create linear relationship with lat and number of alleles 
@@ -165,23 +164,25 @@ allrich_quad_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE),
                                list(MYOTHERVALUE = format(allrich_quad_red_pvalue, digits = 2)))[2]
 
 ##Now Plot 
-pdf("Genetic_Analyses\\genetic_analyses_results\\allrich_lat_quad.pdf", width = 8, height = 6)
+pdf("C:\\Users\\eschumacher\\Documents\\Butternut\\allrich_lat_quad.pdf", width = 8, height = 6)
 
 ##start plot 
-plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], col = all_rich_lat_df[,3], 
+plot(all_rich_lat_df[,2]~all_rich_lat_df[,1], 
      pch = 17, ylab = "Allelic Richness", 
-     xlab = "Mean Latitude", 
-     cex = (butternut_poppr[1:24,2]/30), ylim = c(5,10))
+     xlab = "Mean Latitude", col = all_rich_lat_df[,3],
+     cex = (butternut_poppr[1:24,2]/30), ylim = c(5,10), cex.axis = 1.5, cex.lab = 1.5)
+
 ##label text
-text(all_rich_lat_df[16,2]~all_rich_lat_df[16,1], labels = "WI3", pos = 1)
-text(all_rich_lat_df[22,2]~all_rich_lat_df[22,1], labels = "WI1", pos = 1)
-text(all_rich_lat_df[23,2]~all_rich_lat_df[23,1], labels = "WI2", pos = 1)
+text(all_rich_lat_df[16,2]~all_rich_lat_df[16,1], labels = "WI3", pos = 1, cex = 1.2)
+text(all_rich_lat_df[22,2]~all_rich_lat_df[22,1], labels = "WI1", pos = 1, cex = 1.2)
+text(all_rich_lat_df[23,2]~all_rich_lat_df[23,1], labels = "WI2", pos = 1, cex = 1.2)
 ##draw quadratic lines
 lines(points_values, points_counts, col = "darkslategray3", lwd = 3)
 lines(points_values_21, points_counts_21, col = "darkseagreen4", lwd = 3)
+
 ##draw legends
-legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec", "United States"), pch = 17, 
-       col = c("firebrick1", "firebrick4", "lightsalmon","dodgerblue"), cex = 1.2)
+legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), pch = 17, 
+       col = c("firebrick1", "firebrick4", "dodgerblue"), cex = 1.2)
 legend('topleft', legend = allrich_quad_rp, bty = 'n', border = "black", 
        pt.cex = 1, cex = 1.2, pch = 17, col = "darkslategray3",
        title = "With WI Populations")

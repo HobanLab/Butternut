@@ -31,9 +31,6 @@ rownames(butternutgen_reorg@tab) <- reorg_relatedness$Ind
 ##load in mean longitude and latitude by population 
 butternut_mean_lonlat <- read.csv("Genetic_Analyses\\data_files\\geographic_files\\butternut_coord_df.csv")
 
-##get pop names 
-butternut_24pop_names <- unique(reorg_relatedness$Pop)
-
 ##name butternut lon and lat 
 butternut_mean_lonlat[,1] <- butternut_24pop_names
 
@@ -47,7 +44,7 @@ butternut_poppr <- poppr(butternutgen_reorg)
 butternut_gendiv_stats <- read.csv("Genetic_Analyses\\genetic_analyses_results\\butternut_stat_df.csv")
 
 ###################################################################################
-#### Linear Modeling on Allelic_Richness and Expected Heterozygosity ##############
+#### Linear Modeling on Allelic Richness and Expected Heterozygosity ##############
 ###################################################################################
 
 #We have a nested loop below.  The outer loop goes over the statistics, alleles and heterozygosity
@@ -97,8 +94,7 @@ for (j in 1:4){
     rownames(stat_lat_df) <- butternut_24pop_names
     stat_lat_df$Color <- NA
     stat_lat_df[1:6,3] <- "firebrick1"
-    stat_lat_df[c(8,11),3] <- "lightsalmon"
-    stat_lat_df[c(7,9:10),3] <- "firebrick4"
+    stat_lat_df[c(7:11),3] <- "firebrick4"
     stat_lat_df[12:24,3] <- "dodgerblue"
 
     #This loop will go over the eight possibilities (the list which_pops), with and without NB and Wisconsin
@@ -129,11 +125,13 @@ for (j in 1:4){
 	                              col = stat_lat_df[which_pops[[i]],3], 
 	                              pch = 17, 
 		 main = paste(stat_name,"Compared to Mean Latitude"), ylab = stat_name, 
-		 xlab = "Mean Latitude", cex = (butternut_poppr[which_pops[[i]],2]/50), ylim = c(y_low,y_high))
+		 xlab = "Mean Latitude", cex = (butternut_poppr[1:24,2]/50), ylim = c(y_low,y_high))
   
 	##write text
-	if (i==1|i==3|i==5|i==7) text(stat_lat_df[which_pops[[i]],2]~stat_lat_df[which_pops[[i]],1], 
-	                          labels = butternut_24pop_names[which_pops[[i]]], cex = 0.8, pos = 1)
+	if (i==1|i==3|i==5|i==7) c(text(stat_lat_df[16,2]~stat_lat_df[16,1], labels = "WI3", pos = 1, cex = 1.2), 
+	                           text(stat_lat_df[22,2]~stat_lat_df[22,1], labels = "WI1", pos = 1, cex = 1.2), 
+	                           text(stat_lat_df[23,2]~stat_lat_df[23,1], labels = "WI2", pos = 1, cex = 1.2))
+    
   if(i==1|i==2|i==3|i==4){
 	##create a linear model
 	genstat_lm <- lm(stat_lat_df[which_pops[[i]],2]~stat_lat_df[which_pops[[i]],1])
@@ -192,10 +190,10 @@ for (j in 1:4){
 	
 	  ##Write legend
 	  legend(loc_legend[i], legend = genstat_rp, bty = 'n', border = "black", 
-		   pt.cex = 1, cex = 0.8, pch = 17, col = line_colors[i],
+		   pt.cex = 1.5, cex = 0.8, pch = 17, col = line_colors[i],
 		   title = title_legend[i])
-	  legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec","United States"), 
-		   pch = 17, col = c("firebrick1", "firebrick4","lightsalmon","dodgerblue"))
+	  legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), 
+		   pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
 	#if(i==2|i==6) dev.off()
 	  
   }else{
@@ -205,10 +203,7 @@ for (j in 1:4){
 	       pch = 17, 
 	       main = paste(stat_name,"Compared to Distance to Edge (km)"), ylab = stat_name, 
 	       xlab = "Distance to Edge (km)", cex = (butternut_poppr[which_pops[[i]],2]/50), ylim = c(y_low,y_high))
-	  
-	  ##write text
-	  if (i==1|i==3) text(stat_dist_df[which_pops[[i]],2]~stat_dist_df[which_pops[[i]],1], 
-	                      labels = butternut_24pop_names[which_pops[[i]]], cex = 0.8, pos = 1)
+
     
     if(i==1|i==2|i==3|i==4){
       ##create a linear model
@@ -232,10 +227,10 @@ for (j in 1:4){
 	    
 	    ##Write legend
 	    legend(loc_legend[i], legend = gendist_rp, bty = 'n', border = "black", 
-	           pt.cex = 1, cex = 0.8, pch = 17, col = line_colors[i],
+	           pt.cex = 1.5, cex = 0.8, pch = 17, col = line_colors[i],
 	           title = title_legend[i])
-	    legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec","United States"), 
-	           pch = 17, col = c("firebrick1", "firebrick4","lightsalmon","dodgerblue"))
+	    legend('bottom', legend = c("New Brunswick", "Ontario", "United States"), 
+	           pch = 17, col = c("firebrick1", "firebrick4","dodgerblue"))
 	    
 	        }
         }

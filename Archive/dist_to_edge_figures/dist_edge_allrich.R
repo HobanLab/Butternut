@@ -45,18 +45,17 @@ dist_edge_df <- read.csv("data_files\\geographic_files\\butternut_dist_edge_df.c
 butternut_reorg_allrich <- colSums(allelic.richness(butternutgen_reorg)$Ar)/length(butternutgen_reorg@loc.n.all)
 
 ##create df with allelic richness and distance
-all_rich_dist_df <- data.frame(dist_edge_df$Dist_To_Edge, butternut_reorg_allrich, dist_edge_df$Col)
-colnames(all_rich_dist_df) <- c("Distance", "Allelic_Richness", "Col")
-rownames(all_rich_dist_df) <- butternut_24pop_names
+colnames(butternut_25pop_dist) <- c("Distance", "Allelic_Richness")
+rownames(butternut_25pop_dist) <- butternut_pop_names
 
 ##create data frame without Wisconsin populations 
-allrich_red <- all_rich_dist_df[-c(16,22,23),]
+allrich_red <- butternut_25pop_dist[-c(17,23,24),]
 
 ######################################################################
 ########################## Linear Models  ############################
 ######################################################################
 ###now calculate regressions - linear
-allrich_lm <- lm(all_rich_dist_df[,2]~all_rich_dist_df[,1])
+allrich_lm <- lm(butternut_25pop_dist[,2]~butternut_25pop_dist[,1])
 allrich_lm_sum <- summary(allrich_lm)
 
 ##Reduced data frame
@@ -90,14 +89,15 @@ linear_allrich_dist_red_rp[2] <- substitute(expression(italic(p) == MYOTHERVALUE
 ##Allelic Richness Distance
 pdf("genetic_analyses_results\\linear_allrich_dist_edge.pdf", width = 8, height = 6)
 
-plot(all_rich_dist_df[,2]~all_rich_dist_df[,1], 
-     col = as.character(all_rich_dist_df[,3]), pch = 17,
+plot(butternut_25pop_dist[,2]~butternut_25pop_dist[,1], 
+      pch = 17, col = as.character(all_rich_lat_df[,3]),
+     cex = c(butternut_poppr[1:25,2]/50),
      ylab = "Allelic Richness", xlab = "Distance to Range Edge (km)", 
-     cex = (butternut_24pop_poppr[1:24,2]/50), ylim = c(5,10), xlim = c(0,600),
+      ylim = c(5,10), 
      main = "Allelic Richness Compared with Distance to Range Edge (km)")
 
-text(all_rich_dist_df[,2]~all_rich_dist_df[,1], 
-     labels = rownames(all_rich_dist_df), cex = 0.8, pos = 1)
+text(butternut_25pop_dist[,2]~butternut_25pop_dist[,1], 
+     labels = rownames(butternut_25pop_dist), cex = 0.8, pos = 1)
 
 abline(allrich_lm, col = "dodgerblue4", lwd = 1)
 abline(allrich_red_lm, col = "darkorchid", lwd = 1)
