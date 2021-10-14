@@ -7,6 +7,8 @@ library(poppr)
 library(dplyr)
 library(geosphere)
 library(hierfstat)
+library(rgdal)
+library(Demerelate)
 
 ##########################################
 ############# Set directories ############
@@ -112,7 +114,7 @@ linear_lat_allrich_red_lm_sum <- summary(linear_lat_allrich_red_lm)
 ##create a linear model
 #calculate data points 
 lat_allrich_points <- butternut_26pop_gendiv_geo$Mean_Lat
-lat_allrich_points2 <- lat_points^2
+lat_allrich_points2 <- lat_allrich_points^2
 
 ###Quadratic linear model
 lat_allrich_quad_model_lm <-lm(butternut_26pop_gendiv_geo$All_Rich ~ 
@@ -229,222 +231,6 @@ butternut_26pop_hexp_rp_df[2,3:4] <- c(as.numeric(linear_dist_hexp_red_lm_sum[9]
 
 write.csv(signif(butternut_26pop_hexp_rp_df, 3), "butternut_26pop_hexp_rp_df.csv")
 
-##make plots 
-pdf("allrich_lat.pdf", width = 8, height = 6)
-plot(butternut_26pop_gendiv_geo$All_Rich~butternut_26pop_gendiv_geo$Mean_Lat, pch = 17, col = butternut_26pop_gendiv_geo$Col,
-     cex = butternut_26pop_poppr[1:26,2]/20, main = "Allelic Richness Compared to Mean Population Latitude",
-     xlab = "Mean Population Latitude", ylab = "Allelic Richness", cex.axis = 1.5, cex.lab = 1.5, 
-     xlim = c(34,48), ylim = c(5,10))
-text(butternut_26pop_gendiv_geo$All_Rich[18]~butternut_26pop_gendiv_geo$Mean_Lat[18], labels = "WI3", pos = 3, cex = 1.2)
-text(butternut_26pop_gendiv_geo$All_Rich[24]~butternut_26pop_gendiv_geo$Mean_Lat[24], labels = "WI1", pos = 3, cex = 1.2)
-text(butternut_26pop_gendiv_geo$All_Rich[25]~butternut_26pop_gendiv_geo$Mean_Lat[25], labels = "WI2", pos = 3, cex = 1.2)
-
-##add legend 
-legend("topleft", legend = genstat_rp, bty = 'n', border = "black", 
-       pt.cex = 1.5, cex = 1.2, pch = 17, col = "darkslategray2",
-       title = 'With WI populations')
-
-legend("bottomleft", legend = genstat_red_rp, bty = 'n', border = "black", 
-       pt.cex = 1.5, cex = 1.2, pch = 17, col = "darkcyan",
-       title = 'Without WI populations')
-
-legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec","United States"), 
-       pch = 17, col = c("firebrick1", "firebrick4","lightsalmon","dodgerblue"))
-
-##plot quadratic line on the plot
-lines(quad_values, quad_counts, lwd = 2, col = "darkslategray2")
-##plot quadratic line on the plot
-lines(quad_values_red, quad_counts_red, lwd = 2, col = "darkcyan")
-dev.off()
-
-###########hexp and lat 
-###rp hexp 
-#calculate data points 
-lat_points <- butternut_26pop_gendiv_geo$Mean_Lat
-lat_points2 <- lat_points^2
-
-###Quadratic linear model
-genstat_hexp_lat_quad_model_lm <-lm(butternut_26pop_gendiv_geo$HExp ~ 
-                             lat_points + lat_points2)
-
-##Calculate summary documents 
-genstat_quad_hexp_lat_model_lm_sum <- summary(genstat_hexp_lat_quad_model_lm)
-
-##calculate y-axis values 
-quad_values <- seq(min(butternut_26pop_gendiv_geo[,2]), max(butternut_26pop_gendiv_geo[,2]), 0.5)
-quad_counts <- predict(genstat_hexp_lat_quad_model_lm, list(lat_points=quad_values, lat_points2=quad_values^2))
-
-##create r2 and p values
-genstat_hexp_lat_r2 <- genstat_quad_hexp_lat_model_lm_sum$adj.r.squared
-genstat_hexp_lat_pvalue <- genstat_quad_hexp_lat_model_lm_sum$coefficients[2,4]
-genstat_hexp_lat_rp <- vector('expression',2)
-genstat_rp[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
-                            list(MYVALUE = format(genstat_hexp_lat_r2,dig=3)))[2]
-genstat_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
-                           list(MYOTHERVALUE = format(genstat_hexp_lat_pvalue, digits = 2)))[2]
-
-##without WI 
-#calculate data points 
-hexp_lat_points_red <- butternut_26pop_gendiv_geo_red$Mean_Lat
-hexp_lat_points2_red <- hexp_lat_points_red^2
-
-###Quadratic linear model
-genstat_hexp_lat_quad_model_red_lm <-lm(butternut_26pop_gendiv_geo_red$HExp ~ 
-                                 hexp_lat_points_red + hexp_lat_points2_red)
-
-##Calculate summary documents 
-genstat_hexp_lat_quad_model_red_lm_sum <- summary(genstat_hexp_lat_quad_model_red_lm)
-
-##calculate y-axis values 
-quad_hexp_lat_values_red <- seq(min(butternut_26pop_gendiv_geo_red[,2]), max(butternut_26pop_gendiv_geo_red[,2]), 0.5)
-quad_hexp_lat_counts_red <- predict(genstat_hexp_lat_quad_model_red_lm, list(hexp_lat_points_red=quad_hexp_lat_values_red, 
-                                                                             hexp_lat_points2_red=quad_hexp_lat_values_red^2))
-
-##create r2 and p values
-genstat_hexp_lat_red_r2 <- genstat_hexp_lat_quad_model_red_lm_sum$adj.r.squared
-genstat_hexp_lat_red_pvalue <- genstat_hexp_lat_quad_model_red_lm_sum$coefficients[2,4]
-genstat_hexp_lat_red_rp <- vector('expression',2)
-genstat_hexp_lat_red_rp[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
-                                list(MYVALUE = format(genstat_hexp_lat_red_r2,dig=3)))[2]
-genstat_hexp_lat_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
-                               list(MYOTHERVALUE = format(genstat_hexp_lat_red_pvalue, digits = 2)))[2]
-
-##make plots 
-pdf("hexp_lat.pdf", width = 8, height = 6)
-plot(butternut_26pop_gendiv_geo$HExp~butternut_26pop_gendiv_geo$Mean_Lat, pch = 17, col = butternut_26pop_gendiv_geo$Col,
-     cex = butternut_26pop_poppr[1:26,2]/20, main = "Expected Heterozygosity Compared to Mean Population Latitude",
-     xlab = "Mean Population Latitude", ylab = "Expected Heterozygosity", cex.axis = 1.5, cex.lab = 1.5, 
-     xlim = c(34,48), ylim = c(0.71,0.9))
-text(butternut_26pop_gendiv_geo$HExp[18]~butternut_26pop_gendiv_geo$Mean_Lat[18], labels = "WI3", pos = 3, cex = 1.2)
-text(butternut_26pop_gendiv_geo$HExp[24]~butternut_26pop_gendiv_geo$Mean_Lat[24], labels = "WI1", pos = 3, cex = 1.2)
-text(butternut_26pop_gendiv_geo$HExp[25]~butternut_26pop_gendiv_geo$Mean_Lat[25], labels = "WI2", pos = 3, cex = 1.2)
-
-##add legend 
-legend("topleft", legend = genstat_rp, bty = 'n', border = "black", 
-       pt.cex = 1.5, cex = 1.2, pch = 17, col = "darkslategray2",
-       title = 'With WI populations')
-
-legend("bottomleft", legend = genstat_hexp_lat_red_rp, bty = 'n', border = "black", 
-       pt.cex = 1.5, cex = 1.2, pch = 17, col = "darkcyan",
-       title = 'Without WI populations')
-
-legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec","United States"), 
-       pch = 17, col = c("firebrick1", "firebrick4","lightsalmon","dodgerblue"))
-
-##plot quadratic line on the plot
-lines(quad_values, quad_counts, lwd = 2, col = "darkslategray2")
-##plot quadratic line on the plot
-lines(quad_hexp_lat_values_red, quad_hexp_lat_counts_red, lwd = 2, col = "darkcyan")
-dev.off()
-
-######################distance to range edge figures
-###linear regression 
-dist_allrich_lm <- lm(butternut_26pop_gendiv_geo$All_Rich ~ butternut_26pop_gendiv_geo$Dist_Edge)
-dist_allrich_lm_sum <- summary(dist_allrich_lm)
-
-##linear regression without WI 
-dist_allrich_red_lm <- lm(butternut_26pop_gendiv_geo_red$All_Rich ~ butternut_26pop_gendiv_geo_red$Dist_Edge)
-dist_allrich_red_lm_sum <- summary(dist_allrich_red_lm)
-
-##create r2 and p values
-dist_allrich_r2 <- dist_allrich_lm_sum$adj.r.squared
-dist_allrich_pvalue <- dist_allrich_lm_sum$coefficients[2,4]
-dist_allrich_rp <- vector('expression',2)
-dist_allrich_rp[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
-                                list(MYVALUE = format(dist_allrich_r2,dig=3)))[2]
-dist_allrich_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
-                               list(MYOTHERVALUE = format(dist_allrich_pvalue, digits = 2)))[2]
-
-##create r2 and pvalues 
-dist_allrich_red_r2 <- dist_allrich_red_lm_sum$adj.r.squared
-dist_allrich_red_pvalue <- dist_allrich_red_lm_sum$coefficients[2,4]
-dist_allrich_red_rp <- vector('expression',2)
-dist_allrich_red_rp[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
-                                 list(MYVALUE = format(dist_allrich_red_r2,dig=3)))[2]
-dist_allrich_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
-                                list(MYOTHERVALUE = format(dist_allrich_pvalue, digits = 2)))[2]
-
-##make plots 
-pdf("allrich_distedge.pdf", width = 8, height = 6)
-plot(butternut_26pop_gendiv_geo$All_Rich~butternut_26pop_gendiv_geo$Dist_Edge, pch = 17, col = butternut_26pop_gendiv_geo$Col,
-     cex = butternut_26pop_poppr[1:26,2]/20, main = "Allelic Richness Compared to Distance to Range Edge (km)",
-     xlab = "Distance to Range Edge (km)", ylab = "Allelic Richness", cex.axis = 1.5, cex.lab = 1.5, 
-     xlim = c(0,600), ylim = c(5,10))
-text(butternut_26pop_gendiv_geo$All_Rich[18]~butternut_26pop_gendiv_geo$Dist_Edge[18], labels = "WI3", pos = 3, cex = 1.2)
-text(butternut_26pop_gendiv_geo$All_Rich[24]~butternut_26pop_gendiv_geo$Dist_Edge[24], labels = "WI1", pos = 3, cex = 1.2)
-text(butternut_26pop_gendiv_geo$All_Rich[25]~butternut_26pop_gendiv_geo$Dist_Edge[25], labels = "WI2", pos = 3, cex = 1.2)
-
-abline(dist_allrich_lm, col = "dodgerblue4", lwd = 2)
-abline(dist_allrich_red_lm, col = "darkorchid", lwd = 2)
-
-##add legend 
-legend("topleft", legend = dist_allrich_rp, bty = 'n', border = "black", 
-       pt.cex = 1.5, cex = 1.2, pch = 17, col = "dodgerblue4",
-       title = 'With WI populations')
-
-legend("bottomleft", legend = genstat_hexp_lat_red_rp, bty = 'n', border = "black", 
-       pt.cex = 1.5, cex = 1.2, pch = 17, col = "darkorchid",
-       title = 'Without WI populations')
-
-legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec","United States"), 
-       pch = 17, col = c("firebrick1", "firebrick4","lightsalmon","dodgerblue"))
-
-dev.off()
-
-#################dist to range edge hexp
-##create linear regressions 
-dist_hexp_lm <- lm(butternut_26pop_gendiv_geo$HExp ~ butternut_26pop_gendiv_geo$Dist_Edge)
-dist_hexp_lm_sum <- summary(dist_hexp_lm)
-
-##linear regression without WI 
-dist_hexp_red_lm <- lm(butternut_26pop_gendiv_geo_red$HExp ~ butternut_26pop_gendiv_geo_red$Dist_Edge)
-dist_hexp_red_lm_sum <- summary(dist_hexp_red_lm)
-
-##create r2 and p values
-dist_hexp_r2 <- dist_hexp_lm_sum$adj.r.squared
-dist_hexp_pvalue <- dist_hexp_lm_sum$coefficients[2,4]
-dist_hexp_rp <- vector('expression',2)
-dist_hexp_rp[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
-                                 list(MYVALUE = format(dist_hexp_r2,dig=3)))[2]
-dist_hexp_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
-                                list(MYOTHERVALUE = format(dist_hexp_pvalue, digits = 2)))[2]
-
-##create r2 and pvalues 
-dist_hexp_red_r2 <- dist_hexp_red_lm_sum$adj.r.squared
-dist_hexp_red_pvalue <- dist_hexp_red_lm_sum$coefficients[2,4]
-dist_hexp_red_rp <- vector('expression',2)
-dist_hexp_red_rp[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
-                                     list(MYVALUE = format(dist_hexp_red_r2,dig=3)))[2]
-dist_hexp_red_rp[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
-                                    list(MYOTHERVALUE = format(dist_hexp_red_pvalue, digits = 2)))[2]
-
-##make plots 
-pdf("hexp_distedge.pdf", width = 8, height = 6)
-plot(butternut_26pop_gendiv_geo$HExp~butternut_26pop_gendiv_geo$Dist_Edge, pch = 17, col = butternut_26pop_gendiv_geo$Col,
-     cex = butternut_26pop_poppr[1:26,2]/20, main = "Expected Heterozygosity Compared to Distance to Range Edge (km)",
-     xlab = "Distance to Range Edge (km)", ylab = "Expected Heterozygosity", cex.axis = 1.5, cex.lab = 1.5, 
-     xlim = c(0,600), ylim = c(0.71, 0.9))
-text(butternut_26pop_gendiv_geo$HExp[18]~butternut_26pop_gendiv_geo$Dist_Edge[18], labels = "WI3", pos = 3, cex = 1.2)
-text(butternut_26pop_gendiv_geo$HExp[24]~butternut_26pop_gendiv_geo$Dist_Edge[24], labels = "WI1", pos = 3, cex = 1.2)
-text(butternut_26pop_gendiv_geo$HExp[25]~butternut_26pop_gendiv_geo$Dist_Edge[25], labels = "WI2", pos = 3, cex = 1.2)
-
-abline(dist_hexp_lm, col = "dodgerblue4", lwd = 2)
-abline(dist_hexp_red_lm, col = "darkorchid", lwd = 2)
-
-##add legend 
-legend("topleft", legend = dist_hexp_rp, bty = 'n', border = "black", 
-       pt.cex = 1.5, cex = 1.2, pch = 17, col = "dodgerblue4",
-       title = 'With WI populations')
-
-legend("bottomleft", legend = dist_hexp_red_rp, bty = 'n', border = "black", 
-       pt.cex = 1.5, cex = 1.2, pch = 17, col = "darkorchid",
-       title = 'Without WI populations')
-
-legend('bottom', legend = c("New Brunswick", "Ontario", "Quebec","United States"), 
-       pch = 17, col = c("firebrick1", "firebrick4","lightsalmon","dodgerblue"))
-
-dev.off()
-
 ########################################
 ############## PCOA ####################
 ########################################
@@ -497,7 +283,7 @@ pc1 <- (butternut_reorg_pco$eig[[1]]/sum_eig)*100
 pc2 <- (butternut_reorg_pco$eig[[2]]/sum_eig)*100
 
 ##PCOA of the reorg
-pdf("Genetic_Analyses\\genetic_analyses_results\\PCoA.pdf", width = 8, height = 6)
+pdf("Genetic_Analyses\\genetic_analyses_results\\PCoA_wQU.pdf", width = 8, height = 6)
 ##plot New Brunswick populations
 plot(butternut_pco_nb$A1, butternut_pco_nb$A2, pch = 17, 
      xlab = paste0("PC1", sep = " ", "(",round(pc1, digits = 1), "%", ")"), 
