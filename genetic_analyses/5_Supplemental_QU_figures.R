@@ -166,7 +166,7 @@ butternut_26pop_allrich_rp[3,1:2] <- c(as.numeric(dist_allrich_linear_lm_sum[9])
 butternut_26pop_allrich_rp[4,1:2] <- c(as.numeric(dist_allrich_linear_red_lm_sum[9]), 
                                        as.numeric(dist_allrich_linear_red_lm_sum$coefficients[2,4]))
 
-write.csv(butternut_26pop_allrich_rp, "butternut_26pop_allrich_rp.csv")
+write.csv(butternut_26pop_allrich_rp, "Genetic_Analyses\\genetic_analyses_results\\butternut_26pop_allrich_rp.csv")
 
 #################hexp table 
 ##compare genetic diversity and geographic info
@@ -229,7 +229,7 @@ butternut_26pop_hexp_rp_df[1,3:4] <- c(as.numeric(linear_dist_hexp_lm_sum[9]),
 butternut_26pop_hexp_rp_df[2,3:4] <- c(as.numeric(linear_dist_hexp_red_lm_sum[9]),
                                        as.numeric(linear_dist_hexp_red_lm_sum$coefficients[2,4]))
 
-write.csv(signif(butternut_26pop_hexp_rp_df, 3), "butternut_26pop_hexp_rp_df.csv")
+write.csv(signif(butternut_26pop_hexp_rp_df, 3), "Genetic_Analyses\\genetic_analyses_results\\butternut_26pop_hexp_rp_df.csv")
 
 ########################################
 ############## PCOA ####################
@@ -258,7 +258,7 @@ levels(butternutgen_26pop_relatedness_reduced@pop) <- butternut_26pop_names
 
 ##export genind 2 genalex 
 butternut_26pop_red_genalex <- genind2genalex(butternutgen_26pop_relatedness_reduced, 
-                                              filename = 'butternutgen_26pop_relatedness_reduced.csv')
+                                              filename = 'Genetic_Analyses\\genetic_analyses_results\\butternutgen_26pop_relatedness_reduced.csv')
 
 ###########make PCoA 
 ##run PCOA analysis 
