@@ -40,7 +40,6 @@ The code written for performing two of the steps are in this Github; code for do
  <ul><ul><ul><li>Description: Within this file is the values of all 19 bioclimatic variables during the last 130,000 years. These variables were used to project butternut's distribution model into the past and are separated into 8 separate time points. These bioclimatic values were all downloaded at 2.5 m resolution from Paleoclim.</li></ul></ul></ul>
  
 <ul><ul><li>butternut_abs: CSV of pseudo-absence points used in generating the boosted regression trees that is used to predict butternut's stuitable habitat.</li></ul></ul>
-<ul><ul><li>butternut_buffer: Shapefile of butternut's total range, generated from occurrence records and buffered out by 100 km and cleaned to have smooth edges.</li></ul></ul>
 <ul><ul><li>butternut_pa: CSV of all presence and pseuod-absence points used in the BRT model generating butternut's species distribution, with an additional column coded indicating what is a presence point (1) and what is an absence point (0). </li></ul></ul>
 <ul><ul><li>butternut_var: CSV of all presence and pseudo-absence points (indicated by a 1 and 0, respectively) with the values of all 19 bioclimatic variables at the location of the occurrence record extracted to each point. </li></ul></ul>
 <ul><ul><li>elevation_extent: TIF file of North American elevation limited to the extent of the analysis.</li></ul></ul>
@@ -76,13 +75,30 @@ genetic_analyses_results: All of the outputs from genetic analyses that were use
 <ul><ul><li>after_reorg</li></ul></ul>
 <ul><ul><ul><li>Description: Following geographic reorganization into populations and rebinning analysis, these are the files used in the final genetic analyses included in the manuscript. </li></ul></ul></ul>
 <ul><ul><ul><li> butternut_26pop_lonlat: CSV of genotypes of butternut individuals with coordinates, including Quebec individuals. </li></ul></ul></ul>
-<ul><ul><ul><li> butternutgen_26pop: Genepop file of genotypes of butternut individuals including Quebec individuals. </li></ul></ul></ul>
-<ul><ul><ul><li> butternut_nomd: Genepop, CSV, and Arlequin files of genotypes of butternut individuals used for main genetic analyses (cleaned for clones and missing data). </li></ul></ul></ul>
-<ul><ul><ul><li> butternutgen_relatedness_reduced: CSV, genepop, and Arlequin files of genotypes of butternut individuals, reduced for individuals with missing data and too high of relatedness, leaving 993 individuals. </li></ul></ul></ul> 
-<ul><ul><ul><li> postgeo_rebin_24pop: Original genepop file of butternut individuals following rebinning analysis and geographic reorganization into 24 populations.</li></ul></ul></ul>
-<ul><ul><ul><li> reorg_lon_lat: CSV of genotypes of butternut individuals following geographic reorganization into 24 populations and rebinning analysis with coordinates of each individual.</li></ul></ul></ul>
-<ul><ul><ul><li> reorg_relatedness: CSV of genotypes of butternut individuals following geographic reorganization into 24 populations and rebinning analysis, used for Demerelate relatedness analysis.</li></ul></ul></ul>
+<ul><ul><ul><li>butternutgen_26pop: Genepop file of genotypes of butternut individuals including Quebec individuals. </li></ul></ul></ul>
+<ul><ul><ul><li>butternut_nomd: Genepop, CSV, and Arlequin files of genotypes of butternut individuals used for main genetic analyses (cleaned for clones and missing data). </li></ul></ul></ul>
+<ul><ul><ul><li>butternutgen_relatedness_reduced: CSV, genepop, and Arlequin files of genotypes of butternut individuals, reduced for individuals with missing data and too high of relatedness, leaving 993 individuals. </li></ul></ul></ul> 
+<ul><ul><ul><li>postgeo_rebin_24pop: Original genepop file of butternut individuals following rebinning analysis and geographic reorganization into 24 populations.</li></ul></ul></ul>
+<ul><ul><ul><li>reorg_lon_lat: CSV of genotypes of butternut individuals following geographic reorganization into 24 populations and rebinning analysis with coordinates of each individual.</li></ul></ul></ul>
+<ul><ul><ul><li>reorg_relatedness: CSV of genotypes of butternut individuals following geographic reorganization into 24 populations and rebinning analysis, used for Demerelate relatedness analysis.</li></ul></ul></ul>
 
+<ul><ul><li>before_reorg</li></ul></ul>
+<ul><ul><ul><li>Description: Genepop files from initial analyses on butternut individuals; rebinning analysis and geographic analyses were performed on these individuals to then yield the data files in the "after_reorg" file. </li></ul></ul></ul> 
+<ul><ul><ul><li>butternut_3pops: Genepop file of all initial 1761 butternut individuals, sorted by the person who scored data files. This document was used in the initial rebinning analysis to determine if there were differences in scoring with different individual scorers. </li></ul></ul></ul> 
+<ul><ul><ul><li>butternut_44pops: Genepop file of all initial 1,761 which was used for initial genetic and geographic analyses.</li></ul></ul></ul> 
+
+<ul><ul><li>geographic_files</li></ul></ul>
+<ul><ul><ul><li>Description: Files used in generating maps and all geographic analyses for butternut. </li></ul></ul></ul> 
+<ul><ul><li>butternut_buffer: Shapefile of butternut's total range, generated from occurrence records and buffered out by 100 km and cleaned to have smooth edges.</li></ul></ul>
+<ul><ul><ul><li>buffernut_buffer_map: Map of mean population coordinates plotted over the butternut range buffer.</li></ul></ul></ul>
+<ul><ul><ul><li>butternut_coord_df: CSV of the mean coordinates of the main 24 populations used in this analysis with raw names and color-coded by population.</li></ul></ul></ul>
+<ul><ul><ul><li>butternut_dist_edge_df: CSV of the distance to range edge for each of the 24 populations.</li></ul></ul></ul>
+<ul><ul><ul><li>max_min_lonlat: CSV of the minimum and maximum coordinates of the butternut range.</li></ul></ul></ul>
+ 
+<ul><li>genetic_analyses_results</li></ul>
+<ul><ul><li>Clustering_Analyses</li></li></ul>
+<ul><ul><ul><li>PCoA</li></ul></ul></ul>
+ 
 <b><p><h1 style="color:red;font-size:20px;">R Information</b></p></h1>
 
 R version 4.0.5 (2021-03-31)
