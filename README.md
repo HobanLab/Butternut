@@ -24,20 +24,11 @@ The code written for performing two of the steps are in this Github; code for do
 <li>The final boosted regression tree model was run with five variables and from these predictors a model of suitable habitat was made and then hindcast into past climate scenarios using eight time periods representing notable periods in post-LGM climatic history, available from the Paleoclim database (Brown et al., 2018): 130 (last interglacial); 22 (LGM); 17-14.7 (Heinrich-Stadial); 14.7-12.9 (Bolling-Allerod); 12.9-11.7 (Younger Dryas); 11.7-8.326 (early Holocene); 8.326-4.2 (mid-Holocene); and 4.2-0.3 (late Holocene)  ka YBP (thousand years before present). </li>
 </ol>
 
-<b> Files within this folder</b> 
+<b> Files within SDMs folder</b> 
 <ul><li>InputFiles</li></ul>
 <ul><ul><li>Description: All input files utilized for generating butternut's species distribution model, habitat suitability maps, and projecting the habitat suitability maps into the past.</li></ul></ul>
-<ul><ul><li>butternut_abs: CSV of pseudo-absence points used in generating the boosted regression trees that is used to predict butternut's stuitable habitat.</li></ul></ul>
-<ul><ul><li>butternut_buffer: Shapefile of butternut's total range, generated from occurrence records and buffered out by 100 km and cleaned to have smooth edges.</li></ul></ul>
-<ul><ul><li>butternut_pa: CSV of all presence and pseuod-absence points used in the BRT model generating butternut's species distribution, with an additional column coded indicating what is a presence point (1) and what is an absence point (0). </li></ul></ul>
-<ul><ul><li>butternut_var: CSV of all presence and pseudo-absence points (indicated by a 1 and 0, respectively) with the values of all 19 bioclimatic variables at the location of the occurrence record extracted to each point. </li></ul></ul>
-<ul><ul><li>elevation_extent: TIF file of North American elevation limited to the extent of the analysis.</li></ul></ul>
-<ul><ul><li>extent_project: TIF file of North American elevation limited to the extent of this analysis project to Albers Equal Area Conic projection.</li></ul></ul>
-<ul><ul><li>occurrence_noauto_noproj: Occurrence records used in this analysis, cleaned for spatial autocorrelation and not projected.</li></ul></ul>
-
- <ul><ul><li>bio_2-5m_bil</li></ul></ul>
+<ul><ul><li>bio_2-5m_bil</li></ul></ul>
  <ul><ul><ul><li>Description: All 19 current (averages over 1970 - 2013) bioclimatic layers used to generate butternut's species distribution model, downloaded at 2.5 m resolution. </li></ul></ul></ul>
- <ul><ul><li>occurrence_records</li></ul></ul>
  
  <ul><ul><li>bound_p</li></ul></ul>
  <ul><ul><ul><li>Description: Boundary shapefile used to create maps of this species. </li></ul></ul></ul>
@@ -47,7 +38,17 @@ The code written for performing two of the steps are in this Github; code for do
 
  <ul><ul><li>Paleo_Files</li></ul></ul>
  <ul><ul><ul><li>Description: Within this file is the values of all 19 bioclimatic variables during the last 130,000 years. These variables were used to project butternut's distribution model into the past and are separated into 8 separate time points. These bioclimatic values were all downloaded at 2.5 m resolution from Paleoclim.</li></ul></ul></ul>
+<ul><ul><li>butternut_abs: CSV of pseudo-absence points used in generating the boosted regression trees that is used to predict butternut's stuitable habitat.</li></ul></ul>
+<ul><ul><li>butternut_buffer: Shapefile of butternut's total range, generated from occurrence records and buffered out by 100 km and cleaned to have smooth edges.</li></ul></ul>
+<ul><ul><li>butternut_pa: CSV of all presence and pseuod-absence points used in the BRT model generating butternut's species distribution, with an additional column coded indicating what is a presence point (1) and what is an absence point (0). </li></ul></ul>
+<ul><ul><li>butternut_var: CSV of all presence and pseudo-absence points (indicated by a 1 and 0, respectively) with the values of all 19 bioclimatic variables at the location of the occurrence record extracted to each point. </li></ul></ul>
+<ul><ul><li>elevation_extent: TIF file of North American elevation limited to the extent of the analysis.</li></ul></ul>
+<ul><ul><li>extent_project: TIF file of North American elevation limited to the extent of this analysis project to Albers Equal Area Conic projection.</li></ul></ul>
+<ul><ul><li>occurrence_noauto_noproj: Occurrence records used in this analysis, cleaned for spatial autocorrelation and not projected.</li></ul></ul>
+ 
+<ul><li>OutputFiles</li></ul>
 
+<ul><ul><li>biseral_cor_matrix: CSV of the biserial correlation coefficients between presence points and each bioclimatic variable.</ul></ul></li>
  
 <b>Genetic Analyses: </b> The genetic diversity portion of this project is contained in the genetic_analyses folder, which contains the R Scripts to run genetic diversity and structure analyses, along with the regressions between genetic diversity and geographic location. We used genetic data from the publication Hoban et al. (2010) and newer sampling efforts on butternut from 2011 - 2015. These individuals were collected by Jeanne Romero-Severson, Sean Hoban (https://github.com/smhoban), and Martin Williams over the course of near ten years with a major sampling effort closer to 2009 and then followed up by another round of sampling 2012 - 2015. The initial individuals that were collected were genotyped by Sean Hoban and then subsequent individuals were genotyped in the Romero-Severson lab at Notre Dame non-consequetively. The order these analyses were performed in is indicated with a preceeding number. The script labeled "comparison_barplot" was code used to determine if there were scoring differences between researcher which led to some re-binning analyses to ensure consistency of allele scoring when researchers differed. Then, the code for removing individuals based on missing data and relatedness was designed so PCoA and structure could be run. The individuals were also plotted on a map following removal for missing data. Also, mean latitude, longitude, allelic richness and heterozygosity were calculated for all populations. Finally, a loop was written to compare mean latitude and distance to range edge of each population to genetic diversity.
 
