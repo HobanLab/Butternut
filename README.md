@@ -74,7 +74,7 @@ genetic_analyses_results: All of the outputs from genetic analyses that were use
 <b>Files within Genetic_Analyses</b>
 <ul><li>data_files</li></ul>
 <ul><ul><li>after_reorg</li></ul></ul>
-<ul><ul><ul><li>Description: Following geographic reorganization into populations and rebinning analysis, these are the files used in the final genetic analyses included in the manuscript. </li></ul></ul>
+<ul><ul><ul><li>Description: Following geographic reorganization into populations and rebinning analysis, these are the files used in the final genetic analyses included in the manuscript. </li></ul></ul></ul>
 <ul><ul><ul><li> butternut_26pop_lonlat: CSV of genotypes of butternut individuals with coordinates, including Quebec individuals. </li></ul></ul></ul>
 <ul><ul><ul><li> butternutgen_26pop: Genepop file of genotypes of butternut individuals including Quebec individuals. </li></ul></ul></ul>
 <ul><ul><ul><li> butternut_nomd: Genepop, CSV, and Arlequin files of genotypes of butternut individuals used for main genetic analyses (cleaned for clones and missing data). </li></ul></ul></ul>
