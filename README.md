@@ -24,6 +24,12 @@ The code written for performing two of the steps are in this Github; code for do
 <li>The final boosted regression tree model was run with five variables and from these predictors a model of suitable habitat was made and then hindcast into past climate scenarios using eight time periods representing notable periods in post-LGM climatic history, available from the Paleoclim database (Brown et al., 2018): 130 (last interglacial); 22 (LGM); 17-14.7 (Heinrich-Stadial); 14.7-12.9 (Bolling-Allerod); 12.9-11.7 (Younger Dryas); 11.7-8.326 (early Holocene); 8.326-4.2 (mid-Holocene); and 4.2-0.3 (late Holocene)  ka YBP (thousand years before present). </li>
 </ol>
 
+<b> Files within this folder</b> 
+<ul><li>InputFiles</li>
+ <li><li>Paleo_Files</li></li>
+</ul>  
+ 
+
 <b>Genetic Analyses: </b> The genetic diversity portion of this project is contained in the genetic_analyses folder, which contains the R Scripts to run genetic diversity and structure analyses, along with the regressions between genetic diversity and geographic location. We used genetic data from the publication Hoban et al. (2010) and newer sampling efforts on butternut from 2011 - 2015. These individuals were collected by Jeanne Romero-Severson, Sean Hoban (https://github.com/smhoban), and Martin Williams over the course of near ten years with a major sampling effort closer to 2009 and then followed up by another round of sampling 2012 - 2015. The initial individuals that were collected were genotyped by Sean Hoban and then subsequent individuals were genotyped in the Romero-Severson lab at Notre Dame non-consequetively. The order these analyses were performed in is indicated with a preceeding number. The script labeled "comparison_barplot" was code used to determine if there were scoring differences between researcher which led to some re-binning analyses to ensure consistency of allele scoring when researchers differed. Then, the code for removing individuals based on missing data and relatedness was designed so PCoA and structure could be run. The individuals were also plotted on a map following removal for missing data. Also, mean latitude, longitude, allelic richness and heterozygosity were calculated for all populations. Finally, a loop was written to compare mean latitude and distance to range edge of each population to genetic diversity.
 
 ![Alt text](Images/gendiv_flowchart.jpg?raw=true "Flowchart for the storage of data files. R Scripts to run genetic analyses are contained within this folder and they are all run on the data files stored in the data_files folder. The results are then stored in the genetic_analyses_results folder.") 
@@ -33,7 +39,7 @@ Folders within the genetic analyses folder:
 data_files: Data files generated throughout the process of some of the analyses are stored here. Before_reorg contains the 3 population genind used for the comparison barplot code, after_reorg contains all of the genind and data frames generated following the re-binning process. geographic_files contains many of the geographic files used in analyses, including the range shapefile with the 100 km buffer (butternut_buffer) and many of the mea population longitude and latitude data frames. 
 
 genetic_analyses_results: All of the outputs from genetic analyses that were used in the final publication, including figures and data frames, are stored here. 
- 
+
 <b><p><h1 style="color:red;font-size:20px;">R Information</b></p></h1>
 
 R version 4.0.5 (2021-03-31)
