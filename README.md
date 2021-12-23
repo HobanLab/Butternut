@@ -25,8 +25,8 @@ The code written for performing two of the steps are in this Github; code for do
 </ol>
 
 <b> Files within this folder</b> 
-<ul><li>InputFiles</li>
- <ul><ul><li><li>Paleo_Files</li></ul></ul></ul>
+<ul><li>InputFiles</li></ul>
+ <ul><ul><li>Paleo_Files</li></ul></ul>
  
 
 <b>Genetic Analyses: </b> The genetic diversity portion of this project is contained in the genetic_analyses folder, which contains the R Scripts to run genetic diversity and structure analyses, along with the regressions between genetic diversity and geographic location. We used genetic data from the publication Hoban et al. (2010) and newer sampling efforts on butternut from 2011 - 2015. These individuals were collected by Jeanne Romero-Severson, Sean Hoban (https://github.com/smhoban), and Martin Williams over the course of near ten years with a major sampling effort closer to 2009 and then followed up by another round of sampling 2012 - 2015. The initial individuals that were collected were genotyped by Sean Hoban and then subsequent individuals were genotyped in the Romero-Severson lab at Notre Dame non-consequetively. The order these analyses were performed in is indicated with a preceeding number. The script labeled "comparison_barplot" was code used to determine if there were scoring differences between researcher which led to some re-binning analyses to ensure consistency of allele scoring when researchers differed. Then, the code for removing individuals based on missing data and relatedness was designed so PCoA and structure could be run. The individuals were also plotted on a map following removal for missing data. Also, mean latitude, longitude, allelic richness and heterozygosity were calculated for all populations. Finally, a loop was written to compare mean latitude and distance to range edge of each population to genetic diversity.
