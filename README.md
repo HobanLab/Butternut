@@ -65,13 +65,13 @@ The code written for performing two of the steps are in this Github; code for do
 
 ![Alt text](Images/gendiv_flowchart.jpg?raw=true "Flowchart for the storage of data files. R Scripts to run genetic analyses are contained within this folder and they are all run on the data files stored in the data_files folder. The results are then stored in the genetic_analyses_results folder.") 
 
-Folders within the genetic analyses folder: 
+<b>Folders within Genetic_Analyses</b> 
 
 data_files: Data files generated throughout the process of some of the analyses are stored here. Before_reorg contains the 3 population genind used for the comparison barplot code, after_reorg contains all of the genind and data frames generated following the re-binning process. geographic_files contains many of the geographic files used in analyses, including the range shapefile with the 100 km buffer (butternut_buffer) and many of the mea population longitude and latitude data frames. 
 
 genetic_analyses_results: All of the outputs from genetic analyses that were used in the final publication, including figures and data frames, are stored here. 
 
-<b>Files Stored within Genetic_Analyses</b>
+<b>Files within Genetic_Analyses</b>
 <ul><li>data_files</li></ul>
 <ul><ul><li>after_reorg</li></ul></ul>
 <ul><ul><ul><li>Description: Following geographic reorganization into populations and rebinning analysis, these are the files used in the final genetic analyses included in the manuscript. </li></ul></ul>
