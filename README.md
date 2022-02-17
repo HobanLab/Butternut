@@ -9,7 +9,7 @@ The code written for performing two of the steps are in this Github; code for do
 
 <b>Archive:</b> This is a folder for code that was used in initial steps of this analysis but did not end up in the final manuscript. Most of this code was performed on more individuals than ended up in the final results (were removed due to isolation or genetic relatedness) or for loci that differed based on scoring year. 
 
-<b>Images:</b> This folder contains images generated for organizing the Github or population maps. 
+<b>Images:</b> This folder contains images generated for organizing the Github and population maps. 
 
 <b>SDMs:</b> This folder is for the code to run "species distribution models," specifically with boosted regression tree models as described in Elith et al. (2008). The code published here is based on code from Peter Breslin (ASU) and Fabio Suzart de Albuquerque. Part of this project was interested in identifying butternut's ecological preferences using species distribution modeling and then modeling habitat requirements into the past. This folder contains the code for performing all of these analyses. Here is a conceptual diagram of the steps and files names: 
 
@@ -74,13 +74,11 @@ genetic_analyses_results: All of the outputs from genetic analyses that were use
 <ul><li>data_files</li></ul>
 <ul><ul><li>after_reorg</li></ul></ul>
 <ul><ul><ul><li>Description: Following geographic reorganization into populations and rebinning analysis, these are the files used in the final genetic analyses included in the manuscript. </li></ul></ul></ul>
-<ul><ul><ul><li> butternut_26pop_lonlat: CSV of genotypes of butternut individuals with coordinates, including Quebec individuals. </li></ul></ul></ul>
-<ul><ul><ul><li>butternutgen_26pop: Genepop file of genotypes of butternut individuals including Quebec individuals. </li></ul></ul></ul>
-<ul><ul><ul><li>butternut_nomd: Genepop, CSV, and Arlequin files of genotypes of butternut individuals used for main genetic analyses (cleaned for clones and missing data). </li></ul></ul></ul>
-<ul><ul><ul><li>butternutgen_relatedness_reduced: CSV, genepop, and Arlequin files of genotypes of butternut individuals, reduced for individuals with missing data and too high of relatedness, leaving 993 individuals. </li></ul></ul></ul> 
-<ul><ul><ul><li>postgeo_rebin_24pop: Original genepop file of butternut individuals following rebinning analysis and geographic reorganization into 24 populations.</li></ul></ul></ul>
-<ul><ul><ul><li>reorg_lon_lat: CSV of genotypes of butternut individuals following geographic reorganization into 24 populations and rebinning analysis with coordinates of each individual.</li></ul></ul></ul>
-<ul><ul><ul><li>reorg_relatedness: CSV of genotypes of butternut individuals following geographic reorganization into 24 populations and rebinning analysis, used for Demerelate relatedness analysis.</li></ul></ul></ul>
+<ul><ul><ul><li> butternut_24pop.gen: Genepop file of 1721 butternut individuals following geographic reorganization into 24 populations. </li></ul></ul></ul>
+<ul><ul><ul><li>butternut_24pop_nomd: Genepop, Genalex, CSV, and Arlequin files of genotypes of butternut individuals used for main genetic analyses (cleaned for clones and missing data). When lonlat is included, it includes coordinates and when "relate" is included, its used for relatedness analysis. </li></ul></ul></ul>
+<ul><ul><ul><li>butternut_24pop_relate_red: CSV, genepop, and Arlequin files of genotypes of butternut individuals, reduced for individuals with missing data and too high of relatedness, leaving 993 individuals. </li></ul></ul></ul> 
+<ul><ul><ul><li>butternut_26pop_nomd: Genepop and Arlequin files of genotypes of butternut individuals including Quebec population individuals. CSV file titled "lonlat" includes coordinate information for all individuals. </li></ul></ul></ul>
+<ul><ul><ul><li>butternut_26pop_relate_red: Genepop, Arlequin, and CSV files of genotypes of butternut individuals reduced by relatedness but with Quebec butternut individuals. </li></ul></ul></ul>
 
 <ul><ul><li>before_reorg</li></ul></ul>
 <ul><ul><ul><li>Description: Genepop files from initial analyses on butternut individuals; rebinning analysis and geographic analyses were performed on these individuals to then yield the data files in the "after_reorg" file. </li></ul></ul></ul> 
@@ -118,4 +116,4 @@ Elith, J., Leathwick, J. R., & Hastie, T. (2008). A working guide to boosted reg
 
 Fick, S. E., & Hijmans, R. J. (2017). WorldClim 2: new 1‐km spatial resolution climate surfaces for global land areas. International journal of climatology, 37(12), 4302-4315.
 
-Hoban, S. M., Borkowski, D. S., Brosi, S. L., McCLEARY, T. S., Thompson, L. M., McLACHLAN, J. S., ... & ROMERO‐SEVERSON, J. E. A. N. N. E. (2010). Range‐wide distribution of genetic diversity in the North American tree Juglans cinerea: A product of range shifts, not ecological marginality or recent population decline. Molecular Ecology, 19(22), 4876-4891.
+Hoban, S. M., Borkowski, D. S., Brosi, S. L., McCLEARY, T. S., Thompson, L. M., McLachlan, J. S., ... Romero-Severson, J. (2010). Range‐wide distribution of genetic diversity in the North American tree Juglans cinerea: A product of range shifts, not ecological marginality or recent population decline. Molecular Ecology, 19(22), 4876-4891.
