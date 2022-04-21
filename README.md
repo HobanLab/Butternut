@@ -95,8 +95,26 @@ genetic_analyses_results: All of the outputs from genetic analyses that were use
  
 <ul><li>genetic_analyses_results</li></ul>
 <ul><ul><li>Clustering_Analyses</li></li></ul>
-<ul><ul><ul><li>PCoA</li></ul></ul></ul>
+<ul><ul><ul><li>STR</li></ul></ul></ul>
+<ul><ul><ul><ul><li>Butternut_Structure_24pops: Folder containing results of structure runs on 993 individuals.</li></ul></ul></ul></ul>
+<ul><ul><ul><ul><li>Butternut_Structure_26pops: Folder containing results of structure runs on 1005 individuals./li></ul></ul></ul></ul>
+<ul><ul><ul><li>Butternut_24pop_PCoA: PDF, PNG, and Inkscape file of a PCoA of 993 butternut individuals.</li></ul></ul></ul>
+<ul><ul><ul><li>Butternut_24pop_Structure: Structure diagram of 993 individuals of the best supported K value for structure. </li></ul></ul></ul>
+<ul><ul><ul><li>Butternut_24pop_Structure_alldeltaK_Supplement.PNG: Image file of several delta K values for 993 butternut individuals, presented in the supplement.</li></ul></ul></ul>
+<ul><ul><ul><li>Butternut_26pop_PCoA_Structure: PDF, PNG, and Inkscape file of a PCoA of the 1005 butternut individuals including Quebec individuals.</li></ul></ul></ul>
  
+<ul><ul><li>Diversity_Analyses</li></li></ul>
+<ul><ul><ul><li>butternut_24pop_allrich_rp_df.csv: R2 and p-values for regressions between each 24 butternut populations' geographic statistics (mean population latitude; distance to range edge) and allelic richness. </li></ul></ul></ul>
+<ul><ul><ul><li>butternut_24pop_gendiv_stat_df.csv: Genetic diversity summary stats of 24 populations of butternut populations.</li></ul></ul></ul>
+<ul><ul><ul><li>butternut_24pop_hexp_rp_df.csv: R2 and p-values for regressions between each 24 butternut populations' between geographic statistics (mean population latitude; distance to range edge) and expected heterozygosity. </li></ul></ul></ul>
+<ul><ul><ul><li>butternut_24pop_hwe.csv: Hardy-Weinberg Equilibrium deviation by population 24 populations.</li></ul></ul></ul>
+<ul><ul><ul><li>butternut_24pop_ld_loci.csv: Linkage disequilibrium between each of the 11 loci. </li></ul></ul></ul>
+<ul><ul><ul><li>butternut_26pop_allrich_rp_df</li></ul></ul></ul>
+<ul><ul><ul><li>butternut_26pop_hexp_rp_df</li></ul></ul></ul>
+
+<ul><ul><li>Rebinning_Analyses</li></li></ul>
+<ul><ul><ul><li>PCoA</li></ul></ul></ul>
+
 <b><p><h1 style="color:red;font-size:20px;">R Information</b></p></h1>
 
 R version 4.0.5 (2021-03-31)
