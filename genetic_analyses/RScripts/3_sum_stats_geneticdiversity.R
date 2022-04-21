@@ -33,7 +33,7 @@ setwd("../data_files/after_reorg")
 butternutgen_reorg <- read.genepop("butternut_24pop_nomd.gen", ncode = 3)
 
 #load lat lon doc for individual names and population names 
-butternut_reorg_lonlat <- read.csv("butternut_24pop_lonlat.csv")
+butternut_reorg_lonlat <- read.csv("butternut_24pop_nomd_lonlat.csv")
 
 ##load in mean lon and lat document 
 butternut_mean_lonlat <- read.csv("../geographic_files/butternut_coord_df.csv")
@@ -62,7 +62,7 @@ butternut_nullall_df <- matrix(nrow = length(rownames(butternut_nullall$null.all
                          ncol = length(colnames(butternut_nullall$null.allele.freq$summary1)))
 
 #save results in data frame
-butternut_nullall_df <- bn_null_all$null.allele.freq$summary1
+butternut_nullall_df <- butternut_nullall$null.allele.freq$summary1
 
 #bn HWE test
 butternut_hwe_pop <- seppop(butternutgen_reorg) %>% lapply(hw.test, B = 0)
@@ -78,7 +78,7 @@ butternut_ld <- pair.ia(butternutgen_reorg, sample = 1000)
 butternut_ld_df <- data.frame(round(butternut_ld,digits = 2))
 
 #write out data files 
-write.csv(bn_hwe, "../../genetic_analyses_results/Diversity_Analyses/bn_hwe_overall.csv")
+write.csv(butternut_hwe_pop_df, "../../genetic_analyses_results/Diversity_Analyses/butternut_24pop_hwe.csv")
 write.csv(bn_hwe_bypops, "Genetic_Analyses\\genetic_analyses_results\\bn_hwe_bypop.csv")
 write.csv(ld_comp_df, "Genetic_Analyses\\genetic_analyses_results\\ld_loci.csv")
 
